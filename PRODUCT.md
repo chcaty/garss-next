@@ -1,7 +1,7 @@
 # Product
 <!-- impeccable:product-schema 1 -->
 ## Platform
-web
+web + Android
 ## Product Purpose
 用户先高效筛选 RSS 信息，再专注阅读筛选后的内容。桌面和手机都要可用。
 ## Capabilities and Constraints
@@ -9,4 +9,4 @@ GitHub Actions 定时采集 RSS，GitHub Pages 展示信息和管理订阅源，
 ## Confirmed Experience
 用户确认兼顾快速筛选和舒适阅读，提供专注阅读。阅读页隐藏没有文章的来源；管理页提供采集正常筛选；同步状态有可发现的入口。
 ## Open Decisions
-没有要求变更产品名称，统一使用 GARSS。专注阅读使用 RSS 已提供的摘要，原文通过外部链接阅读。
+用户确认产品名称为「拾阅」，理念为「挑选信息，慢慢阅读」，仓库保留 garss-next。专注阅读使用 RSS 已提供的摘要，原文通过外部链接阅读。

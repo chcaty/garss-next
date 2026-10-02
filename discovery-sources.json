@@ -94,6 +94,156 @@
       "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Architecture.opml",
       "page": "https://github.com/plenaryapp/awesome-rss-feeds",
       "category": "建筑设计"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/phretor/infosec-opml/main/feeds.xml",
+      "page": "https://github.com/phretor/infosec-opml",
+      "category": "网络安全",
+      "name": "phretor/infosec-opml",
+      "maintenance_checked_at": "2026-10-02T17:47:12.691823+00:00",
+      "updated_at": "2026-08-19T02:32:08Z",
+      "update_evidence": "https://github.com/phretor/infosec-opml/commit/ea85d29755f70732195def9380bb02f30c8ff5fe",
+      "verified_feed_count": 366
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lotosbin/opml-list/master/generate/all.opml",
+      "page": "https://github.com/lotosbin/opml-list",
+      "category": "综合阅读",
+      "name": "lotosbin/opml-list",
+      "maintenance_checked_at": "2026-10-02T17:47:12.692116+00:00",
+      "updated_at": "2026-09-30T03:07:33Z",
+      "update_evidence": "https://github.com/lotosbin/opml-list/commit/4042ce4803e16cdf045c68667e7e6c70baa5fe72",
+      "verified_feed_count": 1000
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ecosyste-ms/package-managers-opml/main/package-manager.opml",
+      "page": "https://github.com/ecosyste-ms/package-managers-opml",
+      "category": "开源生态",
+      "name": "ecosyste-ms/package-managers-opml",
+      "maintenance_checked_at": "2026-10-02T17:47:12.692317+00:00",
+      "updated_at": "2026-09-18T08:45:54Z",
+      "update_evidence": "https://github.com/ecosyste-ms/package-managers-opml/commit/da919043b31b59c789d70a9705cdecb652a1804a",
+      "verified_feed_count": 102
+    },
+    {
+      "url": "https://raw.githubusercontent.com/clivoa/awesome-security-feeds/main/data/sec_feeds_active.xml",
+      "page": "https://github.com/clivoa/awesome-security-feeds",
+      "category": "网络安全",
+      "name": "clivoa/awesome-security-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:12.692497+00:00",
+      "updated_at": "2026-10-02T09:56:24Z",
+      "update_evidence": "https://github.com/clivoa/awesome-security-feeds/commit/13e30fbc593b2726cbaae5e7c96fd9fb43f1d8a0",
+      "verified_feed_count": 916
+    },
+    {
+      "url": "https://raw.githubusercontent.com/alan-turing-institute/ai-rss-feeds/main/feeds.opml",
+      "page": "https://github.com/alan-turing-institute/ai-rss-feeds",
+      "category": "人工智能",
+      "name": "alan-turing-institute/ai-rss-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:12.692699+00:00",
+      "updated_at": "2026-08-28T13:08:55Z",
+      "update_evidence": "https://github.com/alan-turing-institute/ai-rss-feeds/commit/82b3a7eeff4151127304873e649b46ad329e0054",
+      "verified_feed_count": 16
+    },
+    {
+      "url": "https://raw.githubusercontent.com/iamdtms/iamdtms-opml/main/iamdtms.xml",
+      "page": "https://github.com/iamdtms/iamdtms-opml",
+      "category": "科技阅读",
+      "name": "iamdtms/iamdtms-opml",
+      "maintenance_checked_at": "2026-10-02T17:47:16.792015+00:00",
+      "updated_at": "2026-09-03T16:12:18Z",
+      "update_evidence": "https://github.com/iamdtms/iamdtms-opml/commit/cda5b1b04efad26ba65555b5c31bcd86b79d1317",
+      "verified_feed_count": 55
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benlk/columbus-govdelivery-rss/trunk/subscriptions.opml",
+      "page": "https://github.com/benlk/columbus-govdelivery-rss",
+      "category": "公共资讯",
+      "name": "benlk/columbus-govdelivery-rss",
+      "maintenance_checked_at": "2026-10-02T17:47:17.079134+00:00",
+      "updated_at": "2026-09-21T23:01:09Z",
+      "update_evidence": "https://github.com/benlk/columbus-govdelivery-rss/commit/8ae0e1288d228a3ea1ed1c844369f9e8113f72aa",
+      "verified_feed_count": 429
+    },
+    {
+      "url": "https://raw.githubusercontent.com/luc926823-cloud/feeds-opml/main/feeds.opml",
+      "page": "https://github.com/luc926823-cloud/feeds-opml",
+      "category": "中文资讯",
+      "name": "luc926823-cloud/feeds-opml",
+      "maintenance_checked_at": "2026-10-02T17:47:17.140768+00:00",
+      "updated_at": "2026-08-30T03:49:23Z",
+      "update_evidence": "https://github.com/luc926823-cloud/feeds-opml/commit/fd319082e6a57f1d68f5ad8688bf54da2c7d7e0a",
+      "verified_feed_count": 19
+    },
+    {
+      "url": "https://raw.githubusercontent.com/fuxiaoai/tidings-rss/main/opml/tidings-chinese.opml",
+      "page": "https://github.com/fuxiaoai/tidings-rss",
+      "category": "中文资讯",
+      "name": "fuxiaoai/tidings-rss",
+      "maintenance_checked_at": "2026-10-02T17:47:17.309361+00:00",
+      "updated_at": "2026-08-13T03:45:18Z",
+      "update_evidence": "https://github.com/fuxiaoai/tidings-rss/commit/cbe507b61523466d9620089e71bb779b24f7553f",
+      "verified_feed_count": 469
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yohaybn/israeli-rss-feeds/main/world/opml/by-category/news.opml",
+      "page": "https://github.com/yohaybn/israeli-rss-feeds",
+      "category": "国际新闻",
+      "name": "yohaybn/israeli-rss-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:20.653936+00:00",
+      "updated_at": "2026-09-27T11:27:39Z",
+      "update_evidence": "https://github.com/yohaybn/israeli-rss-feeds/commit/f45624e61a7a51ab11ad2dd1b0f527860443d7c0",
+      "verified_feed_count": 176
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gianhiltbrunner/datanews/main/datanews.opml",
+      "page": "https://github.com/gianhiltbrunner/datanews",
+      "category": "数据工程",
+      "name": "gianhiltbrunner/datanews",
+      "maintenance_checked_at": "2026-10-02T17:47:21.192852+00:00",
+      "updated_at": "2026-10-02T11:02:20Z",
+      "update_evidence": "https://github.com/gianhiltbrunner/datanews/commit/47bf28ab33f5277035f66feafc9befb20892487a",
+      "verified_feed_count": 85
+    },
+    {
+      "url": "https://raw.githubusercontent.com/oooopera/RSS_OPML/main/data/categories/reading.opml",
+      "page": "https://github.com/oooopera/RSS_OPML",
+      "category": "图书阅读",
+      "name": "oooopera/RSS_OPML",
+      "maintenance_checked_at": "2026-10-02T17:47:21.506683+00:00",
+      "updated_at": "2026-09-16T05:38:03Z",
+      "update_evidence": "https://github.com/oooopera/RSS_OPML/commit/d6e14322f27108b4fb4ccb2b58141861ccea4495",
+      "verified_feed_count": 43
+    },
+    {
+      "url": "https://raw.githubusercontent.com/huaminghuangtw/RSS/main/Subscriptions-Blog.opml",
+      "page": "https://github.com/huaminghuangtw/RSS",
+      "category": "阅读随笔",
+      "name": "huaminghuangtw/RSS",
+      "maintenance_checked_at": "2026-10-02T17:47:21.696684+00:00",
+      "updated_at": "2026-09-14T11:55:03Z",
+      "update_evidence": "https://github.com/huaminghuangtw/RSS/commit/743d301c99c86bc694ef386175b3d3b11cd20e1a",
+      "verified_feed_count": 50
+    },
+    {
+      "url": "https://raw.githubusercontent.com/asterism-amelio/asterism-feeds/main/feeds.opml",
+      "page": "https://github.com/asterism-amelio/asterism-feeds",
+      "category": "科技阅读",
+      "name": "asterism-amelio/asterism-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:24.058965+00:00",
+      "updated_at": "2026-09-12T16:34:58Z",
+      "update_evidence": "https://github.com/asterism-amelio/asterism-feeds/commit/ff3e67d2ace7a627ee477f2c75f4907d58997e8f",
+      "verified_feed_count": 4
+    },
+    {
+      "url": "https://raw.githubusercontent.com/mroyme/my-feeds/main/data/miniflux.opml",
+      "page": "https://github.com/mroyme/my-feeds",
+      "category": "综合阅读",
+      "name": "mroyme/my-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:24.834181+00:00",
+      "updated_at": "2026-10-02T00:12:03Z",
+      "update_evidence": "https://github.com/mroyme/my-feeds/commit/72c497f6e2bf3152370ff005d48b17f1d3141a1c",
+      "verified_feed_count": 59
     }
   ],
   "seed_sources": [

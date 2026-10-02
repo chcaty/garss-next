@@ -48,9 +48,16 @@ footer { max-width: 1280px; margin: 0 auto; padding: 1.5rem 0; border-top: 1px s
 .site-header { background:var(--panel); min-height:72px; } .brand { font-size:1.2rem; letter-spacing:-.02em; } .header-links a[aria-current="page"] { color:var(--green); font-weight:600; }
 
 :root[data-theme="dark"] { color-scheme:dark; --paper:#101826; --panel:#172235; --ink:#e5edf9; --muted:#a8b6cb; --line:#34445b; --green:#95b5ff; --green-soft:#243858; --color-paper:#101826; --color-panel:#172235; --color-ink:#e5edf9; --color-muted:#a8b6cb; --color-line:#34445b; --color-brand:#95b5ff; --color-soft:#243858; }
-.theme-control select { background:var(--panel); color:var(--ink); min-height:44px; border:1px solid var(--line); border-radius:5px; padding:.4rem; font-size:.75rem; }
 :root[data-theme="dark"] .button-primary, :root[data-theme="dark"] .btn-primary { background:#345fc1; color:#fff; border-color:#345fc1; }
 :root[data-theme="dark"] .text-red-800 { color:#ffa6a6; }
 :root[data-theme="dark"] .bg-amber-50 { background:#382c18; }
 :root[data-theme="dark"] .text-amber-900 { color:#f2ce91; }
 @media(max-width:720px) { .app-nav { padding-top:.5rem; padding-bottom:.5rem; gap:.25rem; } .app-links { width:100%; justify-content:space-between; gap:.75rem; } .header-links { width:100%; justify-content:space-between; gap:.5rem; } }
+
+.theme-control { position:relative; }
+.theme-control summary { display:flex; align-items:center; justify-content:center; width:44px; height:44px; border:1px solid var(--line); border-radius:5px; background:var(--panel); cursor:pointer; list-style:none; }
+.theme-control summary::-webkit-details-marker { display:none; }
+.theme-control svg { width:20px; height:20px; stroke-linecap:round; stroke-linejoin:round; }
+.theme-options { position:absolute; top:calc(100% + 8px); right:0; z-index:30; min-width:160px; padding:4px; background:var(--panel); border:1px solid var(--line); border-radius:8px; box-shadow:0 8px 24px rgb(10 20 36 / 15%); }
+.theme-options button { width:100%; min-height:44px; display:block; text-align:left; padding:8px 12px; border:0; border-radius:4px; background:transparent; color:var(--ink); font-size:.85rem; }
+.theme-options button:hover,.theme-options button[aria-pressed="true"] { background:var(--green-soft); color:var(--green); }

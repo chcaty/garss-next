@@ -98,5 +98,9 @@ byId<HTMLDialogElement>('focus-reader').onclose=()=>{renderArticles();byId('stre
 byId('focus-save').onclick=()=>{toggleSaved(focusQueue[focusIndex]);showFocus();};
 byId('focus-previous').onclick=()=>{focusIndex--;showFocus();};
 byId('focus-next').onclick=()=>{focusIndex++;showFocus();};
-byId<HTMLSelectElement>('theme-choice').value=currentTheme();
-byId<HTMLSelectElement>('theme-choice').onchange=event=>setTheme((event.target as HTMLSelectElement).value as Theme);
+const icons:Record<Theme,string>={system:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/>',light:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/>',dark:'<path d="M20 14.2A8.6 8.6 0 0 1 9.8 4a8.6 8.6 0 1 0 10.2 10.2Z"/>'};
+function updateAppearance(){const mode=currentTheme();const labels={system:'跟随系统',light:'浅色',dark:'深色'};byId('theme-choice').setAttribute('aria-label',`外观：${labels[mode]}`);byId('theme-choice').title=`外观：${labels[mode]}`;byId('theme-choice').querySelector('svg')!.innerHTML=icons[mode];document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.themeChoice===mode)));}
+document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach(button=>{button.onclick=()=>{setTheme(button.dataset.themeChoice as Theme);updateAppearance();byId<HTMLDetailsElement>('theme-menu').open=false;byId('theme-choice').focus();};});
+document.addEventListener('click',event=>{if(!byId('theme-menu').contains(event.target as Node))byId<HTMLDetailsElement>('theme-menu').open=false;});
+byId('theme-menu').onkeydown=event=>{if(event.key==='Escape'){byId<HTMLDetailsElement>('theme-menu').open=false;byId('theme-choice').focus();}};
+updateAppearance();

@@ -55,6 +55,28 @@ class LibraryState {
     fontScale: fontScale ?? this.fontScale,
     showImages: showImages ?? this.showImages,
   );
+  Map<String, int> get articleCounts {
+    final counts = <String, int>{};
+    for (final article in catalog.articles) {
+      for (final id in article.sources.toSet()) {
+        counts.update(id, (value) => value + 1, ifAbsent: () => 1);
+      }
+    }
+    return counts;
+  }
+
+  List<Feed> get readingFeeds {
+    final counts = articleCounts;
+    return catalog.feeds
+        .where(
+          (feed) =>
+              feed.enabled &&
+              !hidden.contains(feed.id) &&
+              (counts[feed.id] ?? 0) > 0,
+        )
+        .toList();
+  }
+
   List<Article> visible({
     String query = '',
     bool savedOnly = false,
@@ -62,19 +84,17 @@ class LibraryState {
     String source = '',
   }) {
     final needle = query.trim().toLowerCase();
+    final enabled = {
+      for (final feed in catalog.feeds)
+        if (feed.enabled && !hidden.contains(feed.id)) feed.id,
+    };
+    final canonical = catalog.sourceAliases[source] ?? source;
     return (savedOnly ? saved.values : catalog.articles)
         .where(
           (article) =>
-              (savedOnly ||
-                  article.sources.any(
-                    (id) =>
-                        !hidden.contains(id) &&
-                        catalog.feeds.any(
-                          (feed) => feed.id == id && feed.enabled,
-                        ),
-                  )) &&
+              (savedOnly || article.sources.any(enabled.contains)) &&
               (!unreadOnly || !read.contains(article.id)) &&
-              (source.isEmpty || article.sources.contains(source)) &&
+              (canonical.isEmpty || article.sources.contains(canonical)) &&
               (needle.isEmpty ||
                   '${article.title} ${article.sourceTitle} ${article.summary}'
                       .toLowerCase()
@@ -103,7 +123,7 @@ class LibraryController extends AsyncNotifier<LibraryState> {
     final saved = <String, Article>{};
     try {
       for (final value in jsonDecode(
-        _preferences.getString('saved-v1') ?? '[]',
+        _preferences.getString('saved-v2') ?? '[]',
       ) as List<dynamic>) {
         try {
           final article = Article.fromJson(value as Map<String, dynamic>);
@@ -144,7 +164,10 @@ class LibraryController extends AsyncNotifier<LibraryState> {
         catalog,
         (_preferences.getStringList('read-v1') ?? []).toSet(),
       ),
-      hidden: (_preferences.getStringList('hidden-v1') ?? []).toSet(),
+      hidden: {
+        for (final id in _preferences.getStringList('hidden-v1') ?? <String>[])
+          catalog.sourceAliases[id] ?? id,
+      },
       fontScale: (_preferences.getDouble('font-scale') ?? 1).clamp(1, 1.4),
       showImages: _preferences.getBool('show-images') ?? true,
       message: message,
@@ -168,6 +191,10 @@ class LibraryController extends AsyncNotifier<LibraryState> {
         state = AsyncData(
           state.requireValue.copyWith(
             catalog: catalog,
+            hidden: {
+              for (final id in state.requireValue.hidden)
+                catalog.sourceAliases[id] ?? id,
+            },
             read: migrateRead(catalog, state.requireValue.read),
             syncing: false,
             message: '已同步最新文章',
@@ -188,7 +215,7 @@ class LibraryController extends AsyncNotifier<LibraryState> {
     _writes = _writes
         .then((_) async {
           await _preferences.setString(
-            'saved-v1',
+            'saved-v2',
             jsonEncode(
               next.saved.values.map((article) => article.toJson()).toList(),
             ),

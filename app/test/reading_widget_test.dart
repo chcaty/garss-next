@@ -71,9 +71,9 @@ void main() {
           )
           .first,
     );
-    await tester.tap(find.byTooltip('收藏文章'));
+    await tester.tap(find.byTooltip('加入稍后读'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('收藏').last);
+    await tester.tap(find.text('稍后读').last);
     await tester.pumpAndSettle();
     expect(find.text(article.title), findsOneWidget);
     await tester.tap(find.text(article.title));
@@ -88,7 +88,7 @@ void main() {
     await setup(tester, scale: 2);
     expect(tester.takeException(), isNull);
     expect(
-      MediaQuery.textScalerOf(tester.element(find.text('今日阅读'))).scale(10),
+      MediaQuery.textScalerOf(tester.element(find.text('信息流').first)).scale(10),
       greaterThan(10),
     );
     await tester.scrollUntilVisible(
@@ -108,14 +108,14 @@ void main() {
     await tester.enterText(find.byType(TextField), '没有这个关键词');
     await tester.pumpAndSettle();
     expect(find.text('没有匹配的文章'), findsOneWidget);
-    await tester.tap(find.text('收藏').last);
+    await tester.tap(find.text('稍后读').last);
     await tester.pumpAndSettle();
     expect(find.text('这里留给想再读的文章'), findsOneWidget);
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
       isEmpty,
     );
-    await tester.tap(find.text('阅读').last);
+    await tester.tap(find.text('信息流').last);
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
@@ -151,11 +151,21 @@ void main() {
       ]) {
         tester.view.physicalSize = size;
         await tester.pumpAndSettle();
-        await tester.tap(find.text('来源').last);
+        await tester.tap(find.text('订阅源').last);
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
         await tester.tap(find.text('设置').last);
         await tester.pumpAndSettle();
+        await tester.scrollUntilVisible(
+          find.text('当前字号 100%'),
+          100,
+          scrollable: find
+              .descendant(
+                of: find.byType(ListView),
+                matching: find.byType(Scrollable),
+              )
+              .first,
+        );
         expect(find.text('当前字号 100%'), findsOneWidget);
         expect(tester.takeException(), isNull);
       }

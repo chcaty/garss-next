@@ -2,6 +2,9 @@
 @source "./sources.tsx";
 @source "./sync.tsx";
 @source "./shell.tsx";
+@source "./appearance.tsx";
+@source "./provenance.tsx";
+@source "./publisher.tsx";
 @theme {
   --color-paper: #f5f7fb;
   --color-panel: #ffffff;

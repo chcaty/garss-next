@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'models.dart';
+import 'sync_report.dart';
 
 const defaultBaseUrl = String.fromEnvironment(
   'GARSS_BASE_URL',
@@ -83,6 +84,7 @@ class CatalogRepository {
         return await compute(Catalog.fromJson, {
           'generated_at': manifest['generated_at'],
           'feeds': feeds['feeds'],
+          'source_aliases': feeds['source_aliases'],
           'articles': articles['articles'],
         });
       } catch (_) {
@@ -90,5 +92,17 @@ class CatalogRepository {
       }
     }
     throw const FormatException('Catalog unavailable');
+  }
+
+  Future<SyncReport> fetchSyncReport() async {
+    final documents = await Future.wait([
+      get(base.resolve('api/v1/sync.json')),
+      get(base.resolve('api/v1/source-state.json')),
+    ]);
+    final ledger = decode(documents[0]), health = decode(documents[1]);
+    if (ledger['generated_at'] != health['generated_at']) {
+      throw const FormatException('Mixed sync records');
+    }
+    return SyncReport.fromJson({...ledger, 'sources': health['sources']});
   }
 }

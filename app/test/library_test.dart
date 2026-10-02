@@ -182,4 +182,65 @@ void main() {
     addTearDown(restarted.dispose);
     expect((await restarted.read(libraryProvider.future)).read, {'earlier'});
   });
+  test(
+    'source merges keep reading preferences without migrating old bookmarks',
+    () async {
+      final renamed = Article(
+        id: 'stable',
+        sourceId: 'current',
+        title: 'Merged',
+        url: article.url,
+        publishedAt: article.publishedAt,
+        legacyIds: [article.id],
+      );
+      final merged = Catalog(
+        generatedAt: catalog.generatedAt,
+        feeds: [
+          const Feed(
+            id: 'current',
+            title: 'Current',
+            url: 'https://example.com/rss',
+          ),
+          const Feed(
+            id: 'empty',
+            title: 'Empty',
+            url: 'https://empty.test/rss',
+          ),
+        ],
+        articles: [renamed],
+        sourceAliases: {'source': 'current'},
+      );
+      SharedPreferences.setMockInitialValues({
+        'catalog-v1': jsonEncode(merged.toJson()),
+        'saved-v1': jsonEncode([article.toJson()]),
+        'read-v1': [article.id],
+        'hidden-v1': ['source'],
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final data = await container.read(libraryProvider.future);
+      expect(data.saved, isEmpty);
+      expect(data.read, contains('stable'));
+      expect(data.hidden, {'current'});
+      expect(data.readingFeeds, isEmpty);
+      container.read(libraryProvider.notifier).follow('current', true);
+      expect(
+        container
+            .read(libraryProvider)
+            .requireValue
+            .readingFeeds
+            .map((feed) => feed.id),
+        ['current'],
+      );
+      expect(
+        container
+            .read(libraryProvider)
+            .requireValue
+            .visible(source: 'source')
+            .single
+            .id,
+        'stable',
+      );
+    },
+  );
 }

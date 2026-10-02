@@ -54,6 +54,7 @@ def discover(config, directories, previous, now, *, download=download_opml, chec
         return document
     document['last_attempt_at'] = stamp(now)
     errors = []
+    directory_states = []
     pool = {}
     seed_keys = set()
     for item in seed_sources:
@@ -63,12 +64,15 @@ def discover(config, directories, previous, now, *, download=download_opml, chec
             pool[key] = dict(item)
     for directory in directories:
         try:
-            for item in parse_opml(download(directory['url']), directory):
+            items = parse_opml(download(directory['url']), directory)
+            directory_states.append({**directory, 'status': 'ok', 'checked_at': stamp(now), 'feed_count': len({feed_key(item['feed_url']) for item in items})})
+            for item in items:
                 key = feed_key(item['feed_url'])
                 if key not in existing:
                     pool.setdefault(key, item)
         except Exception as error:
             errors.append({'directory': directory['page'], 'error': str(error)[:300]})
+            directory_states.append({**directory, 'status': 'error', 'checked_at': stamp(now), 'error': str(error)[:300], 'feed_count': 0})
     saved = {feed_key(item['feed_url']): item for item in candidates}
     rejected = document.get('rejected', {})
     # Retry failures after 30 days, so one bad feed does not monopolize every batch.
@@ -105,5 +109,5 @@ def discover(config, directories, previous, now, *, download=download_opml, chec
             saved[key] = {**item, 'verified_at': stamp(now)}
             rejected.pop(key, None)
     document.update(candidates=list(saved.values()), rejected=dict(list(rejected.items())[-500:]),
-                    directories_revision=revision, directory_errors=errors, checked_count=len(work), generated_at=stamp(now))
+                    directories_revision=revision, directory_errors=errors, directories=directory_states, checked_count=len(work), generated_at=stamp(now))
     return document

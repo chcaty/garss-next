@@ -35,6 +35,6 @@ jobs:
       - run: flutter build apk --release --split-per-abi
       - uses: actions/upload-artifact@v7
         with:
-          name: garss-android-preview
+          name: shiyue-android-preview
           path: app/build/app/outputs/flutter-apk/app-*-release.apk
           retention-days: 30

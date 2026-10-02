@@ -7,8 +7,9 @@ class Feed {
     this.status = 'ok',
     this.enabled = true,
     this.category = '',
+    this.error = '',
   });
-  final String id, title, url, description, status, category;
+  final String id, title, url, description, status, category, error;
   final bool enabled;
   factory Feed.fromJson(Map<String, dynamic> json) => Feed(
     id: json['id'] as String,
@@ -18,6 +19,7 @@ class Feed {
     status: json['status'] as String? ?? 'ok',
     enabled: json['enabled'] as bool? ?? true,
     category: json['category'] as String? ?? '',
+    error: json['error'] as String? ?? '',
   );
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -27,6 +29,7 @@ class Feed {
     'status': status,
     'enabled': enabled,
     'category': category,
+    'error': error,
   };
 }
 
@@ -42,9 +45,11 @@ class Article {
     this.imageUrl = '',
     this.sourceIds = const [],
     this.legacyIds = const [],
+    this.dateInferred = false,
   });
   final String id, sourceId, title, url, sourceTitle, summary, imageUrl;
   final DateTime publishedAt;
+  final bool dateInferred;
   final List<String> sourceIds, legacyIds;
   List<String> get sources => sourceIds.isEmpty ? [sourceId] : sourceIds;
   factory Article.fromJson(
@@ -61,6 +66,7 @@ class Article {
       title: json['title'] as String,
       url: url,
       publishedAt: DateTime.parse(json['published_at'] as String),
+      dateInferred: json['date_inferred'] as bool? ?? false,
       sourceTitle:
           feeds[json['source_id']]?.title ??
           json['source_title'] as String? ??
@@ -80,6 +86,7 @@ class Article {
     'title': title,
     'url': url,
     'published_at': publishedAt.toUtc().toIso8601String(),
+    'date_inferred': dateInferred,
     'summary': summary,
     'image_url': imageUrl,
   };
@@ -98,11 +105,14 @@ class Catalog {
     required this.generatedAt,
     required List<Feed> feeds,
     required List<Article> articles,
+    Map<String, String> sourceAliases = const {},
   }) : feeds = List.unmodifiable(feeds),
-       articles = List.unmodifiable(articles);
+       articles = List.unmodifiable(articles),
+       sourceAliases = Map.unmodifiable(sourceAliases);
   final DateTime generatedAt;
   final List<Feed> feeds;
   final List<Article> articles;
+  final Map<String, String> sourceAliases;
   factory Catalog.fromJson(Map<String, dynamic> json) {
     final feeds = (json['feeds'] as List<dynamic>)
         .map((value) => Feed.fromJson(value as Map<String, dynamic>))
@@ -124,10 +134,13 @@ class Catalog {
       generatedAt: DateTime.parse(json['generated_at'] as String),
       feeds: feeds,
       articles: articles,
+      sourceAliases: (json['source_aliases'] as Map<String, dynamic>? ?? {})
+          .cast<String, String>(),
     );
   }
   Map<String, dynamic> toJson() => {
     'generated_at': generatedAt.toUtc().toIso8601String(),
+    'source_aliases': sourceAliases,
     'feeds': feeds.map((feed) => feed.toJson()).toList(),
     'articles': articles.map((article) => article.toJson()).toList(),
   };
