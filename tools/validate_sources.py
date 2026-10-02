@@ -16,8 +16,10 @@ if __name__ == '__main__':
     if args.base:
         baseline = json.loads(args.base.read_text(encoding='utf-8'))
         urls = {item['feed_url'] for item in baseline['sources'] if item.get('enabled', True)}
+        baseline_tokens = {item['id']: item.get('recheck_requested_at') for item in baseline['sources']}
+        tokens = {item['id']: item.get('recheck_requested_at') for item in config['sources']}
         for source in feed_sources(config):
-            if source.feed_url not in urls:
+            if source.feed_url not in urls or tokens[source.id] != baseline_tokens.get(source.id):
                 result = fetch_feed(source, attempts=1, budget_seconds=15)
                 if result.error:
                     raise ValueError(f'RSS validation failed for {source.id}: {result.error}')

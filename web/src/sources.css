@@ -1,0 +1,27 @@
+@import "tailwindcss" source(none);
+@source "./sources.tsx";
+@theme {
+  --color-paper: #f7f5ef;
+  --color-panel: #fdfcf8;
+  --color-ink: #252820;
+  --color-muted: #66695e;
+  --color-line: #deddd3;
+  --color-brand: #52613b;
+  --color-soft: #ecf0e3;
+}
+@layer base {
+  body { @apply m-0 min-w-80 bg-paper text-ink antialiased; font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; }
+  button, a { touch-action: manipulation; }
+  button { @apply cursor-pointer disabled:cursor-default disabled:opacity-40; }
+  :focus-visible { @apply outline-2 outline-offset-4 outline-brand; }
+  input, textarea { caret-color: var(--color-brand); }
+  ::selection { @apply bg-soft text-ink; }
+  html { scrollbar-color: #babdac #f7f5ef; }
+}
+@layer components {
+  .btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-line bg-panel px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-soft disabled:hover:bg-panel; }
+  .btn-primary { @apply border-brand bg-brand text-white hover:bg-[#414e2f]; }
+  .field { @apply min-h-11 w-full rounded-md border border-line bg-panel px-3 py-2 text-base text-ink placeholder:text-muted md:text-sm; }
+  .pill { @apply inline-flex items-center rounded-sm bg-soft px-2 py-1 text-xs font-medium text-brand; }
+}
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important;animation:none!important; } }

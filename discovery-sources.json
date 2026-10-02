@@ -1,0 +1,14 @@
+{
+  "directories": [
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-lifestyle.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "生活文化"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Programming.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "编程技术"
+    }
+  ]
+}

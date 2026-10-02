@@ -1,6 +1,7 @@
 export interface Source {
   id: string; title: string; description: string; category: string;
   feed_url: string; enabled: boolean; status?: string; article_count?: number;
+  recheck_requested_at?: string; discovered_from?: string; verified_at?: string;
 }
 export interface Article {
   id: string; source_id: string; source_ids?: string[]; title: string;

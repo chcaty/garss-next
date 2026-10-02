@@ -13,7 +13,9 @@ from garss.feed_cache import FeedCache
 from garss.fetch_pool import fetch_all
 from garss.history import merge_recent_history
 from garss.models import FeedResult
-from garss.snapshot import create_snapshot, expand_history, validate_snapshot
+from garss.snapshot import create_snapshot, expand_history, validate_snapshot, write_json
+from garss.source_lifecycle import prepare, update, effective_config, stamp
+from garss.discovery import discover
 from garss.timezones import app_date
 
 
@@ -29,11 +31,15 @@ def main():
     if args.output.exists():
         raise ValueError('Output must be a new directory')
     config = load_sources(args.sources)
-    sources = feed_sources(config)
     old = []
     if args.previous and (args.previous / 'api/v1/articles.json').exists():
         old = expand_history(json.loads((args.previous / 'api/v1/articles.json').read_text(encoding='utf-8'))['articles'])
     now = datetime.now(timezone.utc)
+    def previous_document(name, default):
+        path = args.previous / 'api/v1' / name if args.previous else None
+        return json.loads(path.read_text(encoding='utf-8')) if path and path.exists() else default
+    states, due = prepare(config, previous_document('source-state.json', {}).get('sources', {}), now)
+    sources = feed_sources({'sources': due})
     if args.offline:
         results = [FeedResult(source, error='Migration seed; waiting for first live collection') for source in sources]
     else:
@@ -41,11 +47,27 @@ def main():
         results = fetch_all(sources, fetch_date=app_date(now), workers=16, cache=cache,
                             bootstrap_ids=[source.id for source in sources], retention_days=30)
         cache.prune(source.feed_url for source in sources)
-        if sources and all(result.error for result in results):
+        active_results = [result for result in results if states[result.source.id]['status'] != 'archived']
+        if active_results and all(result.error for result in active_results):
             raise RuntimeError('All enabled sources failed; previous data is preserved')
+    if not args.offline:
+        update(states, results, now)
+    effective = effective_config(config, states)
+    # Archived sources leave the reading catalog but stay in authored configuration.
+    results = [result for result in results if states[result.source.id]['status'] != 'archived']
     results = merge_recent_history(results, old, app_date(now), 30)
-    create_snapshot(args.output, results, config, now,
+    create_snapshot(args.output, results, effective, now,
                     code_revision=args.code_revision, source_revision=args.source_revision)
+    write_json(args.output / 'api/v1/sources.json', config)
+    write_json(args.output / 'api/v1/source-state.json', {'generated_at': stamp(now), 'sources': states,
+               'policy': {'failures': 3, 'duration_hours': 24, 'retry_days': 7}})
+    write_json(args.output / 'api/v1/source-archive.json', {'generated_at': stamp(now), 'sources': [
+        {**source, **states[source['id']]} for source in config['sources'] if states[source['id']]['status'] == 'archived']})
+    discovery = previous_document('source-discovery.json', {})
+    if not args.offline:
+        directories = json.loads((ROOT / 'discovery-sources.json').read_text(encoding='utf-8'))['directories']
+        discovery = discover(config, directories, discovery, now)
+    write_json(args.output / 'api/v1/source-discovery.json', discovery)
     # Keep at most the current and immediately previous immutable snapshot.
     if args.previous and (args.previous / 'api/v1/meta.json').exists():
         previous = validate_snapshot(args.previous)['snapshot_id']

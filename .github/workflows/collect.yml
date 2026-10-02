@@ -5,7 +5,7 @@ on:
     - cron: '0 22,5,9,14 * * *'
   push:
     branches: [main]
-    paths: ['sources.json', 'collector/**', 'tools/collect.py', '.github/workflows/collect.yml']
+    paths: ['sources.json', 'discovery-sources.json', 'collector/**', 'tools/collect.py', '.github/workflows/collect.yml']
 concurrency:
   group: rss-production
   cancel-in-progress: false

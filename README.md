@@ -5,7 +5,7 @@ GitHub Actions 采集 RSS，GitHub Pages 展示文章与管理来源，Flutter �
 ## 目录与语言
 
 - `collector/`：Python RSS 解析、条件请求、并发采集、历史合并和去重。
-- `web/`：TypeScript 阅读页与来源管理页；构建成原生 ES modules，无前端框架运行时。
+- `web/`：TypeScript 阅读页；来源管理页采用 React + Headless UI + Tailwind CSS，单独打包，不影响手机 APK。
 - `app/`：Flutter / Dart Android 客户端。
 - `sources.json`：唯一的公共采集来源配置。`enabled: false` 会停止 CI 采集。
 - `tools/`：校验、采集、静态构建、数据分支发布。
@@ -50,3 +50,13 @@ Android：在 `app` 目录运行 `flutter pub get`、`flutter analyze`、`flutte
 创建公开仓库 garss-next；推送 main 与经过校验的迁移种子 rss-data；在仓库 Settings → Pages 选择 GitHub Actions。第一次运行 Collect RSS and deploy 完成实时采集与发布。来源配置中的 repository 信息、App 的默认 JSON 地址需与实际仓库保持一致。
 
 本项目迁入的源码与素材来自 `https://github.com/chcaty/garss`，不包含历史提交、生成的 README、旧快照、邮件配置、密钥或 SDK 缓存。字体许可证随文件保留。上游根目录未发现统一许可证；迁入并不新增或改变原有文件的授权。
+
+## 来源发现与生命周期
+
+`discovery-sources.json` 配置外部 OPML 目录，目前接入 Plenary 的编程目录与 awesome-rss-feeds-list 的中文生活文化目录。CI 每 7 天发现一批，单次最多验证 20 个新地址、4 路并发；通过后进入「待确认」，需要在网页加入草稿并提交到 main 才会开启采集。候选最多 100 个，失败验证记录最多 500 条，失败地址 30 天后可重新验证。外部目录失败会保留原候选并在 24 小时后重试。
+
+`api/v1/source-state.json` 保存连续失败次数、首次失败、最近成功和复查时间。连续失败至少 3 次且持续 24 小时后归档，停止普通采集，每 7 天复查；成功后自动恢复。大面积失败（80% 及以上）不累计归档次数，全部活跃源失败则停止发布并保留旧数据。手动停用的源不参与复查。网页「请求复查」生成配置中的 recheck_requested_at，提交生效后立即复查；修改 RSS 地址同样重置归档状态。
+
+归档记录保存在 `api/v1/source-archive.json`，外部发现保存在 `api/v1/source-discovery.json`；两者随 rss-data 滚动保存，不新增历史分支。sources.json 始终保留人工配置，归档仅改变有效采集/阅读目录。归档不是永久删除，网页仍可编辑、复查或删除配置。
+
+来源管理区使用 Headless UI 的 Tabs、Listbox、Menu、Dialog、Checkbox、Switch，支持键盘和焦点管理。草稿保存基线；远程配置变化时先合并远程更新并检查改动，同一字段保留本机值。复制、下载与打开 GitHub 不代表配置已发布。

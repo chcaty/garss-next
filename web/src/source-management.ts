@@ -13,7 +13,7 @@ export function changes(before: Source[], after: Source[]): {id:string;title:str
   const result = [];
   for (const source of after) {const old = previous.get(source.id);
     if (!old) result.push({id:source.id,title:source.title,kind:'新增'});
-    else if (['title','feed_url','description','category','enabled'].some(key => old[key as keyof Source] !== source[key as keyof Source])) result.push({id:source.id,title:source.title,kind:'修改'});
+    else if (['title','feed_url','description','category','enabled','recheck_requested_at'].some(key => old[key as keyof Source] !== source[key as keyof Source])) result.push({id:source.id,title:source.title,kind:'修改'});
   }
   for (const source of before) if (!current.has(source.id)) result.push({id:source.id,title:source.title,kind:'删除'});
   return result;

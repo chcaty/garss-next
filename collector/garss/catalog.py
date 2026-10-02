@@ -32,6 +32,9 @@ def load_sources(path: Path) -> dict:
         if not item['title'].strip() or not item['category'].strip():
             raise ValueError('Source title and category are required')
         safe_http_url(item['feed_url'])
+        for key in ('recheck_requested_at', 'discovered_from'):
+            if key in item and not isinstance(item[key], str):
+                raise ValueError(f'{key} must be a string')
         if not isinstance(item.get('enabled', True), bool):
             raise ValueError('enabled must be boolean')
     return config
