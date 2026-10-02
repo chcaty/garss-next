@@ -1,0 +1,14 @@
+{
+  "name": "garss-next-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "node tools/build_web.mjs",
+    "test": "node --test tests-web/*.test.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "typescript": "^5.9.3"
+  }
+}

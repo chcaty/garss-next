@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="嘎!RSS，为打破信息茧房而生。阅读来自不同订阅源的最新文章。">
+  <meta name="theme-color" content="#f7f5ef">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'">
+  <title>阅读信息流 · 嘎!RSS</title>
+  <link rel="icon" type="image/png" href="./_media/review-icon-192.png">
+  <link rel="stylesheet" href="./assets/shared/base.css">
+  <link rel="stylesheet" href="./assets/reader.css">
+  <script type="module" src="./assets/reader/app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#articles">跳到文章列表</a>
+  <header class="site-header">
+    <a class="brand" href="./"><img class="brand-mark" src="./_media/review-icon-192.png" alt="" width="40" height="40"><span>嘎!RSS</span><span class="brand-note">为打破信息茧房而生</span></a>
+    <nav class="header-links" aria-label="主导航"><a href="./" aria-current="page">阅读</a><a href="./sources.html">来源管理</a><a href="https://github.com/chcaty/garss-next" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
+  </header>
+  <main class="reader">
+    <section class="reading-heading" aria-labelledby="page-title">
+      <div><h1 id="page-title">世界很大，<br>多读一点。</h1><p>从熟悉的关注之外，发现新的声音。</p></div>
+      <div class="edition"><strong id="edition-date">正在读取信息流</strong><span id="snapshot-info">连接静态目录…</span><a href="./sources.html">了解订阅源</a></div>
+    </section>
+    <div class="reading-layout">
+      <aside class="source-index" aria-label="订阅来源"><h2>阅读来源 <span id="source-count"></span></h2><label class="visually-hidden" for="source-search">搜索订阅来源</label><input id="source-search" type="search" placeholder="查找来源" autocomplete="off"><div id="source-list"></div><p class="index-note">不同的视角，<br>同一个世界。</p></aside>
+      <section class="reading-column" aria-labelledby="stream-title">
+        <div class="stream-toolbar"><div><h2 id="stream-title">全部文章</h2><span id="result-count" aria-live="polite">正在加载…</span></div><label class="article-search"><span class="visually-hidden">搜索文章</span><input id="article-search" type="search" placeholder="搜索标题或来源" autocomplete="off"></label></div>
+        <div class="stream-options"><label for="article-sort">排序 <select id="article-sort"><option value="newest">最新发布</option><option value="oldest">最早发布</option></select></label><button id="clear-filters" class="text-button" type="button" hidden>清除筛选</button><span>点击标题，阅读原文</span></div>
+        <div id="articles" class="article-list" aria-busy="true"></div>
+        <div id="reader-message" class="reader-message" role="status"><strong>正在整理文章…</strong><p>请稍候，正在读取最新目录。</p></div>
+        <button id="retry-load" class="button" type="button" hidden>重新加载</button>
+        <nav class="reader-pagination" aria-label="文章分页"><button id="previous-page" class="button" type="button" disabled>上一页</button><span id="page-indicator">第 1 / 1 页</span><button id="next-page" class="button" type="button" disabled>下一页</button></nav>
+      </section>
+    </div>
+  </main>
+  <footer><span>嘎!RSS · 让信息流保持开阔</span><span>由 RSS 与 GitHub Actions 驱动 <a href="./api/index.json">开放 JSON</a></span></footer>
+  <noscript><p>请启用 JavaScript，也可查看 <a href="./api/v1/articles.json">文章 JSON</a>。</p></noscript>
+</body>
+</html>

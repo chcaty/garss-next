@@ -1,0 +1,51 @@
+name: Deploy Pages
+on:
+  workflow_call:
+    inputs:
+      data_revision:
+        type: string
+        default: rss-data
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['web/**', 'package*.json', 'tsconfig.json', 'tools/build_site.py', 'tools/build_web.mjs', '.github/workflows/deploy.yml']
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.data_revision || 'rss-data' }}
+          path: data-checkout
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements.txt
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run check && npm test && npm run build
+      - run: python tools/build_site.py --data data-checkout --output build/site
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/site
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/deploy-pages@v5
+        id: deployment

@@ -1,0 +1,70 @@
+name: Collect RSS and deploy
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 22,5,9,14 * * *'
+  push:
+    branches: [main]
+    paths: ['sources.json', 'collector/**', 'tools/collect.py', '.github/workflows/collect.yml']
+concurrency:
+  group: rss-production
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  collect:
+    runs-on: ubuntu-24.04
+    outputs:
+      data_revision: ${{ steps.publish.outputs.revision }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python tools/validate_sources.py
+      - name: Test collector
+        run: PYTHONPATH=collector python -m unittest discover -s tests -q
+      - name: Read previous data branch
+        id: previous
+        shell: bash
+        run: |
+          previous=$(git ls-remote --heads origin refs/heads/rss-data | cut -f1)
+          echo "revision=$previous" >> "$GITHUB_OUTPUT"
+          if [ -n "$previous" ]; then
+            git fetch --depth=1 origin "$previous"
+            mkdir data-checkout
+            git archive FETCH_HEAD | tar -x -C data-checkout
+          fi
+      - uses: actions/cache@v5
+        with:
+          path: .cache/feed-responses
+          key: rss-http-${{ runner.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: rss-http-${{ runner.os }}-
+      - run: python tools/collect.py --previous data-checkout --output data-next --code-revision "${{ github.sha }}" --source-revision "${{ github.sha }}"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: rss-snapshot-${{ github.run_id }}
+          path: data-next/api
+          retention-days: 14
+      - name: Publish rolling data branch
+        id: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          git config --global credential.helper '!f() { echo username=x-access-token; echo "password=$GH_TOKEN"; }; f'
+          python tools/publish_data.py --data data-next --remote "https://github.com/${{ github.repository }}.git" --expected "${{ steps.previous.outputs.revision }}"
+          echo "revision=$(git -C data-next rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  deploy:
+    needs: collect
+    uses: ./.github/workflows/deploy.yml
+    with:
+      data_revision: ${{ needs.collect.outputs.data_revision }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

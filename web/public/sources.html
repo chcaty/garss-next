@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'">
+<title>来源管理 · GARSS Next</title><link rel="stylesheet" href="./assets/shared/base.css"><link rel="stylesheet" href="./assets/sources.css">
+<script type="module" src="./assets/sources/app.mjs"></script></head>
+<body><header class="site-header"><a class="brand" href="./">GARSS Next</a><nav class="header-links"><a href="./">阅读</a><a href="./sources.html" aria-current="page">来源管理</a></nav></header>
+<main class="manager"><h1>来源管理</h1><p>修改先保存在本机草稿。通过 GitHub 提交配置，校验并合并后，CI 才会按新配置采集。</p>
+<p id="status" role="status" aria-live="polite">正在读取来源配置…</p>
+<div class="toolbar"><label>搜索<input id="search" type="search" placeholder="名称、简介或分类"></label>
+<label>状态<select id="filter"><option value="all">全部</option><option value="enabled">已启用</option><option value="disabled">已停用</option></select></label>
+<button id="enable">启用筛选结果</button><button id="disable">停用筛选结果</button></div>
+<div id="list"></div><h2>添加来源</h2><form id="add"><label>名称<input name="title" required></label><label>RSS 地址<input name="feed_url" type="url" required></label><label>分类<input name="category" required></label><label>简介<input name="description"></label><button type="submit">加入草稿</button></form>
+<h2>提交与导入导出</h2><div class="toolbar"><button id="copy">复制配置</button><button id="download">下载 JSON</button><button id="submit">打开 GitHub 提交</button><button id="export-opml">导出 OPML</button><label>导入 OPML<input id="import-opml" type="file" accept=".opml,.xml"></label><button id="reset">丢弃本机草稿</button><button id="retry">重新加载</button></div>
+<p>打开 GitHub 后，将复制的配置粘贴到编辑器，选择新分支并创建 PR。新增地址需要 CI 的实时 RSS 校验；草稿不代表已经发布。</p>
+</main></body></html>

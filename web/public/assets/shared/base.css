@@ -1,0 +1,46 @@
+/* Noto Serif SC, SIL OFL 1.1; subset contains the two page headings. */
+@font-face { font-family: "GARSS Editorial"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/editorial-heading.ttf") format("truetype"); }
+:root {
+  --paper: #f7f5ef; --panel: #fdfcf8; --ink: #252820; --muted: #66695e;
+  --line: #deddd3; --green: #52613b; --green-soft: #ecf0e3;
+  --red: #9b4139; --red-soft: #f6e9e5; --amber: #805d24;
+  --heading: "GARSS Editorial", "Songti SC", SimSun, serif;
+  --reading: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", SimSun, Georgia, serif;
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  color: var(--ink); background: var(--paper); color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; min-width: 320px; }
+button, input, select { font: inherit; }
+button, a, summary { touch-action: manipulation; }
+a { color: inherit; text-underline-offset: .25em; }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .45; }
+input { caret-color: var(--green); }
+::selection { background: #dae1c7; color: var(--ink); }
+:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+html { scrollbar-color: #babdac var(--paper); scroll-padding-top: 5rem; }
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 80px; padding: 1rem max(1.5rem, calc((100% - 1280px) / 2)); border-bottom: 1px solid var(--line); background: var(--paper); }
+.brand { display: inline-flex; align-items: center; gap: .75rem; text-decoration: none; font-weight: 700; font-size: 1.1rem; }
+.brand-mark { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
+.brand-note { font-size: .7rem; color: var(--muted); font-weight: 400; margin-left: .5rem; }
+.header-links { display: flex; align-items: center; gap: 1.5rem; }
+.header-links a { font-size: .82rem; text-decoration: none; color: var(--muted); min-height: 44px; display: flex; align-items: center; }
+.header-links a:hover, .header-links a[aria-current="page"] { color: var(--ink); text-decoration: underline; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 44px; border: 1px solid var(--line); border-radius: 4px; padding: .55rem .85rem; background: var(--panel); color: var(--ink); text-decoration: none; font-size: .8rem; }
+.button:hover:not(:disabled) { background: var(--green-soft); }
+.button-primary { background: var(--green); color: white; border-color: var(--green); }
+.button-primary:hover:not(:disabled) { background: #414e2f; }
+.skip-link { position: fixed; top: -5rem; left: 1rem; z-index: 50; background: var(--ink); color: white; padding: 1rem; }
+.skip-link:focus { top: 1rem; }
+.visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
+footer { max-width: 1280px; margin: 0 auto; padding: 1.5rem 0; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .75rem; }
+@media (max-width: 720px) {
+  .site-header { min-height: 68px; padding: .75rem 1rem; flex-wrap: wrap; gap: .4rem; }
+  .brand-note { display: none; }
+  .header-links { gap: 1rem; }
+  .header-links a { font-size: .75rem; }
+  footer { margin: 0 1rem; flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
