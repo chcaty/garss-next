@@ -39,3 +39,21 @@ class SnapshotTests(unittest.TestCase):
         from garss.catalog import feed_sources
         self.assertEqual(feed_sources({'sources':[]}), [])
         self.assertEqual(feed_sources({'sources':[{'id':'a','title':'A','description':'','feed_url':'https://example.com/rss','enabled':False}]}), [])
+
+    def test_merged_source_keeps_old_reader_identity(self):
+        import json
+        from hashlib import sha256
+        source = FeedSource('current', 'Current', '', 'https://example.com/feed')
+        now = datetime(2026, 10, 1, tzinfo=timezone.utc)
+        article = Article('current', 'Article', 'https://example.com/post', now)
+        config = {'sources': [{'id': 'current', 'title': 'Current', 'feed_url': source.feed_url}],
+                  'source_aliases': {'removed': 'current'}}
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            create_snapshot(root, [FeedResult(source, [article])], config, now)
+            validate_snapshot(root)
+            document = json.loads((root / 'api/v1/articles.json').read_text())
+            self.assertEqual(len(document['articles']), 1)
+            self.assertIn(sha256(b'removed\0https://example.com/post').hexdigest()[:20], document['articles'][0]['legacy_ids'])
+            feeds = json.loads((root / 'api/v1/feeds.json').read_text())
+            self.assertEqual(feeds['source_aliases'], {'removed': 'current'})

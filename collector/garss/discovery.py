@@ -4,20 +4,15 @@ from collections import defaultdict
 import json
 from datetime import timedelta
 from hashlib import sha256
-from urllib.parse import urlsplit, urlunsplit
 import xml.etree.ElementTree as ET
 import requests
-from .catalog import safe_http_url
+from .catalog import safe_http_url, feed_key
 from .fetch import fetch_feed
 from .models import FeedSource
 from .source_lifecycle import date, stamp
 
 MAX_CANDIDATES = 100
 MAX_CHECKS = 20
-
-def feed_key(url):
-    parsed = urlsplit(safe_http_url(url))
-    return urlunsplit((parsed.scheme.lower(), parsed.netloc.lower(), parsed.path, parsed.query, ''))
 
 def parse_opml(payload, directory):
     if len(payload) > 2_000_000 or b'<!DOCTYPE' in payload.upper() or b'<!ENTITY' in payload.upper():

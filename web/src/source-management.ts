@@ -1,7 +1,10 @@
 import type {Source} from './catalog.ts';
 export function duplicateUrls(sources: Source[]): Set<string> {
-  const seen = new Set<string>(), duplicates = new Set<string>();
-  for (const source of sources) {if (seen.has(source.feed_url)) duplicates.add(source.feed_url); seen.add(source.feed_url);}
+  const seen = new Map<string,string>(), duplicates = new Set<string>();
+  for (const source of sources) {
+    let key=source.feed_url;try {const url=new URL(key);url.hash='';key=url.href;}catch{}
+    const prior=seen.get(key);if(prior!==undefined){duplicates.add(prior);duplicates.add(source.feed_url);}else seen.set(key,source.feed_url);
+  }
   return duplicates;
 }
 export function matchesSource(source: Source, query: string, category: string): boolean {

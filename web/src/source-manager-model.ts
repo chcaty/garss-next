@@ -34,11 +34,12 @@ export function exportOpml(sources: Source[]): string {
 export function importOpml(content: string, existing: Source[]): Source[] {
   const xml = new DOMParser().parseFromString(content,'text/xml');
   if (xml.querySelector('parsererror') || /<!DOCTYPE|<!ENTITY/i.test(content)) throw Error('OPML 格式不正确或包含不支持的声明');
-  const urls = new Set(existing.map(source => source.feed_url)); const result:Source[]=[];
+  const key=(value:string)=>{try{const url=new URL(value);url.hash='';return url.href;}catch{return value;}};
+  const urls = new Set(existing.map(source => key(source.feed_url)));  const result:Source[]=[];
   for (const node of xml.querySelectorAll('outline[xmlUrl]')) {
     const url=node.getAttribute('xmlUrl')!.trim();
-    try {const parsed=new URL(url); if (!['http:','https:'].includes(parsed.protocol) || parsed.username || parsed.password || urls.has(url)) continue;} catch {continue;}
-    urls.add(url); result.push({id:`user-${crypto.randomUUID()}`,title:node.getAttribute('title')?.trim() || node.getAttribute('text')?.trim() || url,feed_url:url,category:node.getAttribute('category')?.trim() || '导入来源',description:node.getAttribute('description') ?? '',enabled:true});
+    try {const parsed=new URL(url); if (!['http:','https:'].includes(parsed.protocol) || parsed.username || parsed.password || urls.has(key(url))) continue;} catch {continue;}
+    urls.add(key(url)); result.push({id:`user-${crypto.randomUUID()}`,title:node.getAttribute('title')?.trim() || node.getAttribute('text')?.trim() || url,feed_url:url,category:node.getAttribute('category')?.trim() || '导入来源',description:node.getAttribute('description') ?? '',enabled:true});
     if (result.length >= 500) break;
   }
   return result;

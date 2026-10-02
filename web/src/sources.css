@@ -1,13 +1,15 @@
 @import "tailwindcss" source(none);
 @source "./sources.tsx";
+@source "./sync.tsx";
+@source "./shell.tsx";
 @theme {
-  --color-paper: #f7f5ef;
-  --color-panel: #fdfcf8;
-  --color-ink: #252820;
-  --color-muted: #66695e;
-  --color-line: #deddd3;
-  --color-brand: #52613b;
-  --color-soft: #ecf0e3;
+  --color-paper: #f5f7fb;
+  --color-panel: #ffffff;
+  --color-ink: #17243b;
+  --color-muted: #57657a;
+  --color-line: #dbe2ec;
+  --color-brand: #2455c6;
+  --color-soft: #eaf0ff;
 }
 @layer base {
   body { @apply m-0 min-w-80 bg-paper text-ink antialiased; font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; }
@@ -16,12 +18,22 @@
   :focus-visible { @apply outline-2 outline-offset-4 outline-brand; }
   input, textarea { caret-color: var(--color-brand); }
   ::selection { @apply bg-soft text-ink; }
-  html { scrollbar-color: #babdac #f7f5ef; }
+  html { scrollbar-color: #a0aec2 #f5f7fb; }
 }
 @layer components {
   .btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-line bg-panel px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-soft disabled:hover:bg-panel; }
-  .btn-primary { @apply border-brand bg-brand text-white hover:bg-[#414e2f]; }
+  .btn-primary { @apply border-brand bg-brand text-white hover:bg-[#1c439c]; }
   .field { @apply min-h-11 w-full rounded-md border border-line bg-panel px-3 py-2 text-base text-ink placeholder:text-muted md:text-sm; }
   .pill { @apply inline-flex items-center rounded-sm bg-soft px-2 py-1 text-xs font-medium text-brand; }
 }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important;animation:none!important; } }
+
+@layer components { .app-header { @apply border-b border-line bg-panel; } .app-nav { @apply mx-auto flex min-h-18 max-w-7xl flex-wrap items-center justify-between gap-x-6 px-4 sm:px-8; } .app-links { @apply flex gap-5 text-sm; } .app-links a { @apply flex min-h-11 items-center text-muted; } .app-links a[aria-current="page"] { @apply font-semibold text-brand underline underline-offset-8; } .page-intro { @apply mb-8 flex flex-wrap items-end justify-between gap-5; } .page-title { @apply text-3xl font-semibold tracking-tight; } }
+
+:root[data-theme="dark"] { color-scheme:dark; --paper:#101826; --panel:#172235; --ink:#e5edf9; --muted:#a8b6cb; --line:#34445b; --green:#95b5ff; --green-soft:#243858; --color-paper:#101826; --color-panel:#172235; --color-ink:#e5edf9; --color-muted:#a8b6cb; --color-line:#34445b; --color-brand:#95b5ff; --color-soft:#243858; }
+.theme-control select { background:var(--panel); color:var(--ink); min-height:44px; border:1px solid var(--line); border-radius:5px; padding:.4rem; font-size:.75rem; }
+:root[data-theme="dark"] .button-primary, :root[data-theme="dark"] .btn-primary { background:#345fc1; color:#fff; border-color:#345fc1; }
+:root[data-theme="dark"] .text-red-800 { color:#ffa6a6; }
+:root[data-theme="dark"] .bg-amber-50 { background:#382c18; }
+:root[data-theme="dark"] .text-amber-900 { color:#f2ce91; }
+@media(max-width:720px) { .app-nav { padding-top:.5rem; padding-bottom:.5rem; gap:.25rem; } .app-links { width:100%; justify-content:space-between; gap:.75rem; } .header-links { width:100%; justify-content:space-between; gap:.5rem; } }

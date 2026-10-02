@@ -778,14 +778,6 @@
       "enabled": true
     },
     {
-      "id": "B090",
-      "title": "小明明 domicile",
-      "description": "前豆瓣工程师，现在家带娃，远程工作机会联系我哟",
-      "feed_url": "http://snlcw.com/feed",
-      "category": "活着的个人独立博客",
-      "enabled": true
-    },
-    {
       "id": "B091",
       "title": "LFhacks.com",
       "description": "读万卷书，行万里路",
@@ -1458,14 +1450,6 @@
       "enabled": true
     },
     {
-      "id": "C004",
-      "title": "小众软件",
-      "description": "小众软件RSS",
-      "feed_url": "https://www.appinn.com/feed/",
-      "category": "内容平台",
-      "enabled": true
-    },
-    {
       "id": "C005",
       "title": "199IT",
       "description": "互联网数据资讯网",
@@ -1866,14 +1850,6 @@
       "enabled": true
     },
     {
-      "id": "TG007",
-      "title": "Google Drive",
-      "description": "资源共享-软件-电影-纪录片-科学上网",
-      "feed_url": "https://rsshub.v2fy.com/telegram/channel/YunPanPan",
-      "category": "Telegram优质频道RSS订阅",
-      "enabled": true
-    },
-    {
       "id": "TG008",
       "title": "扫地僧笔记",
       "description": "扫地僧树洞",
@@ -1939,5 +1915,10 @@
     "name": "garss-next",
     "branch": "main",
     "path": "sources.json"
+  },
+  "source_aliases": {
+    "B090": "B089",
+    "C004": "S005",
+    "TG007": "TG006"
   }
 }

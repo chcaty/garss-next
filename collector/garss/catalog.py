@@ -2,7 +2,7 @@
 import json
 import re
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
 
 from .models import FeedSource
 
@@ -17,11 +17,17 @@ def safe_http_url(value: str) -> str:
     return value
 
 
+def feed_key(url):
+    parsed = urlsplit(safe_http_url(url))
+    return urlunsplit((parsed.scheme.lower(), parsed.netloc.lower(), parsed.path or '/', parsed.query, ''))
+
+
 def load_sources(path: Path) -> dict:
     config = json.loads(path.read_text(encoding='utf-8'))
     if config.get('schema_version') != '1.0' or not isinstance(config.get('sources'), list):
         raise ValueError('Unsupported source configuration')
     ids = set()
+    urls = set()
     for item in config['sources']:
         for key in ('id', 'title', 'description', 'category', 'feed_url'):
             if not isinstance(item.get(key), str):
@@ -31,7 +37,10 @@ def load_sources(path: Path) -> dict:
         ids.add(item['id'])
         if not item['title'].strip() or not item['category'].strip():
             raise ValueError('Source title and category are required')
-        safe_http_url(item['feed_url'])
+        key = feed_key(item['feed_url'])
+        if key in urls:
+            raise ValueError(f'Duplicate RSS URL: {item["feed_url"]}')
+        urls.add(key)
         for key in ('recheck_requested_at', 'discovered_from'):
             if key in item and not isinstance(item[key], str):
                 raise ValueError(f'{key} must be a string')

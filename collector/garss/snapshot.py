@@ -52,6 +52,13 @@ def expand_history(articles):
 def create_snapshot(root: Path, results, config, generated_at, *, code_revision='local', source_revision='local'):
     generated = generated_at.isoformat().replace('+00:00', 'Z')
     articles = consolidate(results)
+    aliases = config.get('source_aliases', {})
+    for article in articles:
+        for old_id, current_id in aliases.items():
+            if current_id in article['source_ids']:
+                legacy = sha256(f"{old_id}\0{article['url']}".encode()).hexdigest()[:20]
+                if legacy not in article['legacy_ids']:
+                    article['legacy_ids'].append(legacy)
     counts = {}
     for article in articles:
         for source in article['source_ids']:
@@ -63,7 +70,7 @@ def create_snapshot(root: Path, results, config, generated_at, *, code_revision=
         feeds.append({**item, 'status': 'disabled' if not item.get('enabled', True) else result.status if result else 'error',
                       'article_count': counts.get(item['id'], 0),
                       'error': result.error if result else None})
-    feed_doc = {'api_version': '1.0', 'generated_at': generated, 'feeds': feeds}
+    feed_doc = {'api_version': '1.0', 'generated_at': generated, 'feeds': feeds, 'source_aliases': aliases}
     article_doc = {'api_version': '1.0', 'generated_at': generated, 'articles': articles}
     identity = sha256(json.dumps([feed_doc, article_doc], sort_keys=True).encode()).hexdigest()[:20]
     folder = root / 'api/v1/snapshots' / identity

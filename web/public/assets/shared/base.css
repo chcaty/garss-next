@@ -1,8 +1,8 @@
 /* Noto Serif SC, SIL OFL 1.1; subset contains the two page headings. */
 @font-face { font-family: "GARSS Editorial"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/editorial-heading.ttf") format("truetype"); }
 :root {
-  --paper: #f7f5ef; --panel: #fdfcf8; --ink: #252820; --muted: #66695e;
-  --line: #deddd3; --green: #52613b; --green-soft: #ecf0e3;
+  --paper: #f5f7fb; --panel: #ffffff; --ink: #17243b; --muted: #57657a;
+  --line: #dbe2ec; --green: #2455c6; --green-soft: #eaf0ff;
   --red: #9b4139; --red-soft: #f6e9e5; --amber: #805d24;
   --heading: "GARSS Editorial", "Songti SC", SimSun, serif;
   --reading: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", SimSun, Georgia, serif;
@@ -18,9 +18,9 @@ a { color: inherit; text-underline-offset: .25em; }
 button { cursor: pointer; }
 button:disabled { cursor: default; opacity: .45; }
 input { caret-color: var(--green); }
-::selection { background: #dae1c7; color: var(--ink); }
+::selection { background: #eaf0ff; color: var(--ink); }
 :focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
-html { scrollbar-color: #babdac var(--paper); scroll-padding-top: 5rem; }
+html { scrollbar-color: #a0aec2 var(--paper); scroll-padding-top: 5rem; }
 .site-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 80px; padding: 1rem max(1.5rem, calc((100% - 1280px) / 2)); border-bottom: 1px solid var(--line); background: var(--paper); }
 .brand { display: inline-flex; align-items: center; gap: .75rem; text-decoration: none; font-weight: 700; font-size: 1.1rem; }
 .brand-mark { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
@@ -31,7 +31,7 @@ html { scrollbar-color: #babdac var(--paper); scroll-padding-top: 5rem; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 44px; border: 1px solid var(--line); border-radius: 4px; padding: .55rem .85rem; background: var(--panel); color: var(--ink); text-decoration: none; font-size: .8rem; }
 .button:hover:not(:disabled) { background: var(--green-soft); }
 .button-primary { background: var(--green); color: white; border-color: var(--green); }
-.button-primary:hover:not(:disabled) { background: #414e2f; }
+.button-primary:hover:not(:disabled) { background: #1c439c; }
 .skip-link { position: fixed; top: -5rem; left: 1rem; z-index: 50; background: var(--ink); color: white; padding: 1rem; }
 .skip-link:focus { top: 1rem; }
 .visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
@@ -44,3 +44,13 @@ footer { max-width: 1280px; margin: 0 auto; padding: 1.5rem 0; border-top: 1px s
   footer { margin: 0 1rem; flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+.site-header { background:var(--panel); min-height:72px; } .brand { font-size:1.2rem; letter-spacing:-.02em; } .header-links a[aria-current="page"] { color:var(--green); font-weight:600; }
+
+:root[data-theme="dark"] { color-scheme:dark; --paper:#101826; --panel:#172235; --ink:#e5edf9; --muted:#a8b6cb; --line:#34445b; --green:#95b5ff; --green-soft:#243858; --color-paper:#101826; --color-panel:#172235; --color-ink:#e5edf9; --color-muted:#a8b6cb; --color-line:#34445b; --color-brand:#95b5ff; --color-soft:#243858; }
+.theme-control select { background:var(--panel); color:var(--ink); min-height:44px; border:1px solid var(--line); border-radius:5px; padding:.4rem; font-size:.75rem; }
+:root[data-theme="dark"] .button-primary, :root[data-theme="dark"] .btn-primary { background:#345fc1; color:#fff; border-color:#345fc1; }
+:root[data-theme="dark"] .text-red-800 { color:#ffa6a6; }
+:root[data-theme="dark"] .bg-amber-50 { background:#382c18; }
+:root[data-theme="dark"] .text-amber-900 { color:#f2ce91; }
+@media(max-width:720px) { .app-nav { padding-top:.5rem; padding-bottom:.5rem; gap:.25rem; } .app-links { width:100%; justify-content:space-between; gap:.75rem; } .header-links { width:100%; justify-content:space-between; gap:.5rem; } }

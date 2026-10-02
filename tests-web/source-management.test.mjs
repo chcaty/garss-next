@@ -15,3 +15,8 @@ test('duplicate detection and URL/category search find management problems', () 
   assert.equal(matchesSource(source,' EXAMPLE.COM ','技术'),true);
   assert.equal(matchesSource(source,'','新闻'),false);
 });
+
+test('duplicate detection ignores fragments and domain case but keeps distinct feed paths', () => {
+ const other={...source,id:'b',feed_url:'https://EXAMPLE.com/feed#comments'};
+ assert.deepEqual([...duplicateUrls([source,other,{...source,id:'c',feed_url:'https://example.com/news/feed'}])],[source.feed_url,other.feed_url]);
+});

@@ -1,9 +1,11 @@
 """Collect public RSS into a fresh output tree; never modify source files."""
 import argparse
 import json
+import os
 import shutil
 import sys
 from datetime import datetime, timezone
+from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +17,7 @@ from garss.history import merge_recent_history
 from garss.models import FeedResult
 from garss.snapshot import create_snapshot, expand_history, validate_snapshot, write_json
 from garss.source_lifecycle import prepare, update, effective_config, stamp
+from garss.sync_log import publication_log
 from garss.discovery import discover
 from garss.timezones import app_date
 
@@ -34,7 +37,10 @@ def main():
     old = []
     if args.previous and (args.previous / 'api/v1/articles.json').exists():
         old = expand_history(json.loads((args.previous / 'api/v1/articles.json').read_text(encoding='utf-8'))['articles'])
+    aliases = config.get('source_aliases', {})
+    old = [replace(article, source_id=aliases.get(article.source_id, article.source_id)) for article in old]
     now = datetime.now(timezone.utc)
+    started_at = now
     def previous_document(name, default):
         path = args.previous / 'api/v1' / name if args.previous else None
         return json.loads(path.read_text(encoding='utf-8')) if path and path.exists() else default
@@ -50,6 +56,7 @@ def main():
         active_results = [result for result in results if states[result.source.id]['status'] != 'archived']
         if active_results and all(result.error for result in active_results):
             raise RuntimeError('All enabled sources failed; previous data is preserved')
+    run_results = list(results)
     if not args.offline:
         update(states, results, now)
     effective = effective_config(config, states)
@@ -68,6 +75,13 @@ def main():
         settings = json.loads((ROOT / 'discovery-sources.json').read_text(encoding='utf-8'))
         discovery = discover(config, settings['directories'], discovery, now, seed_sources=settings.get('seed_sources', []))
     write_json(args.output / 'api/v1/source-discovery.json', discovery)
+    # A bounded publication ledger; failed workflows remain discoverable in Actions.
+    if not args.offline:
+        finished = datetime.now(timezone.utc)
+        article_count = len(json.loads((args.output / 'api/v1/articles.json').read_text(encoding='utf-8'))['articles'])
+        write_json(args.output / 'api/v1/sync.json', publication_log(previous_document('sync.json', {}),
+                   run_results, states, started_at, finished, article_count, args.code_revision,
+                   os.environ.get('GITHUB_RUN_ID', '')))
     # Keep at most the current and immediately previous immutable snapshot.
     if args.previous and (args.previous / 'api/v1/meta.json').exists():
         previous = validate_snapshot(args.previous)['snapshot_id']

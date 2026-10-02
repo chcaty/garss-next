@@ -39,7 +39,7 @@ export async function readJson<T>(url: URL | string): Promise<T> {
   if (!response.ok) throw Error(`读取失败 (${response.status})`);
   return response.json() as Promise<T>;
 }
-export async function loadCatalog(base: string): Promise<{sources: Source[]; articles: Article[]; generatedAt: string}> {
+export async function loadCatalog(base: string): Promise<{sources: Source[]; articles: Article[]; generatedAt: string; sourceAliases: Record<string,string>}> {
   const metaUrl = new URL('./api/v1/meta.json', base);
   const meta = await readJson<{ snapshot_id: string; snapshot_endpoint: string; generated_at: string }>(metaUrl);
   const manifestUrl = new URL(meta.snapshot_endpoint, metaUrl);
@@ -55,7 +55,7 @@ export async function loadCatalog(base: string): Promise<{sources: Source[]; art
     if (bytes.byteLength !== manifest.files[name]?.bytes || hash !== manifest.files[name]?.sha256) throw Error('数据校验失败');
     return JSON.parse(new TextDecoder().decode(bytes)) as T;
   }
-  const [feeds, entries] = await Promise.all([verified<{feeds: Source[]; generated_at: string}>('feeds.json'), verified<{articles: Article[]; generated_at: string}>('articles.json')]);
+  const [feeds, entries] = await Promise.all([verified<{feeds: Source[]; generated_at: string; source_aliases?: Record<string,string>}>('feeds.json'), verified<{articles: Article[]; generated_at: string}>('articles.json')]);
   if (feeds.generated_at !== meta.generated_at || entries.generated_at !== meta.generated_at || !Array.isArray(feeds.feeds) || !Array.isArray(entries.articles)) throw Error('数据结构不正确');
-  return {sources: feeds.feeds.filter(source => source.enabled !== false), articles: entries.articles.filter(article => webUrl(article.url)), generatedAt: meta.generated_at};
+  return {sources: feeds.feeds.filter(source => source.enabled !== false), articles: entries.articles.filter(article => webUrl(article.url)), generatedAt: meta.generated_at, sourceAliases: feeds.source_aliases ?? {}};
 }
