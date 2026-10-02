@@ -4,6 +4,8 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 import sys
+import json
+from hashlib import sha256
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from publish_data import publish
@@ -24,6 +26,11 @@ class DataBranchTests(unittest.TestCase):
                 create_snapshot(folder, [], config, datetime.now(timezone.utc))
             publish(first, str(remote), '')
             old = git('rev-parse', 'refs/heads/rss-data', cwd=remote)
+            meta = json.loads((first / 'api/v1/meta.json').read_text(encoding='utf-8'))
+            path = f"api/v1/snapshots/{meta['snapshot_id']}/articles.json"
+            stored = subprocess.check_output(['git', 'show', f'rss-data:{path}'], cwd=remote)
+            manifest = json.loads((first / 'api/v1/snapshots' / meta['snapshot_id'] / 'manifest.json').read_text(encoding='utf-8'))
+            self.assertEqual(manifest['files']['articles.json'], {'bytes':len(stored), 'sha256':sha256(stored).hexdigest()})
             publish(second, str(remote), old)
             self.assertEqual(git('rev-list', '--count', 'rss-data', cwd=remote), '1')
             with self.assertRaises(subprocess.CalledProcessError):

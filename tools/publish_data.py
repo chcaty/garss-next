@@ -18,9 +18,11 @@ def publish(folder: Path, remote: str, expected: str):
     if (folder / '.git').exists():
         raise ValueError('Publisher requires a fresh non-repository output folder')
     run('init', '--initial-branch=rss-data', cwd=folder)
+    run('config', 'core.autocrlf', 'false', cwd=folder)
+    (folder / '.gitattributes').write_text('api/** -text\n', encoding='utf-8', newline='\n')
     run('config', 'user.name', 'garss-data-bot', cwd=folder)
     run('config', 'user.email', 'garss-data-bot@users.noreply.github.com', cwd=folder)
-    run('add', 'api', cwd=folder)
+    run('add', 'api', '.gitattributes', cwd=folder)
     run('commit', '-m', f"Snapshot {meta['snapshot_id']}", cwd=folder)
     run('remote', 'add', 'origin', remote, cwd=folder)
     # Never force main. Empty expected means the data branch must not yet exist.
