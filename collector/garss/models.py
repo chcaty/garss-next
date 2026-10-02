@@ -9,6 +9,7 @@ class FeedSource:
     title: str
     description: str
     feed_url: str
+    allow_undated: bool = False
 
     def as_dict(self):
         return {
@@ -36,6 +37,7 @@ class Article:
     published_at: datetime
     summary: str = ""
     image_url: str = ""
+    date_inferred: bool = False
 
     @property
     def id(self):
@@ -51,6 +53,7 @@ class Article:
             "published_at": self.published_at.isoformat().replace("+00:00", "Z"),
             "summary": self.summary,
             "image_url": self.image_url,
+            "date_inferred": self.date_inferred,
         }
 
 

@@ -95,12 +95,16 @@ def _parse_articles(
     if feed.get("bozo") and not entries:
         raise ValueError(f"invalid feed: {feed.get('bozo_exception')}")
 
+    first_seen = datetime.now(timezone.utc)
     if today is None:
-        today = datetime.now(timezone.utc).date()
+        today = app_date(first_seen)
     articles = []
     seen_urls = set()
     for entry in entries:
         published_at = entry_published_datetime(entry)
+        inferred = published_at is None
+        if inferred and source.allow_undated:
+            published_at = first_seen
         if published_at is None:
             continue
         published_date = app_date(published_at)
@@ -125,6 +129,7 @@ def _parse_articles(
                 published_at=published_at,
                 summary=plain_summary(entry.get("summary") or next((item.get("value", "") for item in entry.get("content", []) if isinstance(item, dict)), "")),
                 image_url=entry_image(entry, url),
+                date_inferred=inferred,
             )
         )
     return retain_articles(articles, today, retention_days, minimum_articles, only_date)

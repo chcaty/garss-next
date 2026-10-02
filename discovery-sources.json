@@ -9,6 +9,122 @@
       "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Programming.opml",
       "page": "https://github.com/plenaryapp/awesome-rss-feeds",
       "category": "编程技术"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-essays.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "阅读随笔"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-finance.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "商业财经"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-podcasts.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "播客访谈"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-product-design.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "产品设计"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/News.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "新闻资讯"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Science.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "科学探索"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Space.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "天文航天"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/History.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "历史人文"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Books.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "图书阅读"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Photography.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "摄影艺术"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Movies.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "影视"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Music.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "音乐"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Food.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "美食"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Sports.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "体育"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Travel.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "旅行"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Business%20%26%20Economy.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "商业财经"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Architecture.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "建筑设计"
+    }
+  ],
+  "seed_sources": [
+    {
+      "id": "hot-weibo",
+      "title": "微博热搜榜",
+      "feed_url": "https://rsshub.chyi.org/weibo/search/hot",
+      "category": "社交热点",
+      "description": "通过 RSSHub 转换微博热搜；无原始发布时间时使用首次发现时间。",
+      "enabled": true,
+      "allow_undated": true,
+      "discovered_from": "https://github.com/DIYgod/RSSHub"
+    },
+    {
+      "id": "hot-wechat",
+      "title": "微信24小时热文榜",
+      "feed_url": "https://rsshub.yfi.moe/tophub/WnBe01o371",
+      "category": "微信热门",
+      "description": "今日热榜聚合的微信24h热文，经 RSSHub 转换；第三方榜单并非微信官方全站榜单。无原始发布时间时使用首次发现时间。",
+      "enabled": true,
+      "allow_undated": true,
+      "discovered_from": "https://tophub.today/n/WnBe01o371"
+    },
+    {
+      "id": "hot-toutiao",
+      "title": "今日头条热点频道",
+      "feed_url": "https://rsshub.yfi.moe/toutiao/channel/news_hot",
+      "category": "头条热点",
+      "description": "RSSHub 的今日头条热点频道，属于频道文章而非实时全站热搜排名。",
+      "enabled": true,
+      "discovered_from": "https://github.com/DIYgod/RSSHub/blob/master/lib/routes/toutiao/channel.ts"
     }
   ]
 }

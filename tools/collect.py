@@ -65,8 +65,8 @@ def main():
         {**source, **states[source['id']]} for source in config['sources'] if states[source['id']]['status'] == 'archived']})
     discovery = previous_document('source-discovery.json', {})
     if not args.offline:
-        directories = json.loads((ROOT / 'discovery-sources.json').read_text(encoding='utf-8'))['directories']
-        discovery = discover(config, directories, discovery, now)
+        settings = json.loads((ROOT / 'discovery-sources.json').read_text(encoding='utf-8'))
+        discovery = discover(config, settings['directories'], discovery, now, seed_sources=settings.get('seed_sources', []))
     write_json(args.output / 'api/v1/source-discovery.json', discovery)
     # Keep at most the current and immediately previous immutable snapshot.
     if args.previous and (args.previous / 'api/v1/meta.json').exists():

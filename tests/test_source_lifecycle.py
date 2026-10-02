@@ -45,3 +45,17 @@ class LifecycleTests(unittest.TestCase):
         doc=discover(self.config,[directory],{},self.now,download=lambda _:payload,check=lambda _:'not RSS')
         self.assertEqual(doc['candidates'],[])
         self.assertEqual(len(doc['rejected']),1)
+
+    def test_each_category_gets_a_slot_and_directory_changes_bypass_cooldown(self):
+        directories=[{'url':'https://directory.test/'+name,'page':'https://directory.test','category':name} for name in ['many','few']]
+        def download(url):
+            name=url.rsplit('/',1)[1]
+            count=30 if name=='many' else 1
+            return ('<opml><body>'+''.join(f'<outline xmlUrl="https://{name}.test/{i}"/>' for i in range(count))+'</body></opml>').encode()
+        checked=[]
+        doc=discover(self.config,directories,{},self.now,download=download,check=lambda item:checked.append(item) or None)
+        self.assertEqual(len(checked),20)
+        self.assertIn('few',{item['category'] for item in checked})
+        calls=[]
+        discover(self.config,directories+[{'url':'https://directory.test/new','page':'https://directory.test','category':'new'}],doc,self.now+timedelta(hours=1),download=lambda url:calls.append(url) or download(url),check=lambda _:None)
+        self.assertEqual(len(calls),3)

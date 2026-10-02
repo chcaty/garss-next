@@ -35,11 +35,13 @@ def load_sources(path: Path) -> dict:
         for key in ('recheck_requested_at', 'discovered_from'):
             if key in item and not isinstance(item[key], str):
                 raise ValueError(f'{key} must be a string')
+        if not isinstance(item.get('allow_undated', False), bool):
+            raise ValueError('allow_undated must be boolean')
         if not isinstance(item.get('enabled', True), bool):
             raise ValueError('enabled must be boolean')
     return config
 
 
 def feed_sources(config: dict) -> list[FeedSource]:
-    return [FeedSource(item['id'], item['title'], item['description'], item['feed_url'])
+    return [FeedSource(item['id'], item['title'], item['description'], item['feed_url'], item.get('allow_undated', False))
             for item in config['sources'] if item.get('enabled', True)]

@@ -26,7 +26,7 @@ function renderArticles() {
   byId('articles').replaceChildren();
   for (const article of filtered.slice((page - 1) * 30, page * 30)) {
     const row = create('article', '', 'article-row'), content = create('div'), meta = create('div', '', 'article-meta');
-    meta.append(create('span', sourceIds(article).map(id => sources.find(item => item.id === id)?.title ?? id).join(' · '), 'article-source'), create('time', date.format(new Date(article.published_at))));
+    meta.append(create('span', sourceIds(article).map(id => sources.find(item => item.id === id)?.title ?? id).join(' · '), 'article-source'), create('time', `${article.date_inferred ? '首次发现 ' : ''}${date.format(new Date(article.published_at))}`));
     const heading = create('h3'), link = create('a', article.title) as HTMLAnchorElement;
     link.href = article.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; heading.append(link);
     content.append(meta, heading); row.append(content); byId('articles').append(row);

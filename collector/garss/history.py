@@ -44,6 +44,7 @@ def load_cached_articles(path: Path, source_ids: set[str]) -> list[Article]:
                     published_at=published_at,
                     summary=str(item.get("summary", ""))[:600],
                     image_url=_cached_image(item.get("image_url")),
+                    date_inferred=bool(item.get("date_inferred", False)),
                 )
             )
         except (KeyError, TypeError, ValueError):
@@ -98,6 +99,8 @@ def merge_recent_history(
             previous = merged.get(key)
             # Keep historical URLs/IDs so existing bookmarks and read records survive.
             candidate = replace(article, url=previous.url,
+                                published_at=previous.published_at if article.date_inferred else article.published_at,
+                                date_inferred=previous.date_inferred if article.date_inferred else False,
                                 summary=article.summary or previous.summary,
                                 image_url=article.image_url or previous.image_url) if previous else article
             merged[key] = article if candidate == article else candidate

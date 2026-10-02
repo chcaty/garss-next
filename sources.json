@@ -1912,6 +1912,26 @@
       "feed_url": "https://access.xtlmrmig.cc/feed",
       "category": "优质",
       "enabled": true
+    },
+    {
+      "id": "hot-weibo",
+      "title": "微博热搜榜",
+      "feed_url": "https://rsshub.chyi.org/weibo/search/hot",
+      "category": "社交热点",
+      "description": "通过 RSSHub 转换微博热搜；无原始发布时间时使用首次发现时间。",
+      "enabled": true,
+      "allow_undated": true,
+      "discovered_from": "https://github.com/DIYgod/RSSHub"
+    },
+    {
+      "id": "hot-wechat",
+      "title": "微信24小时热文榜",
+      "feed_url": "https://rsshub.yfi.moe/tophub/WnBe01o371",
+      "category": "微信热门",
+      "description": "今日热榜聚合的微信24h热文，经 RSSHub 转换；第三方榜单并非微信官方全站榜单。无原始发布时间时使用首次发现时间。",
+      "enabled": true,
+      "allow_undated": true,
+      "discovered_from": "https://tophub.today/n/WnBe01o371"
     }
   ],
   "repository": {

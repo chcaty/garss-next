@@ -42,7 +42,7 @@ def expand_history(articles):
         try:
             article = Article(item['source_id'], item['title'], item['url'],
                               datetime.fromisoformat(item['published_at'].replace('Z', '+00:00')),
-                              item.get('summary', ''), item.get('image_url', ''))
+                              item.get('summary', ''), item.get('image_url', ''), bool(item.get('date_inferred', False)))
             result.extend(replace(article, source_id=source) for source in item.get('source_ids', [article.source_id]))
         except (KeyError, TypeError, ValueError):
             continue

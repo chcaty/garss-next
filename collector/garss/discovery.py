@@ -1,5 +1,7 @@
 """Bounded OPML discovery. External data enters a review queue, never authored config."""
 from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict
+import json
 from datetime import timedelta
 from hashlib import sha256
 from urllib.parse import urlsplit, urlunsplit
@@ -47,16 +49,23 @@ def download_opml(url):
                 raise ValueError('OPML exceeds size limit')
         return bytes(payload)
 
-def discover(config, directories, previous, now, *, download=download_opml, check=None):
+def discover(config, directories, previous, now, *, download=download_opml, check=None, seed_sources=()):
     existing = {feed_key(source['feed_url']) for source in config['sources']}
     document = dict(previous or {})
     candidates = [item for item in document.get('candidates', []) if feed_key(item['feed_url']) not in existing][:MAX_CANDIDATES]
     document['candidates'] = candidates
-    if document.get('last_attempt_at') and now - date(document['last_attempt_at']) < timedelta(days=1 if document.get('directory_errors') else 7):
+    revision = sha256(json.dumps([directories, seed_sources], sort_keys=True).encode()).hexdigest()
+    if document.get('directories_revision') == revision and document.get('last_attempt_at') and now - date(document['last_attempt_at']) < timedelta(days=1 if document.get('directory_errors') else 7):
         return document
     document['last_attempt_at'] = stamp(now)
     errors = []
     pool = {}
+    seed_keys = set()
+    for item in seed_sources:
+        key = feed_key(item['feed_url'])
+        seed_keys.add(key)
+        if key not in existing:
+            pool[key] = dict(item)
     for directory in directories:
         try:
             for item in parse_opml(download(directory['url']), directory):
@@ -69,13 +78,26 @@ def discover(config, directories, previous, now, *, download=download_opml, chec
     rejected = document.get('rejected', {})
     # Retry failures after 30 days, so one bad feed does not monopolize every batch.
     work = [item for key, item in pool.items() if key not in saved and
-            (key not in rejected or now - date(rejected[key]['checked_at']) >= timedelta(days=30))]
-    # Alternate catalogs rather than taking every item from the first catalog.
-    work.sort(key=lambda item: sha256((item['id'] + stamp(now)[:10]).encode()).hexdigest())
-    work = work[:min(MAX_CHECKS, MAX_CANDIDATES - len(saved))]
+            (key in seed_keys or key not in rejected or now - date(rejected[key]['checked_at']) >= timedelta(days=30))]
+    # Give every eligible category one slot per round; favor underrepresented genres.
+    groups = defaultdict(list)
+    for item in work:
+        groups[item['category']].append(item)
+    for group in groups.values():
+        group.sort(key=lambda item: sha256((item['id'] + stamp(now)[:10]).encode()).hexdigest())
+    counts = defaultdict(int)
+    for item in saved.values():
+        counts[item['category']] += 1
+    categories = sorted(groups, key=lambda category: (counts[category], sha256((category + stamp(now)[:10]).encode()).hexdigest()))
+    work = []
+    limit = min(MAX_CHECKS, MAX_CANDIDATES - len(saved))
+    while len(work) < limit and any(groups.values()):
+        for category in categories:
+            if groups[category] and len(work) < limit:
+                work.append(groups[category].pop(0))
     def verify(item):
         try:
-            return (check(item) if check else fetch_feed(FeedSource(item['id'], item['title'], item['description'], item['feed_url']), attempts=1, budget_seconds=15).error)
+            return (check(item) if check else fetch_feed(FeedSource(item['id'], item['title'], item['description'], item['feed_url'], item.get('allow_undated', False)), attempts=1, budget_seconds=15).error)
         except Exception as error:
             return str(error)[:300]
     with ThreadPoolExecutor(max_workers=4) as workers:
@@ -88,5 +110,5 @@ def discover(config, directories, previous, now, *, download=download_opml, chec
             saved[key] = {**item, 'verified_at': stamp(now)}
             rejected.pop(key, None)
     document.update(candidates=list(saved.values()), rejected=dict(list(rejected.items())[-500:]),
-                    directory_errors=errors, checked_count=len(work), generated_at=stamp(now))
+                    directories_revision=revision, directory_errors=errors, checked_count=len(work), generated_at=stamp(now))
     return document
