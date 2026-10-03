@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/models.dart';
+import '../data/reading_filter.dart';
+import 'reading_filters.dart';
 import '../state/library.dart';
 import '../state/appearance.dart';
 import 'appearance.dart';
@@ -175,7 +177,8 @@ class ReadingPage extends ConsumerStatefulWidget {
 
 class _ReadingPageState extends ConsumerState<ReadingPage> {
   final search = TextEditingController();
-  String query = '', source = '';
+  String query = '', source = '', category = '';
+  ReadingPeriod period = ReadingPeriod.all;
   bool unread = false, balanced = true;
   @override
   void dispose() {
@@ -189,6 +192,8 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
       query = '';
       source = '';
       unread = false;
+      category = '';
+      period = ReadingPeriod.all;
     });
   }
 
@@ -197,14 +202,29 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
     final library = widget.library;
     final colors = Theme.of(context).colorScheme;
     final feeds = library.readingFeeds;
+    final unreadBySource = library.unreadCounts;
     final canonical = library.catalog.sourceAliases[source] ?? source;
     final selected = feeds.any((feed) => feed.id == canonical) ? canonical : '';
-    final hasFilters = query.isNotEmpty || unread || selected.isNotEmpty;
+    final categories =
+        feeds
+            .map((feed) => feed.category)
+            .where((value) => value.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
+    final hasFilters =
+        query.isNotEmpty ||
+        unread ||
+        selected.isNotEmpty ||
+        category.isNotEmpty ||
+        period != ReadingPeriod.all;
     final filtered = library.visible(
       query: query,
       savedOnly: widget.savedOnly,
       unreadOnly: unread,
       source: widget.savedOnly ? '' : selected,
+      category: category,
+      period: period,
     );
     final articles = balanced && !widget.savedOnly && selected.isEmpty
         ? diversify(filtered)
@@ -270,6 +290,43 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
                         selected: unread,
                         onSelected: (value) => setState(() => unread = value),
                       ),
+                      ActionChip(
+                        avatar: const Icon(Icons.filter_list, size: 18),
+                        label: Text(
+                          category.isEmpty && period == ReadingPeriod.all
+                              ? '分类与时间'
+                              : [
+                                  if (category.isNotEmpty) category,
+                                  if (period != ReadingPeriod.all)
+                                    periodLabel(period),
+                                ].join(' · '),
+                        ),
+                        onPressed: () async {
+                          final selection =
+                              await showModalBottomSheet<ReadingSelection>(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                showDragHandle: true,
+                                constraints: const BoxConstraints(
+                                  maxWidth: 640,
+                                ),
+                                builder: (context) => ReadingFilterSheet(
+                                  categories: categories,
+                                  selection: ReadingSelection(
+                                    category: category,
+                                    period: period,
+                                  ),
+                                ),
+                              );
+                          if (mounted && selection != null) {
+                            setState(() {
+                              category = selection.category;
+                              period = selection.period;
+                            });
+                          }
+                        },
+                      ),
                       Text(
                         '${articles.length} 篇${widget.savedOnly ? '稍后读' : '文章'}',
                         style: TextStyle(
@@ -327,7 +384,7 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
                           DropdownMenuItem(
                             value: feed.id,
                             child: Text(
-                              feed.title,
+                              '${feed.title} · ${unreadBySource[feed.id] ?? 0} 未读',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -803,7 +860,7 @@ class SettingsPage extends ConsumerWidget {
         ),
         const Divider(height: 32),
         const Text(
-          '拾阅 · Android 预览版 0.2.0',
+          '拾阅 · Android 预览版 0.2.1',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),

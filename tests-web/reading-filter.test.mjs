@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {build} from 'esbuild';
+const compiled=await build({entryPoints:['web/src/reading-filter.ts'],bundle:true,write:false,format:'esm',platform:'node'});
+const {windowStart,readingSelection,unreadCounts}=await import(`data:text/javascript;base64,${Buffer.from(compiled.outputFiles[0].text).toString('base64')}`);
+const now=Date.parse('2026-10-03T02:00:00Z');
+const entry=(id,date,ids=['a'])=>({id,title:id,source_id:ids[0],source_ids:ids,url:`https://example.com/${id}`,published_at:date});
+const sources=[{id:'a',category:'技术'},{id:'b',category:'新闻'}];
+test('today and seven-day filters use Beijing calendar boundaries',()=>{assert.equal(windowStart('today',now),Date.parse('2026-10-02T16:00:00Z'));assert.equal(windowStart('week',now),Date.parse('2026-09-26T16:00:00Z'));const articles=[entry('today','2026-10-02T16:00:00Z'),entry('before','2026-10-02T15:59:59Z'),entry('future','2026-10-04T00:00:00Z')];assert.deepEqual(readingSelection(articles,sources,'','today',now).map(value=>value.id),['today']);});
+test('category filtering retains shared entries under every category',()=>{const articles=[entry('shared','2026-10-02T00:00:00Z',['a','b'])];assert.equal(readingSelection(articles,sources,'新闻','week',now).length,1);assert.equal(readingSelection(articles,sources,'财经','week',now).length,0);});
+test('unread source counts ignore read entries and duplicate memberships',()=>{assert.deepEqual([...unreadCounts([entry('shared','2026-10-01T00:00:00Z',['a','a','b']),entry('read','2026-10-01T00:00:00Z')],new Set(['read']))],[['a',1],['b',1]]);});

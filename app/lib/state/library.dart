@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/models.dart';
+import '../data/reading_filter.dart';
 import '../data/repository.dart';
 
 final repositoryProvider = Provider<CatalogRepository>((ref) {
@@ -65,6 +66,17 @@ class LibraryState {
     return counts;
   }
 
+  Map<String, int> get unreadCounts {
+    final counts = <String, int>{};
+    for (final article in catalog.articles) {
+      if (read.contains(article.id)) continue;
+      for (final id in article.sources.toSet()) {
+        counts.update(id, (value) => value + 1, ifAbsent: () => 1);
+      }
+    }
+    return counts;
+  }
+
   List<Feed> get readingFeeds {
     final counts = articleCounts;
     return catalog.feeds
@@ -82,6 +94,9 @@ class LibraryState {
     bool savedOnly = false,
     bool unreadOnly = false,
     String source = '',
+    String category = '',
+    ReadingPeriod period = ReadingPeriod.all,
+    DateTime? now,
   }) {
     final needle = query.trim().toLowerCase();
     final enabled = {
@@ -89,11 +104,18 @@ class LibraryState {
         if (feed.enabled && !hidden.contains(feed.id)) feed.id,
     };
     final canonical = catalog.sourceAliases[source] ?? source;
+    final categories = {
+      for (final feed in catalog.feeds) feed.id: feed.category,
+    };
+    final readingNow = now ?? DateTime.now();
     return (savedOnly ? saved.values : catalog.articles)
         .where(
           (article) =>
               (savedOnly || article.sources.any(enabled.contains)) &&
               (!unreadOnly || !read.contains(article.id)) &&
+              (category.isEmpty ||
+                  article.sources.any((id) => categories[id] == category)) &&
+              inReadingPeriod(article, period, readingNow) &&
               (canonical.isEmpty || article.sources.contains(canonical)) &&
               (needle.isEmpty ||
                   '${article.title} ${article.sourceTitle} ${article.summary}'

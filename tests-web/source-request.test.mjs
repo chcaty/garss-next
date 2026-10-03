@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {build} from 'esbuild';
+const code=await build({entryPoints:['web/src/source-request.ts'],bundle:true,write:false,format:'esm',platform:'node'});
+const {sourceOperations,sourceRequestBatches,marker}=await import(`data:text/javascript;base64,${Buffer.from(code.outputFiles[0].text).toString('base64')}`);
+const source={id:'a',title:'中文来源',description:'原始摘要',category:'科技',feed_url:'https://example.com/rss',enabled:true};
+const base={schema_version:'1.0',repository:{owner:'chcaty',name:'garss-next',branch:'main',path:'sources.json'},sources:[source]};
+test('requests contain only changed fields and preserve Unicode',async()=>{const draft={...base,sources:[{...source,title:'拾阅新来源'}]};const operations=await sourceOperations(base,draft);assert.deepEqual(operations[0].set,{title:'拾阅新来源'});assert.equal(operations[0].before,'03991762cbefe09040ace36b8e551655a50c52f646fc185deb641509c6b49765');const batch=(await sourceRequestBatches(base,draft))[0],url=new URL(batch.url);assert.equal(url.origin,'https://github.com');assert.equal(url.pathname,'/chcaty/garss-next/issues/new');assert.ok(url.searchParams.get('body').includes('拾阅新来源'));assert.ok(batch.body.startsWith(marker));});
+test('large imports split into bounded independent requests',async()=>{const draft={...base,sources:[source,...Array.from({length:80},(_,index)=>({...source,id:`new-${index}`,title:'科学和技术的新来源'+index,description:'一个持续更新的来源。'.repeat(15),feed_url:`https://new.test/${index}`}))]};const batches=await sourceRequestBatches(base,draft);assert.ok(batches.length>1);assert.ok(batches.every(batch=>batch.url.length<=6500&&batch.count<=40));assert.equal(batches.reduce((total,batch)=>total+batch.count,0),80);});
+test('deleted feeds have a version precondition and duplicate RSS addresses are rejected',async()=>{const operations=await sourceOperations(base,{...base,sources:[]});assert.equal(operations[0].remove,true);assert.match(operations[0].before,/^[a-f0-9]{64}$/);await assert.rejects(sourceOperations(base,{...base,sources:[source,{...source,id:'b'}]}),/重复/);});

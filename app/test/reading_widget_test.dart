@@ -171,4 +171,33 @@ void main() {
       }
     },
   );
+  testWidgets(
+    'reading filters can be applied and reset at enlarged text scale',
+    (tester) async {
+      await setup(tester, scale: 2);
+      await tester.tap(find.text('分类与时间'));
+      await tester.pumpAndSettle();
+      expect(find.text('筛选文章'), findsOneWidget);
+      await tester.tap(find.text('今天'));
+      await tester.scrollUntilVisible(
+        find.text('应用筛选'),
+        100,
+        scrollable: find
+            .descendant(
+              of: find.byType(SingleChildScrollView),
+              matching: find.byType(Scrollable),
+            )
+            .last,
+      );
+      await tester.tap(find.text('应用筛选'));
+      await tester.pumpAndSettle();
+      expect(find.text('筛选文章'), findsNothing);
+      expect(find.text('今天'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.text('重置筛选').first);
+      await tester.pumpAndSettle();
+      expect(find.text('分类与时间'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
