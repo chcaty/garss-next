@@ -1,0 +1,1824 @@
+{
+  "generated_at": "2026-10-03T22:53:42.832776Z",
+  "sources": [
+    {
+      "id": "S001",
+      "title": "不死鸟",
+      "description": "不死鸟:专注分享优质资源",
+      "feed_url": "https://iao.su/feed",
+      "category": "软件工具",
+      "enabled": true,
+      "signature": [
+        "https://iao.su/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "S003",
+      "title": "老殁",
+      "description": "免费推荐优秀软件",
+      "feed_url": "https://www.mpyit.com/feed",
+      "category": "软件工具",
+      "enabled": true,
+      "signature": [
+        "https://www.mpyit.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "S004",
+      "title": "鹏少资源网",
+      "description": "专注于精品软件收录分享",
+      "feed_url": "https://www.jokerps.com/feed",
+      "category": "软件工具",
+      "enabled": true,
+      "signature": [
+        "https://www.jokerps.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://www.jokerps.com/feed",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "S006",
+      "title": "懒得勤快的博客",
+      "description": "懒得勤快，互联网分享精神，勤于发现，乐于分享",
+      "feed_url": "https://masuit.com/rss",
+      "category": "软件工具",
+      "enabled": true,
+      "signature": [
+        "https://masuit.com/rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://masuit.net/rss",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "S008",
+      "title": "异次元软件世界",
+      "description": "极具人气和特色的软件网站！专注于推荐优秀软件、APP应用和互联网资源，每篇图文评测都极其用心，并提供大量软件资源下载。",
+      "feed_url": "https://rsshub.v2fy.com/iplay/home",
+      "category": "软件工具",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/iplay/home",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/iplay/home",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B015",
+      "title": "wenzi",
+      "description": "蚊子在前端开发工作中的总结",
+      "feed_url": "https://www.xiabingbao.com/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.xiabingbao.com/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.xiabingbao.com', port=443): Max retries exceeded with url: /atom.xml (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.xiabingbao.com', port=443) at 0x7fae2c975950>, 'Connection to www.xiabingbao.com timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B016",
+      "title": "DIYgod",
+      "description": "人气网红,前端萌新,有猫,开源",
+      "feed_url": "https://diygod.me/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://diygod.me/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://diygod.cc/atom.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B020",
+      "title": "追梦人物",
+      "description": "追梦人物的博客",
+      "feed_url": "https://www.zmrenwu.com/all/rss/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.zmrenwu.com/all/rss/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://www.zmrenwu.com/all/rss/",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B022",
+      "title": "但行好事，莫问前程",
+      "description": "Windard's simple blog web",
+      "feed_url": "https://windard.com/feed.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://windard.com/feed.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B024",
+      "title": "阁子",
+      "description": "Newdee's Blog",
+      "feed_url": "https://newdee.cf/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://newdee.cf/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='newdee.cf', port=443): Max retries exceeded with url: /atom.xml (Caused by NameResolutionError(\"HTTPSConnection(host='newdee.cf', port=443): Failed to resolve 'newdee.cf' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B025",
+      "title": "RidiQulous",
+      "description": "RidiQulous's Blog",
+      "feed_url": "https://ridiqulous.com/feed/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://ridiqulous.com/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='ridiqulous.com', port=443): Max retries exceeded with url: /feed/ (Caused by ConnectTimeoutError(<HTTPSConnection(host='ridiqulous.com', port=443) at 0x7fae2cc37110>, 'Connection to ridiqulous.com timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B027",
+      "title": "开源实验室",
+      "description": "张涛的开源实验室",
+      "feed_url": "https://www.kymjs.com/feed.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.kymjs.com/feed.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.kymjs.com', port=443): Max retries exceeded with url: /feed.xml (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.kymjs.com'. (_ssl.c:1032)\")))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B028",
+      "title": "技术小黑屋",
+      "description": "一个Android 工程师",
+      "feed_url": "https://droidyue.com/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://droidyue.com/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://droidyue.com/atom.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B030",
+      "title": "INTJer",
+      "description": "Armin Li（李钊）",
+      "feed_url": "https://arminli.com/feed/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://arminli.com/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "402 Client Error: Payment Required for url: https://arminli.com/feed/",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B031",
+      "title": "思圆笔记",
+      "description": "促成良性循环",
+      "feed_url": "https://hintsnet.com/pimgeek/feed/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://hintsnet.com/pimgeek/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='hintsnet.com', port=443): Max retries exceeded with url: /pimgeek/feed/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1032)')))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B032",
+      "title": "老周快救我",
+      "description": "Life Is Fantastic",
+      "feed_url": "https://zxx.im/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://zxx.im/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='zxx.im', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='zxx.im', port=443): Failed to resolve 'zxx.im' ([Errno -5] No address associated with hostname)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B041",
+      "title": "四季书评",
+      "description": "四季书评",
+      "feed_url": "http://www.4sbooks.com/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://www.4sbooks.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPConnectionPool(host='www.4sbooks.com', port=80): Max retries exceeded with url: /feed (Caused by ConnectTimeoutError(<HTTPConnection(host='www.4sbooks.com', port=80) at 0x7fae2fee79b0>, 'Connection to www.4sbooks.com timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B046",
+      "title": "人人都是产品经理——iamsujie",
+      "description": "成长中的产品经理，期待和同学们一起，用好产品改变世界~",
+      "feed_url": "http://iamsujie.com/feed/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://iamsujie.com/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "521 Server Error:  for url: https://blog.csdn.net/iamsujie/feed/",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B048",
+      "title": "火丁笔记",
+      "description": "多研究些问题，少谈些主义。",
+      "feed_url": "https://blog.huoding.com/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://blog.huoding.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='blog.huoding.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='blog.huoding.com', port=443): Failed to resolve 'blog.huoding.com' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B049",
+      "title": "產品經理 x 成長駭客 - Mr. PM下午先生",
+      "description": "PM可以是產品經理、下午、Pig Man，但絕對不是Poor Man",
+      "feed_url": "http://mrpm.cc/?feed=rss2",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://mrpm.cc/?feed=rss2",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://mrpm.cc/?feed=rss2",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B050",
+      "title": "Matrix67",
+      "description": "Matrix67: The Aha Moments",
+      "feed_url": "http://www.matrix67.com/blog/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://www.matrix67.com/blog/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='matrix67.com', port=443): Max retries exceeded with url: /blog/feed (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)')))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B051",
+      "title": "我爱自然语言处理",
+      "description": "I Love Natural Language Processing",
+      "feed_url": "https://www.52nlp.cn/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.52nlp.cn/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B058",
+      "title": "bang's blog",
+      "description": "我的世界",
+      "feed_url": "http://blog.cnbang.net/feed/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://blog.cnbang.net/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "415 Client Error: Unsupported Media Type for url: http://blog.cnbang.net/feed/",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B062",
+      "title": "木木木木木",
+      "description": "林小沐的博客",
+      "feed_url": "https://immmmm.com/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://immmmm.com/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://immmmm.com/atom.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B065",
+      "title": "余果的博客",
+      "description": "公众号：余果专栏",
+      "feed_url": "https://yuguo.us/feed.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://yuguo.us/feed.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://yuguo.us/feed.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B066",
+      "title": "陈沙克日志",
+      "description": "把我的过程记录下来，以免以后忘了",
+      "feed_url": "http://www.chenshake.com/feed/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://www.chenshake.com/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://chenshake.com/feed/",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B067",
+      "title": "透明思考 Transparent Thoughts",
+      "description": "就，觉得自己还挺有洞察力的……",
+      "feed_url": "http://gigix.thoughtworkers.org/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://gigix.thoughtworkers.org/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPConnectionPool(host='gigix.thoughtworkers.org', port=80): Max retries exceeded with url: /atom.xml (Caused by NameResolutionError(\"HTTPConnection(host='gigix.thoughtworkers.org', port=80): Failed to resolve 'gigix.thoughtworkers.org' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B083",
+      "title": "方圆STU",
+      "description": "天是方的，地是圆的。",
+      "feed_url": "https://fangyuanstu.com/feed/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://fangyuanstu.com/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='fangyuanstu.com', port=443): Max retries exceeded with url: /feed/ (Caused by NameResolutionError(\"HTTPSConnection(host='fangyuanstu.com', port=443): Failed to resolve 'fangyuanstu.com' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B085",
+      "title": "不羁阁",
+      "description": "行走少年郎 不羁，谓才行高远，不可羁系也",
+      "feed_url": "https://bujige.net/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://bujige.net/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='bujige.net', port=443): Read timed out. (read timeout=5)",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B087",
+      "title": "3号实验室",
+      "description": "树莓派; 开发板; 编程; 折腾",
+      "feed_url": "https://www.labno3.com/feed/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.labno3.com/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://www.labno3.com/feed/",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B089",
+      "title": "十年老程网",
+      "description": "推荐各种VPS主机",
+      "feed_url": "http://snlcw.com/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://snlcw.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B091",
+      "title": "LFhacks.com",
+      "description": "读万卷书，行万里路",
+      "feed_url": "https://www.lfhacks.com/rss/",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.lfhacks.com/rss/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://www.lfhacks.com/rss/",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B093",
+      "title": "夏海比比",
+      "description": "关于设计与摄影，一个95后的个人博客",
+      "feed_url": "https://huiweishijie.com/feed.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://huiweishijie.com/feed.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://huiweishijie.com/feed.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B094",
+      "title": "TRHX'S BLOG",
+      "description": "一入 IT 深似海 从此学习无绝期",
+      "feed_url": "https://www.itrhx.com/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.itrhx.com/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.itrhx.com', port=443): Max retries exceeded with url: /atom.xml (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.itrhx.com', port=443) at 0x7fae2cc36490>, 'Connection to www.itrhx.com timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B095",
+      "title": "CallMeSoul",
+      "description": "callmesoul前端开发者",
+      "feed_url": "https://callmesoul.cn/rss.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://callmesoul.cn/rss.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://callmesoul.cn/rss.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B101",
+      "title": "Michael翔",
+      "description": "因上努力，果上随缘！",
+      "feed_url": "https://michael728.github.io/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://michael728.github.io/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://michael728.github.io/atom.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B102",
+      "title": "Dosk 技术站",
+      "description": "SpringHack 的无名技术小站",
+      "feed_url": "https://www.dosk.win/feed.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.dosk.win/feed.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.dosk.win', port=443): Max retries exceeded with url: /feed.xml (Caused by NameResolutionError(\"HTTPSConnection(host='www.dosk.win', port=443): Failed to resolve 'www.dosk.win' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B106",
+      "title": "轶哥",
+      "description": "妄图改变世界的全栈程序员。",
+      "feed_url": "https://www.wyr.me/rss.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.wyr.me/rss.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.wyr.me', port=443): Max retries exceeded with url: /rss.xml (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1032)')))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B108",
+      "title": "隋堤倦客",
+      "description": "我挥舞着键盘和本子，发誓要把这世界写个明明白白！！！",
+      "feed_url": "https://fengxu.ink/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://fengxu.ink/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://fengxu.ink/atom.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B110",
+      "title": "StrongWong",
+      "description": "Embedded Software Engineer. Blogging about tech and life.",
+      "feed_url": "https://blog.strongwong.top/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://blog.strongwong.top/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://blog.strongwong.top/atom.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B115",
+      "title": "爪哇堂 JavaTang",
+      "description": "荣辱不惊闲看庭前花开花谢，去留无意漫随天外云卷云舒",
+      "feed_url": "https://www.javatang.com/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.javatang.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.javatang.com', port=443): Max retries exceeded with url: /feed (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.javatang.com', port=443) at 0x7fae2ca5bb10>, 'Connection to www.javatang.com timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B117",
+      "title": "Grayson's Blog",
+      "description": "Grayson's Blog",
+      "feed_url": "http://blog.grayson.org.cn/feed.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "http://blog.grayson.org.cn/feed.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPConnectionPool(host='blog.grayson.org.cn', port=80): Max retries exceeded with url: /feed.xml (Caused by NameResolutionError(\"HTTPConnection(host='blog.grayson.org.cn', port=80): Failed to resolve 'blog.grayson.org.cn' ([Errno -3] Temporary failure in name resolution)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B118",
+      "title": "格物致知",
+      "description": "专注于分享后端相关的技术以及设计架构思想，偶尔写一些生活和前端相关的东西",
+      "feed_url": "https://liqiang.io/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://liqiang.io/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B120",
+      "title": "阳志平的网志",
+      "description": "致力于认知科学的产品开发、课程设计与科学传播。",
+      "feed_url": "https://www.yangzhiping.com/feed.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://www.yangzhiping.com/feed.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://yangzhiping.com/feed.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B123",
+      "title": "伪医生律师的博客",
+      "description": "记录、生活、思考",
+      "feed_url": "https://chidd.net/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://chidd.net/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='chidd.net', port=443): Max retries exceeded with url: /feed (Caused by ConnectTimeoutError(<HTTPSConnection(host='chidd.net', port=443) at 0x7fae2ca5a990>, 'Connection to chidd.net timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B125",
+      "title": "水八口的冥想盆",
+      "description": "一位居住在日本的女开发者",
+      "feed_url": "https://blog.shuiba.co/feed",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://blog.shuiba.co/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://blog.shuiba.co/feed",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "B127",
+      "title": "千古壹号的博客",
+      "description": "一个京东前端工程师",
+      "feed_url": "https://qianguyihao.com/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true,
+      "signature": [
+        "https://qianguyihao.com/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='qianguyihao.com', port=443): Max retries exceeded with url: /atom.xml (Caused by ConnectTimeoutError(<HTTPSConnection(host='qianguyihao.com', port=443) at 0x7fae2c975e50>, 'Connection to qianguyihao.com timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "D003-e516698b",
+      "title": "Chiphell",
+      "description": "分享与交流用户体验",
+      "feed_url": "https://www.chiphell.com/portal.php?mod=rss",
+      "category": "数码",
+      "enabled": true,
+      "signature": [
+        "https://www.chiphell.com/portal.php?mod=rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "567 Server Error: Unknown Status for url: https://www.chiphell.com/portal.php?mod=rss",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "I001",
+      "title": "AlloyTeam",
+      "description": "腾讯全端AlloyTeam团队的技术博客",
+      "feed_url": "http://www.alloyteam.com/feed/",
+      "category": "IT团队博客",
+      "enabled": true,
+      "signature": [
+        "http://www.alloyteam.com/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPConnectionPool(host='www.alloyteam.com', port=80): Max retries exceeded with url: /feed/ (Caused by NewConnectionError(\"HTTPConnection(host='www.alloyteam.com', port=80): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "I002",
+      "title": "奇舞周刊",
+      "description": "360前端团队博客，领略前端技术，阅读奇舞周刊",
+      "feed_url": "https://weekly.75.team/rss",
+      "category": "IT团队博客",
+      "enabled": true,
+      "signature": [
+        "https://weekly.75.team/rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='weekly.75.team', port=443): Max retries exceeded with url: /rss (Caused by NameResolutionError(\"HTTPSConnection(host='weekly.75.team', port=443): Failed to resolve 'weekly.75.team' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "I004",
+      "title": "淘系前端团队",
+      "description": "淘宝团队技术博客",
+      "feed_url": "https://fed.taobao.org/atom.xml",
+      "category": "IT团队博客",
+      "enabled": true,
+      "signature": [
+        "https://fed.taobao.org/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "I005",
+      "title": "字节跳动团队技术博客",
+      "description": "字节跳动团队技术博客",
+      "feed_url": "https://blog.csdn.net/ByteDanceTech/rss/list",
+      "category": "IT团队博客",
+      "enabled": true,
+      "signature": [
+        "https://blog.csdn.net/ByteDanceTech/rss/list",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "521 Server Error:  for url: https://blog.csdn.net/ByteDanceTech/rss/list",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "I007",
+      "title": "云音乐大前端专栏",
+      "description": "网易云音乐大前端专栏",
+      "feed_url": "https://musicfe.dev/rss",
+      "category": "IT团队博客",
+      "enabled": true,
+      "signature": [
+        "https://musicfe.dev/rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='musicfe.dev', port=443): Max retries exceeded with url: /rss (Caused by NameResolutionError(\"HTTPSConnection(host='musicfe.dev', port=443): Failed to resolve 'musicfe.dev' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "I008",
+      "title": "百度 FEX 团队",
+      "description": "FEX 技术周刊",
+      "feed_url": "https://fex.baidu.com/feed.xml",
+      "category": "IT团队博客",
+      "enabled": true,
+      "signature": [
+        "https://fex.baidu.com/feed.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "I009",
+      "title": "JDC",
+      "description": "京东设计中心",
+      "feed_url": "https://jdc.jd.com/feed",
+      "category": "IT团队博客",
+      "enabled": true,
+      "signature": [
+        "https://jdc.jd.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='jdc.jd.com', port=443): Max retries exceeded with url: /feed (Caused by ConnectTimeoutError(<HTTPSConnection(host='jdc.jd.com', port=443) at 0x7fae2c976850>, 'Connection to jdc.jd.com timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "I010",
+      "title": "凹凸实验室",
+      "description": "凹凸技术揭秘 · 技术精进与业务发展两不误",
+      "feed_url": "https://aotu.io/atom.xml",
+      "category": "IT团队博客",
+      "enabled": true,
+      "signature": [
+        "https://aotu.io/atom.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://aotu.io/atom.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "H001",
+      "title": "虎嗅",
+      "description": "虎嗅网新闻",
+      "feed_url": "https://www.huxiu.com/rss/0.xml",
+      "category": "互联网类",
+      "enabled": true,
+      "signature": [
+        "https://www.huxiu.com/rss/0.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.huxiu.com', port=443): Read timed out. (read timeout=8)",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "H003",
+      "title": "微软亚洲研究院",
+      "description": "微软亚洲研究院技术博客",
+      "feed_url": "https://www.msra.cn/feed",
+      "category": "互联网类",
+      "enabled": true,
+      "signature": [
+        "https://www.msra.cn/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.msra.cn', port=443): Max retries exceeded with url: /feed (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.msra.cn', port=443) at 0x7fae2c976e90>, 'Connection to www.msra.cn timed out. (connect timeout=5)'))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "T003",
+      "title": "环球科学",
+      "description": "科学美国人中文版，一些科普文章",
+      "feed_url": "https://feedx.net/rss/huanqiukexue.xml",
+      "category": "科技类",
+      "enabled": true,
+      "signature": [
+        "https://feedx.net/rss/huanqiukexue.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://feedx.net/rss/huanqiukexue.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "T004",
+      "title": "MIT 科技评论",
+      "description": "MIT 科技评论 本周热榜",
+      "feed_url": "https://rsshub.v2fy.com/mittrchina/hot",
+      "category": "科技类",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/mittrchina/hot",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/mittrchina/hot",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "T007",
+      "title": "产品100",
+      "description": "产品人学习成长社区",
+      "feed_url": "http://www.chanpin100.com/feed",
+      "category": "科技类",
+      "enabled": true,
+      "signature": [
+        "http://www.chanpin100.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPConnectionPool(host='www.chanpin100.com', port=80): Max retries exceeded with url: /feed (Caused by NewConnectionError(\"HTTPConnection(host='www.chanpin100.com', port=80): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "T008",
+      "title": "蓝卡",
+      "description": "美好科技生活方式",
+      "feed_url": "https://www.lanka.cn/feed",
+      "category": "科技类",
+      "enabled": true,
+      "signature": [
+        "https://www.lanka.cn/feed",
+        ""
+      ],
+      "failures": 8,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "503 Server Error: Service Unavailable for url: https://www.lanka.cn/feed",
+      "last_success_at": "2026-10-02T16:53:48.701293Z",
+      "first_failed_at": "2026-10-02T17:20:09.457301Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "T009",
+      "title": "APPDO数字生活指南",
+      "description": "Simon的自留地_数码_App_羊毛_相机_数字指南",
+      "feed_url": "https://simonword.com/feed",
+      "category": "科技类",
+      "enabled": true,
+      "signature": [
+        "https://simonword.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='simonword.com', port=443): Max retries exceeded with url: /feed (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'simonword.com'. (_ssl.c:1032)\")))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "L002-cc9d3964",
+      "title": "MOOC中国",
+      "description": "慕课改变你，你改变世界",
+      "feed_url": "https://www.mooc.cn/feed",
+      "category": "学习类",
+      "enabled": true,
+      "signature": [
+        "https://www.mooc.cn/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.mooc.cn', port=443): Max retries exceeded with url: /feed (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1032)')))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "A001",
+      "title": "青柠学术",
+      "description": "每个科研小白都有成为大神的潜力",
+      "feed_url": "https://iseex.github.io/feed",
+      "category": "学术类",
+      "enabled": true,
+      "signature": [
+        "https://iseex.github.io/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://iseex.github.io/feed",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "L001-e194559e",
+      "title": "李子柒",
+      "description": "李子柒的微博",
+      "feed_url": "https://rsshub.v2fy.com/weibo/user/2970452952",
+      "category": "生活类",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/weibo/user/2970452952",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/weibo/user/2970452952",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "L003",
+      "title": "一兜糖",
+      "description": "家的主理人社区",
+      "feed_url": "https://rsshub.v2fy.com/yidoutang/index",
+      "category": "生活类",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/yidoutang/index",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/yidoutang/index",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "D001-6c032281",
+      "title": "Behance",
+      "description": "Adobe旗下设计网站Behance",
+      "feed_url": "https://www.behance.net/feeds/projects",
+      "category": "设计类",
+      "enabled": true,
+      "signature": [
+        "https://www.behance.net/feeds/projects",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://www.behance.net/feeds/projects",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "D004",
+      "title": "优设",
+      "description": "优秀设计联盟-优设网-设计师交流学习平台-看设计文章，学软件教程，找灵感素材，尽在优设网！",
+      "feed_url": "https://www.uisdc.com/feed",
+      "category": "设计类",
+      "enabled": true,
+      "signature": [
+        "https://www.uisdc.com/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C001-efcccbfc",
+      "title": "知乎",
+      "description": "知乎每日精选",
+      "feed_url": "https://www.zhihu.com/rss",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://www.zhihu.com/rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C002",
+      "title": "湾区日报",
+      "description": "关注创业与技术，每天推送3到5篇优质英文文章",
+      "feed_url": "https://wanqu.co/feed/",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://wanqu.co/feed/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://www.wanqu.co/feed/",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C010",
+      "title": "Linux中国",
+      "description": "Linux中文开源社区",
+      "feed_url": "https://linux.cn/rss.xml",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://linux.cn/rss.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='linux.cn', port=443): Max retries exceeded with url: /rss.xml (Caused by NameResolutionError(\"HTTPSConnection(host='linux.cn', port=443): Failed to resolve 'linux.cn' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C016",
+      "title": "开源中国",
+      "description": "开源中国社区推荐文章",
+      "feed_url": "https://www.oschina.net/blog/rss",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://www.oschina.net/blog/rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C017",
+      "title": "博客园",
+      "description": "博客园精华区",
+      "feed_url": "http://feed.cnblogs.com/blog/picked/rss",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "http://feed.cnblogs.com/blog/picked/rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "500 Server Error: Internal Server Error for url: https://feed.cnblogs.com/blog/picked/rss",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C019",
+      "title": "PTT(台湾论坛)",
+      "description": "PTT电影专题",
+      "feed_url": "https://www.ptt.cc/atom/movie.xml",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://www.ptt.cc/atom/movie.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://www.ptt.cc/atom/movie.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C020",
+      "title": "PTT(台湾论坛)",
+      "description": "PTT正妹专题",
+      "feed_url": "https://www.ptt.cc/atom/beauty.xml",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://www.ptt.cc/atom/beauty.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "403 Client Error: Forbidden for url: https://www.ptt.cc/atom/beauty.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C021",
+      "title": "吾爱破解",
+      "description": "吾爱破解精品软件区",
+      "feed_url": "https://rsshub.v2fy.com/discuz/x/https%3a%2f%2fwww.52pojie.cn%2fforum-16-1.html",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/discuz/x/https%3a%2f%2fwww.52pojie.cn%2fforum-16-1.html",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/discuz/x/https%3A%2F%2Fwww.52pojie.cn%2Fforum-16-1.html",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C022",
+      "title": "cnBeta.COM 精彩优秀评论",
+      "description": "从cnBeta每天数千评论中精选出来的优秀评论",
+      "feed_url": "https://www.cnbeta.com/commentrss.php",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://www.cnbeta.com/commentrss.php",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.cnbeta.com', port=443): Max retries exceeded with url: /commentrss.php (Caused by NameResolutionError(\"HTTPSConnection(host='www.cnbeta.com', port=443): Failed to resolve 'www.cnbeta.com' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C029",
+      "title": "China Daily News",
+      "description": "中国每日新闻",
+      "feed_url": "http://www.chinadaily.com.cn/rss/cndy_rss.xml",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "http://www.chinadaily.com.cn/rss/cndy_rss.xml",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: http://www.chinadaily.com.cn/rss/cndy_rss.xml",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C030",
+      "title": "MM范",
+      "description": "妹子热门图",
+      "feed_url": "https://rsshub.v2fy.com/95mm/tab/热门",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/95mm/tab/热门",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/95mm/tab/%E7%83%AD%E9%97%A8",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C031",
+      "title": "CNU视觉联盟",
+      "description": "每日精选",
+      "feed_url": "https://rsshub.v2fy.com/cnu/selected",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/cnu/selected",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/cnu/selected",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C032",
+      "title": "香水时代",
+      "description": "最新香水评论-发现香水圈的新鲜事",
+      "feed_url": "https://rsshub.v2fy.com/nosetime/home",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/nosetime/home",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/nosetime/home",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C033",
+      "title": "恩山无线论坛",
+      "description": "无线路由器爱好者的乐园",
+      "feed_url": "https://rsshub.v2fy.com/right/forum/31",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/right/forum/31",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/right/forum/31",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "C034-8a4502aa",
+      "title": "xLog",
+      "description": "An open-source creative community written on the blockchain.",
+      "feed_url": "https://xlog.app/feed/hottest?interval=1",
+      "category": "内容平台",
+      "enabled": true,
+      "signature": [
+        "https://xlog.app/feed/hottest?interval=1",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "530 Server Error: <none> for url: https://xlog.app/feed/hottest?interval=1",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "M001",
+      "title": "VIP影院",
+      "description": "666影院 - 全网VIP电影免费看！",
+      "feed_url": "https://bukaivip.com/rss",
+      "category": "影视资源",
+      "enabled": true,
+      "signature": [
+        "https://bukaivip.com/rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "M002",
+      "title": "LimeTorrents",
+      "description": "Latest Torrents RSS",
+      "feed_url": "https://www.limetorrents.pro/rss/",
+      "category": "影视资源",
+      "enabled": true,
+      "signature": [
+        "https://www.limetorrents.pro/rss/",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "response is not RSS or Atom",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "M004",
+      "title": "YTS",
+      "description": "Most popular Torrents in the smallest file size",
+      "feed_url": "https://yts.mx/rss",
+      "category": "影视资源",
+      "enabled": true,
+      "signature": [
+        "https://yts.mx/rss",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='yts.mx', port=443): Max retries exceeded with url: /rss (Caused by NameResolutionError(\"HTTPSConnection(host='yts.mx', port=443): Failed to resolve 'yts.mx' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "M005",
+      "title": "RARBG",
+      "description": "种子站RARBG",
+      "feed_url": "https://rarbg.to/rss.php",
+      "category": "影视资源",
+      "enabled": true,
+      "signature": [
+        "https://rarbg.to/rss.php",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='rarbg.to', port=443): Max retries exceeded with url: /rss.php (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'rarbg.to'. (_ssl.c:1032)\")))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "G003",
+      "title": "游戏葡萄",
+      "description": "深度解读游戏",
+      "feed_url": "https://rsshub.v2fy.com/gamegrape/13",
+      "category": "游戏",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/gamegrape/13",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/gamegrape/13",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "R003",
+      "title": "kindle吧",
+      "description": "海量书单阅读分享者",
+      "feed_url": "https://www.kindle8.cc/feed",
+      "category": "资源类",
+      "enabled": true,
+      "signature": [
+        "https://www.kindle8.cc/feed",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "HTTPSConnectionPool(host='www.kindle8.cc', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.kindle8.cc', port=443): Failed to resolve 'www.kindle8.cc' ([Errno -2] Name or service not known)\"))",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "R004",
+      "title": "起点中文网",
+      "description": "限时免费清单",
+      "feed_url": "https://rsshub.v2fy.com/qidian/free",
+      "category": "资源类",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/qidian/free",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/qidian/free",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG001",
+      "title": "4K影视屋",
+      "description": "蓝光无损电影",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/dianying4K",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/dianying4K",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/dianying4K",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG002",
+      "title": "编程笑话",
+      "description": "程序员编程笑话",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/programmerjokes",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/programmerjokes",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/programmerjokes",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG003",
+      "title": "薅羊毛",
+      "description": "各种购物平台的优惠信息",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/yangmaoshare",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/yangmaoshare",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/yangmaoshare",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG004",
+      "title": "竹新社",
+      "description": "7×24不定时编译国内外媒体的即时新闻报道。",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/tnews365",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/tnews365",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/tnews365",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG005",
+      "title": "书和读书",
+      "description": "好书推荐。",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/GoReading",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/GoReading",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/GoReading",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG006",
+      "title": "阿里云盘资源分享",
+      "description": "分享资源完成阿里云盘任务，收获精品资源保存到不限速网盘",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/YunPanPan",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/YunPanPan",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/YunPanPan",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG008",
+      "title": "扫地僧笔记",
+      "description": "扫地僧树洞",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/lover_links",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/lover_links",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/lover_links",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG009",
+      "title": "树莓派家用云服务器",
+      "description": "树莓派家用云服务器交流",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/zhaoolee_pi",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/zhaoolee_pi",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/zhaoolee_pi",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG010",
+      "title": "快乐星球",
+      "description": "美女图片",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/botmzt",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/botmzt",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/botmzt",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    },
+    {
+      "id": "TG011",
+      "title": "Newlearnerの自留地",
+      "description": "不定期推送 IT 相关资讯",
+      "feed_url": "https://rsshub.v2fy.com/telegram/channel/NewlearnerChannel",
+      "category": "Telegram优质频道RSS订阅",
+      "enabled": true,
+      "signature": [
+        "https://rsshub.v2fy.com/telegram/channel/NewlearnerChannel",
+        ""
+      ],
+      "failures": 10,
+      "status": "archived",
+      "last_checked_at": "2026-10-03T22:53:42.832776Z",
+      "last_error": "404 Client Error: Not Found for url: https://rsshub.v2fy.com/telegram/channel/NewlearnerChannel",
+      "first_failed_at": "2026-10-02T16:33:49.741251Z",
+      "archived_at": "2026-10-03T22:53:42.832776Z"
+    }
+  ]
+}

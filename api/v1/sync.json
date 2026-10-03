@@ -1,0 +1,101 @@
+{
+  "generated_at": "2026-10-03T22:53:42.832776Z",
+  "runs": [
+    {
+      "generated_at": "2026-10-03T22:53:42.832776Z",
+      "finished_at": "2026-10-03T22:54:49.672688Z",
+      "duration_seconds": 67,
+      "checked": 238,
+      "succeeded": 133,
+      "failed": 105,
+      "archived": 101,
+      "article_count": 3808,
+      "workflow_run_id": "37159950125",
+      "code_revision": "feeb535baf6105fdf383a41767dc5f9855b4b8b3"
+    },
+    {
+      "generated_at": "2026-10-03T14:50:59.236153Z",
+      "finished_at": "2026-10-03T14:52:08.465108Z",
+      "duration_seconds": 69,
+      "checked": 238,
+      "succeeded": 137,
+      "failed": 101,
+      "archived": 0,
+      "article_count": 3712,
+      "workflow_run_id": "37131088856",
+      "code_revision": "feeb535baf6105fdf383a41767dc5f9855b4b8b3"
+    },
+    {
+      "generated_at": "2026-10-03T09:05:56.322645Z",
+      "finished_at": "2026-10-03T09:07:04.533276Z",
+      "duration_seconds": 68,
+      "checked": 238,
+      "succeeded": 136,
+      "failed": 102,
+      "archived": 0,
+      "article_count": 3494,
+      "workflow_run_id": "37111887417",
+      "code_revision": "feeb535baf6105fdf383a41767dc5f9855b4b8b3"
+    },
+    {
+      "generated_at": "2026-10-03T06:54:20.552355Z",
+      "finished_at": "2026-10-03T06:55:23.476572Z",
+      "duration_seconds": 63,
+      "checked": 238,
+      "succeeded": 135,
+      "failed": 103,
+      "archived": 0,
+      "article_count": 3364,
+      "workflow_run_id": "37104552948",
+      "code_revision": "feeb535baf6105fdf383a41767dc5f9855b4b8b3"
+    },
+    {
+      "generated_at": "2026-10-03T05:05:05.200989Z",
+      "finished_at": "2026-10-03T05:06:11.470164Z",
+      "duration_seconds": 66,
+      "checked": 238,
+      "succeeded": 136,
+      "failed": 102,
+      "archived": 0,
+      "article_count": 3254,
+      "workflow_run_id": "37098656103",
+      "code_revision": "7c2eb31c342c6fe3e2556971ba67aafe458c6e1d"
+    },
+    {
+      "generated_at": "2026-10-02T22:05:12.963332Z",
+      "finished_at": "2026-10-02T22:06:21.184884Z",
+      "duration_seconds": 68,
+      "checked": 238,
+      "succeeded": 136,
+      "failed": 102,
+      "archived": 0,
+      "article_count": 2990,
+      "workflow_run_id": "37070541626",
+      "code_revision": "7c2eb31c342c6fe3e2556971ba67aafe458c6e1d"
+    },
+    {
+      "generated_at": "2026-10-02T18:10:54.259177Z",
+      "finished_at": "2026-10-02T18:12:15.093649Z",
+      "duration_seconds": 81,
+      "checked": 238,
+      "succeeded": 135,
+      "failed": 103,
+      "archived": 0,
+      "article_count": 2908,
+      "workflow_run_id": "37045673889",
+      "code_revision": "7c2eb31c342c6fe3e2556971ba67aafe458c6e1d"
+    },
+    {
+      "generated_at": "2026-10-02T17:20:09.457301Z",
+      "finished_at": "2026-10-02T17:21:18.072035Z",
+      "duration_seconds": 69,
+      "checked": 238,
+      "succeeded": 135,
+      "failed": 103,
+      "archived": 0,
+      "article_count": 2871,
+      "workflow_run_id": "37039975022",
+      "code_revision": "c4b8e69286916ab5af5a51e354bb5081b5344367"
+    }
+  ]
+}

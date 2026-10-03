@@ -1,0 +1,878 @@
+{
+  "candidates": [
+    {
+      "id": "discovered-cd040391c4972ad7",
+      "title": "认知与自我提升 - 知乎专栏",
+      "feed_url": "https://rss.lilydjwg.me/zhihuzhuanlan/cognition?pic=cf",
+      "category": "生活文化",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-823e795a2d2f0042",
+      "title": "浮云游子意",
+      "feed_url": "https://leonson.me/feed.xml",
+      "category": "生活文化",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-38cd8ae77fb83d14",
+      "title": "海上的宫殿",
+      "feed_url": "https://soha.moe/feed",
+      "category": "生活文化",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-fdd1cd421b655c05",
+      "title": "渚碧",
+      "feed_url": "https://jubeny.com/feed.xml",
+      "category": "生活文化",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-0cda1a50dcc20d3d",
+      "title": "掘火档案",
+      "feed_url": "https://www.digforfire.net/?feed=rss2",
+      "category": "生活文化",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-6131f2a8fc67c826",
+      "title": "Google TechTalks",
+      "feed_url": "https://www.youtube.com/feeds/videos.xml?user=GoogleTechTalks",
+      "category": "编程技术",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-ed85ad123a96da65",
+      "title": "The JetBrains Blog",
+      "feed_url": "https://blog.jetbrains.com/feed",
+      "category": "编程技术",
+      "description": "Developer Tools for Professionals and Teams",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-067e20fcc07e52d9",
+      "title": "Engineering at Slack",
+      "feed_url": "https://slack.engineering/feed",
+      "category": "编程技术",
+      "description": "Hear directly from Slack's engineers about what we build, why and how we build it, and how you can use it.",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-b812a8f757eb93a2",
+      "title": "住在山上的帽子姐姐",
+      "feed_url": "https://maozjj.com/?feed=rss2",
+      "category": "生活文化",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-ca9f697302202db7",
+      "title": "Software Engineering Radio - The Podcast for Professional Software Developers",
+      "feed_url": "http://feeds.feedburner.com/se-radio",
+      "category": "编程技术",
+      "description": "Software Engineering Radio is a podcast targeted at the professional software developer. The goal is to be a lasting educational resource, not a newscast. Every 10 days, a new episode is published that covers all topics software engineering. Episodes are either tutorials on a specific topic, or an interview with a well-known character from the software engineering world. All SE Radio episodes are original content — we do not record conferences or talks given in other venues. Each episode compris",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-10d8137c553f9f76",
+      "title": "The PIT Show: Reflections and Interviews in the Tech World",
+      "feed_url": "https://feeds.transistor.fm/productivity-in-tech-podcast",
+      "category": "编程技术",
+      "description": "This is the show where I sit down with people in the tech space and talk about what they are doing and how they get it all done.",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-3786415041380107",
+      "title": "HackerNoon.com - Medium",
+      "feed_url": "https://medium.com/feed/hackernoon",
+      "category": "编程技术",
+      "description": "Elijah McClain, George Floyd, Eric Garner, Breonna Taylor, Ahmaud Arbery, Michael Brown, Oscar Grant, Atatiana Jefferson, Tamir Rice, Bettie Jones, Botham Jean - Medium",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-2b23c3022ec8aaf1",
+      "title": "The Women in Tech Show: A Technical Podcast",
+      "feed_url": "https://thewomenintechshow.com/category/podcast/feed/",
+      "category": "编程技术",
+      "description": "A podcast about what we work on, not what it feels like to be a woman in tech. Hosted by Edaena Salinas, Software Engineer at Microsoft. Website: wit.fm",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-6c85f477a9ebb008",
+      "title": "The Cynical Developer",
+      "feed_url": "https://cynicaldeveloper.com/feed/podcast",
+      "category": "编程技术",
+      "description": "A UK based Technology and Software Developer Podcast that helps you to improve your development knowledge and career, through explaining the latest and greatest in development technology and providing you with what you need to succeed as a developer.",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-c1dd866e6e615426",
+      "title": "浅时光博客",
+      "feed_url": "https://www.dqzboy.com/feed",
+      "category": "生活文化",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-a9a22df7381fb2bc",
+      "title": "胶片的味道 | 胶片的味道",
+      "feed_url": "http://letsfilm.org/feed",
+      "category": "生活文化",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:33:49.741251Z"
+    },
+    {
+      "id": "discovered-75e1d84fca2f4528",
+      "title": "International: Top News And Analysis",
+      "feed_url": "https://www.cnbc.com/id/100727362/device/rss/rss.html",
+      "category": "新闻资讯",
+      "description": "CNBC International is the world leader for news on business, technology, China, trade, oil prices, the Middle East and markets.",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-679c3c1dd0636e6f",
+      "title": "Consequence",
+      "feed_url": "http://consequenceofsound.net/feed",
+      "category": "音乐",
+      "description": "Music, Film, TV and Pop Culture News for the Mainstream and Underground",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-fbae328f7026afa0",
+      "title": "/Film",
+      "feed_url": "https://feeds2.feedburner.com/slashfilm",
+      "category": "影视",
+      "description": "Movie News and Reviews This feed is for non commercial use. Content Copyright Slashfilm.com.",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-f5824b1004c4e4eb",
+      "title": "You Must Remember This",
+      "feed_url": "https://feeds.megaphone.fm/YMRT7068253588",
+      "category": "历史人文",
+      "description": "You Must Remember This is a storytelling podcast exploring the secret and/or forgotten histories of Hollywood’s first century. It’s the brainchild and passion project of Karina Longworth (founder of Cinematical.com, former film critic for LA Weekly), who writes, narrates, records and edits each episode. It is a heavily-researched work of creative nonfiction: navigating through conflicting reports, mythology, and institutionalized spin, Karina tries to sort out what really happened behind the fil",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-db3c1a18847dcae6",
+      "title": "硕鼠的博客站",
+      "feed_url": "https://lukefan.com/feed",
+      "category": "阅读随笔",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-42e35b21f6caea79",
+      "title": "Food52",
+      "feed_url": "http://feeds.feedburner.com/food52-TheAandMBlog",
+      "category": "美食",
+      "description": "Eat thoughtfully, live joyfully.",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-b6d143bae9aa5428",
+      "title": "Kirkus Reviews",
+      "feed_url": "https://www.kirkusreviews.com/feeds/rss/",
+      "category": "图书阅读",
+      "description": "Latest book reviews from Kirkus Reviews.",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-d592eddffea98806",
+      "title": "Nature",
+      "feed_url": "https://www.nature.com/nature.rss",
+      "category": "科学探索",
+      "description": "Nature is the foremost international weekly scientific journal in the world and is the flagship journal for Nature Portfolio. It publishes the finest peer-reviewed research in all fields of science and technology on the basis of its originality, importance, interdisciplinary interest, timeliness, accessibility, elegance and surprising conclusions. Nature publishes landmark papers, award winning news, leading comment and expert opinion on important, topical scientific news and events that enable ",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-eba6470601a3bbf3",
+      "title": "华尔街日报",
+      "feed_url": "https://plink.anyfeeder.com/wsj/cn",
+      "category": "商业财经",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-f9aa7d53236c955f",
+      "title": "SpaceX",
+      "feed_url": "https://www.youtube.com/feeds/videos.xml?user=spacexchannel",
+      "category": "天文航天",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-4c868458cdbc5e25",
+      "title": "Adventure.com",
+      "feed_url": "http://adventure.com/feed/",
+      "category": "旅行",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-1d8502d270d7281c",
+      "title": "RSS",
+      "feed_url": "http://www.ximalaya.com/album/51226287.xml",
+      "category": "播客访谈",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-d938f71803287072",
+      "title": "Sports News: Cricket Live Scorecard, Latest Cricket News, Football, NBA, NFL, WWE, NHL, MLB News & More",
+      "feed_url": "https://timesofindia.indiatimes.com/rssfeeds/4719148.cms",
+      "category": "体育",
+      "description": "Get the latest sports news, live cricket scores and in-depth coverage of Cricket, Football, NBA, NFL, WWE, F1, Tennis, and more on The Times of India. Stay updated with breaking sports stories, player stats, and event highlights.",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-449cde1ff77e04f2",
+      "title": "overreacted — A blog by Dan Abramov",
+      "feed_url": "https://overreacted.io/rss.xml",
+      "category": "编程技术",
+      "description": "A blog by Dan Abramov",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-764698fb832ae122",
+      "title": "ArchDaily Global",
+      "feed_url": "http://feeds.feedburner.com/Archdaily",
+      "category": "建筑设计",
+      "description": "ArchDaily | Broadcasting Architecture Worldwide",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T16:53:48.701293Z"
+    },
+    {
+      "id": "discovered-22626fc755ba142b",
+      "title": "Posts on parasrah",
+      "feed_url": "https://blog.parasrah.com/posts/index.xml",
+      "category": "综合阅读",
+      "description": "Recent content in Posts on parasrah",
+      "enabled": true,
+      "discovered_from": "https://github.com/mroyme/my-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-0b056eff660fc293",
+      "title": "Cali Castle | 开发者、设计师、细节控、创始人",
+      "feed_url": "https://cali.so/rss",
+      "category": "产品设计",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-8ace987b3e637279",
+      "title": "RubyGems releases",
+      "feed_url": "https://github.com/ruby/rubygems/releases.atom",
+      "category": "开源生态",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/ecosyste-ms/package-managers-opml",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-c004f7c9c0b0fd23",
+      "title": "Spotify Engineering",
+      "feed_url": "https://engineering.atspotify.com/feed/",
+      "category": "数据工程",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/gianhiltbrunner/datanews",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-afb1b3ba75eadf60",
+      "title": "朝日新聞デジタル",
+      "feed_url": "http://rss.asahi.com/rss/asahi/newsheadlines.rdf",
+      "category": "国际新闻",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/yohaybn/israeli-rss-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-4bd8004a3a04e851",
+      "title": "DPU – Blueprint Columbus Clintonville III Construction Updates - Recent Updates",
+      "feed_url": "https://public.govdelivery.com/topics/OHCCC_392/feed.rss",
+      "category": "公共资讯",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/benlk/columbus-govdelivery-rss",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-fdbb004d85568bda",
+      "title": "PetaPixel",
+      "feed_url": "https://petapixel.com/feed/",
+      "category": "摄影艺术",
+      "description": "Photography and Camera News, Reviews, and Inspiration",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-9bff4da16feb03f4",
+      "title": "Anthropic News",
+      "feed_url": "https://raw.githubusercontent.com/alan-turing-institute/ai-rss-feeds/refs/heads/main/feeds/anthropic-news.xml",
+      "category": "人工智能",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/alan-turing-institute/ai-rss-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-133121ac3096849e",
+      "title": "凹凸电波",
+      "feed_url": "https://rsshub.bestblogs.dev/xiaoyuzhou/podcast/5e2839ca418a84a0462431b7",
+      "category": "中文资讯",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/fuxiaoai/tidings-rss",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-b23edc17dde000bc",
+      "title": "BadCyber",
+      "feed_url": "https://badcyber.com/feed",
+      "category": "网络安全",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/phretor/infosec-opml",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-c7094ed5f6fee526",
+      "title": "Design MilkArchitecture, Architectural Designs, and House Designs | Design Milk",
+      "feed_url": "https://design-milk.com/category/architecture/feed/",
+      "category": "建筑设计",
+      "description": "Dedicated to modern design",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-058410f9d75f8be0",
+      "title": "RSS: News",
+      "feed_url": "http://pitchfork.com/rss/news",
+      "category": "音乐",
+      "description": "News content RSS feed",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-ca85d6a433d9abde",
+      "title": "FirstShowing.net",
+      "feed_url": "https://www.firstshowing.net/feed/",
+      "category": "影视",
+      "description": "Connecting Hollywood with its Audience",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-14660a369e2d91f8",
+      "title": "Dan Carlin's Hardcore History",
+      "feed_url": "https://feeds.feedburner.com/dancarlin/history?format=xml",
+      "category": "历史人文",
+      "description": "In \"Hardcore History\" journalist and broadcaster Dan Carlin takes his \"Martian\", unorthodox way of thinking and applies it to the past. Was Alexander the Great as bad a person as Adolf Hitler? What would Apaches with modern weapons be like? Will our modern civilization ever fall like civilizations from past eras? This isn't academic history (and Carlin isn't a historian) but the podcast's unique blend of high drama, masterful narration and Twilight Zone-style twists has entertained millions of l",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-f7d1d175af6fc4ca",
+      "title": "Monkeyuser",
+      "feed_url": "https://www.monkeyuser.com/index.xml",
+      "category": "阅读随笔",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/huaminghuangtw/RSS",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    },
+    {
+      "id": "discovered-3c5850953e5619f4",
+      "title": "Bon Appétit",
+      "feed_url": "https://www.youtube.com/feeds/videos.xml?user=BonAppetitDotCom",
+      "category": "美食",
+      "description": "",
+      "enabled": true,
+      "discovered_from": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "verified_at": "2026-10-02T18:10:54.259177Z"
+    }
+  ],
+  "last_attempt_at": "2026-10-02T18:10:54.259177Z",
+  "rejected": {
+    "https://gledos.science/feed.xml": {
+      "checked_at": "2026-10-02T16:33:49.741251Z",
+      "error": "404 Client Error: Not Found for url: https://gledos.science/feed.xml"
+    },
+    "https://journeybunnies.com/feed": {
+      "checked_at": "2026-10-02T16:33:49.741251Z",
+      "error": "404 Client Error: Not Found for url: https://journeybunnies.com/feed"
+    },
+    "http://rss.cnki.net/kns/rss.aspx?amp%3Bvirtual=kns&journal=zxws": {
+      "checked_at": "2026-10-02T16:33:49.741251Z",
+      "error": "418 Client Error: I'm a Teapot for url: http://rss.cnki.net/kns/rss.aspx?amp%3Bvirtual=kns&journal=zxws"
+    },
+    "https://afipo.top/rss.xml": {
+      "checked_at": "2026-10-02T16:33:49.741251Z",
+      "error": "404 Client Error: Not Found for url: https://afipo.top/rss.xml"
+    },
+    "https://architizer.wpengine.com/feed/": {
+      "checked_at": "2026-10-02T16:53:48.701293Z",
+      "error": "HTTPSConnectionPool(host='architizer.wpengine.com', port=443): Max retries exceeded with url: /feed/ (Caused by ConnectTimeoutError(<HTTPSConnection(host='architizer.wpengine.com', port=443) at 0x7f68ece4ca50>, 'Connection to architizer.wpengine.com timed out. (connect timeout=5)'))"
+    },
+    "https://fenx.work/rss": {
+      "checked_at": "2026-10-02T16:53:48.701293Z",
+      "error": "403 Client Error: Forbidden for url: https://fenx.work/rss"
+    },
+    "https://stuckincustoms.com/feed/": {
+      "checked_at": "2026-10-02T16:53:48.701293Z",
+      "error": "HTTPSConnectionPool(host='stuckincustoms.com', port=443): Max retries exceeded with url: /feed/ (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))"
+    },
+    "https://rsshub.yfi.moe/toutiao/channel/news_hot": {
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "error": "503 Server Error: Service Unavailable for url: https://rsshub.yfi.moe/toutiao/channel/news_hot"
+    },
+    "https://zzrl.cc/atom.xml": {
+      "checked_at": "2026-10-02T16:53:48.701293Z",
+      "error": "HTTPSConnectionPool(host='zzrl.cc', port=443): Max retries exceeded with url: /atom.xml (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1032)')))"
+    },
+    "http://frontendfocus.co/rss/1e4m5lnd": {
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "error": "HTTPConnectionPool(host='frontendfocus.co', port=80): Max retries exceeded with url: /rss/1e4m5lnd (Caused by NameResolutionError(\"HTTPConnection(host='frontendfocus.co', port=80): Failed to resolve 'frontendfocus.co' ([Errno -5] No address associated with hostname)\"))"
+    },
+    "http://feeds.washingtonpost.com/rss/world": {
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "error": "HTTPConnectionPool(host='feeds.washingtonpost.com', port=80): Read timed out. (read timeout=8)"
+    },
+    "https://rsshub.gamepp.cf/aisixiang/zhuanti/211": {
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "error": "HTTPSConnectionPool(host='rsshub.gamepp.cf', port=443): Max retries exceeded with url: /aisixiang/zhuanti/211 (Caused by NameResolutionError(\"HTTPSConnection(host='rsshub.gamepp.cf', port=443): Failed to resolve 'rsshub.gamepp.cf' ([Errno -2] Name or service not known)\"))"
+    }
+  },
+  "directory_errors": [],
+  "checked_count": 20,
+  "generated_at": "2026-10-02T18:10:54.259177Z",
+  "directories_revision": "03744a99921b5cd2202e3702c712c75d766957ec64ca3e0bc67a2f34757cd048",
+  "directories": [
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-lifestyle.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "生活文化",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 81
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Programming.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "编程技术",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 40
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-essays.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "阅读随笔",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 187
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-finance.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "商业财经",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 11
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-podcasts.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "播客访谈",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 300
+    },
+    {
+      "url": "https://raw.githubusercontent.com/xiangyugongzuoliu/awesome-rss-feeds-list/main/feeds/cn-product-design.opml",
+      "page": "https://github.com/xiangyugongzuoliu/awesome-rss-feeds-list",
+      "category": "产品设计",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 10
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/News.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "新闻资讯",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 10
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Science.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "科学探索",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 23
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Space.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "天文航天",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 6
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/History.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "历史人文",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 7
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Books.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "图书阅读",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 8
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Photography.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "摄影艺术",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 8
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Movies.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "影视",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 9
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Music.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "音乐",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 5
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Food.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "美食",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 19
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Sports.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "体育",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 11
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Travel.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "旅行",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 12
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Business%20%26%20Economy.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "商业财经",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 17
+    },
+    {
+      "url": "https://raw.githubusercontent.com/spians/awesome-RSS-feeds/master/recommended/with_category/Architecture.opml",
+      "page": "https://github.com/plenaryapp/awesome-rss-feeds",
+      "category": "建筑设计",
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 11
+    },
+    {
+      "url": "https://raw.githubusercontent.com/phretor/infosec-opml/main/feeds.xml",
+      "page": "https://github.com/phretor/infosec-opml",
+      "category": "网络安全",
+      "name": "phretor/infosec-opml",
+      "maintenance_checked_at": "2026-10-02T17:47:12.691823+00:00",
+      "updated_at": "2026-08-19T02:32:08Z",
+      "update_evidence": "https://github.com/phretor/infosec-opml/commit/ea85d29755f70732195def9380bb02f30c8ff5fe",
+      "verified_feed_count": 366,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 366
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lotosbin/opml-list/master/generate/all.opml",
+      "page": "https://github.com/lotosbin/opml-list",
+      "category": "综合阅读",
+      "name": "lotosbin/opml-list",
+      "maintenance_checked_at": "2026-10-02T17:47:12.692116+00:00",
+      "updated_at": "2026-09-30T03:07:33Z",
+      "update_evidence": "https://github.com/lotosbin/opml-list/commit/4042ce4803e16cdf045c68667e7e6c70baa5fe72",
+      "verified_feed_count": 1000,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 1000
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ecosyste-ms/package-managers-opml/main/package-manager.opml",
+      "page": "https://github.com/ecosyste-ms/package-managers-opml",
+      "category": "开源生态",
+      "name": "ecosyste-ms/package-managers-opml",
+      "maintenance_checked_at": "2026-10-02T17:47:12.692317+00:00",
+      "updated_at": "2026-09-18T08:45:54Z",
+      "update_evidence": "https://github.com/ecosyste-ms/package-managers-opml/commit/da919043b31b59c789d70a9705cdecb652a1804a",
+      "verified_feed_count": 102,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 102
+    },
+    {
+      "url": "https://raw.githubusercontent.com/clivoa/awesome-security-feeds/main/data/sec_feeds_active.xml",
+      "page": "https://github.com/clivoa/awesome-security-feeds",
+      "category": "网络安全",
+      "name": "clivoa/awesome-security-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:12.692497+00:00",
+      "updated_at": "2026-10-02T09:56:24Z",
+      "update_evidence": "https://github.com/clivoa/awesome-security-feeds/commit/13e30fbc593b2726cbaae5e7c96fd9fb43f1d8a0",
+      "verified_feed_count": 916,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 916
+    },
+    {
+      "url": "https://raw.githubusercontent.com/alan-turing-institute/ai-rss-feeds/main/feeds.opml",
+      "page": "https://github.com/alan-turing-institute/ai-rss-feeds",
+      "category": "人工智能",
+      "name": "alan-turing-institute/ai-rss-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:12.692699+00:00",
+      "updated_at": "2026-08-28T13:08:55Z",
+      "update_evidence": "https://github.com/alan-turing-institute/ai-rss-feeds/commit/82b3a7eeff4151127304873e649b46ad329e0054",
+      "verified_feed_count": 16,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 16
+    },
+    {
+      "url": "https://raw.githubusercontent.com/iamdtms/iamdtms-opml/main/iamdtms.xml",
+      "page": "https://github.com/iamdtms/iamdtms-opml",
+      "category": "科技阅读",
+      "name": "iamdtms/iamdtms-opml",
+      "maintenance_checked_at": "2026-10-02T17:47:16.792015+00:00",
+      "updated_at": "2026-09-03T16:12:18Z",
+      "update_evidence": "https://github.com/iamdtms/iamdtms-opml/commit/cda5b1b04efad26ba65555b5c31bcd86b79d1317",
+      "verified_feed_count": 55,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 55
+    },
+    {
+      "url": "https://raw.githubusercontent.com/benlk/columbus-govdelivery-rss/trunk/subscriptions.opml",
+      "page": "https://github.com/benlk/columbus-govdelivery-rss",
+      "category": "公共资讯",
+      "name": "benlk/columbus-govdelivery-rss",
+      "maintenance_checked_at": "2026-10-02T17:47:17.079134+00:00",
+      "updated_at": "2026-09-21T23:01:09Z",
+      "update_evidence": "https://github.com/benlk/columbus-govdelivery-rss/commit/8ae0e1288d228a3ea1ed1c844369f9e8113f72aa",
+      "verified_feed_count": 429,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 429
+    },
+    {
+      "url": "https://raw.githubusercontent.com/luc926823-cloud/feeds-opml/main/feeds.opml",
+      "page": "https://github.com/luc926823-cloud/feeds-opml",
+      "category": "中文资讯",
+      "name": "luc926823-cloud/feeds-opml",
+      "maintenance_checked_at": "2026-10-02T17:47:17.140768+00:00",
+      "updated_at": "2026-08-30T03:49:23Z",
+      "update_evidence": "https://github.com/luc926823-cloud/feeds-opml/commit/fd319082e6a57f1d68f5ad8688bf54da2c7d7e0a",
+      "verified_feed_count": 19,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 17
+    },
+    {
+      "url": "https://raw.githubusercontent.com/fuxiaoai/tidings-rss/main/opml/tidings-chinese.opml",
+      "page": "https://github.com/fuxiaoai/tidings-rss",
+      "category": "中文资讯",
+      "name": "fuxiaoai/tidings-rss",
+      "maintenance_checked_at": "2026-10-02T17:47:17.309361+00:00",
+      "updated_at": "2026-08-13T03:45:18Z",
+      "update_evidence": "https://github.com/fuxiaoai/tidings-rss/commit/cbe507b61523466d9620089e71bb779b24f7553f",
+      "verified_feed_count": 469,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 469
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yohaybn/israeli-rss-feeds/main/world/opml/by-category/news.opml",
+      "page": "https://github.com/yohaybn/israeli-rss-feeds",
+      "category": "国际新闻",
+      "name": "yohaybn/israeli-rss-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:20.653936+00:00",
+      "updated_at": "2026-09-27T11:27:39Z",
+      "update_evidence": "https://github.com/yohaybn/israeli-rss-feeds/commit/f45624e61a7a51ab11ad2dd1b0f527860443d7c0",
+      "verified_feed_count": 176,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 176
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gianhiltbrunner/datanews/main/datanews.opml",
+      "page": "https://github.com/gianhiltbrunner/datanews",
+      "category": "数据工程",
+      "name": "gianhiltbrunner/datanews",
+      "maintenance_checked_at": "2026-10-02T17:47:21.192852+00:00",
+      "updated_at": "2026-10-02T11:02:20Z",
+      "update_evidence": "https://github.com/gianhiltbrunner/datanews/commit/47bf28ab33f5277035f66feafc9befb20892487a",
+      "verified_feed_count": 85,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 85
+    },
+    {
+      "url": "https://raw.githubusercontent.com/oooopera/RSS_OPML/main/data/categories/reading.opml",
+      "page": "https://github.com/oooopera/RSS_OPML",
+      "category": "图书阅读",
+      "name": "oooopera/RSS_OPML",
+      "maintenance_checked_at": "2026-10-02T17:47:21.506683+00:00",
+      "updated_at": "2026-09-16T05:38:03Z",
+      "update_evidence": "https://github.com/oooopera/RSS_OPML/commit/d6e14322f27108b4fb4ccb2b58141861ccea4495",
+      "verified_feed_count": 43,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 43
+    },
+    {
+      "url": "https://raw.githubusercontent.com/huaminghuangtw/RSS/main/Subscriptions-Blog.opml",
+      "page": "https://github.com/huaminghuangtw/RSS",
+      "category": "阅读随笔",
+      "name": "huaminghuangtw/RSS",
+      "maintenance_checked_at": "2026-10-02T17:47:21.696684+00:00",
+      "updated_at": "2026-09-14T11:55:03Z",
+      "update_evidence": "https://github.com/huaminghuangtw/RSS/commit/743d301c99c86bc694ef386175b3d3b11cd20e1a",
+      "verified_feed_count": 50,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 50
+    },
+    {
+      "url": "https://raw.githubusercontent.com/asterism-amelio/asterism-feeds/main/feeds.opml",
+      "page": "https://github.com/asterism-amelio/asterism-feeds",
+      "category": "科技阅读",
+      "name": "asterism-amelio/asterism-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:24.058965+00:00",
+      "updated_at": "2026-09-12T16:34:58Z",
+      "update_evidence": "https://github.com/asterism-amelio/asterism-feeds/commit/ff3e67d2ace7a627ee477f2c75f4907d58997e8f",
+      "verified_feed_count": 4,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 4
+    },
+    {
+      "url": "https://raw.githubusercontent.com/mroyme/my-feeds/main/data/miniflux.opml",
+      "page": "https://github.com/mroyme/my-feeds",
+      "category": "综合阅读",
+      "name": "mroyme/my-feeds",
+      "maintenance_checked_at": "2026-10-02T17:47:24.834181+00:00",
+      "updated_at": "2026-10-02T00:12:03Z",
+      "update_evidence": "https://github.com/mroyme/my-feeds/commit/72c497f6e2bf3152370ff005d48b17f1d3141a1c",
+      "verified_feed_count": 59,
+      "status": "ok",
+      "checked_at": "2026-10-02T18:10:54.259177Z",
+      "feed_count": 59
+    }
+  ]
+}
