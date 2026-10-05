@@ -2,7 +2,6 @@
 import argparse
 import json
 import os
-import shutil
 import sys
 from datetime import datetime, timezone
 from dataclasses import replace
@@ -15,14 +14,17 @@ from garss.feed_cache import FeedCache
 from garss.fetch_pool import fetch_all
 from garss.history import merge_recent_history
 from garss.models import FeedResult
-from garss.snapshot import create_snapshot, expand_history, validate_snapshot, write_json
+from garss.snapshot import (
+    create_snapshot, expand_history, read_previous_document,
+    retain_previous_snapshot, validate_snapshot, write_json,
+)
 from garss.source_lifecycle import prepare, update, effective_config, stamp
 from garss.sync_log import publication_log
 from garss.discovery import discover
 from garss.timezones import app_date
 
 
-def main():
+def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--sources', type=Path, default=ROOT / 'sources.json')
     parser.add_argument('--previous', type=Path)
@@ -30,21 +32,19 @@ def main():
     parser.add_argument('--offline', action='store_true')
     parser.add_argument('--code-revision', default='local')
     parser.add_argument('--source-revision', default='local')
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+def collect(args):
     if args.output.exists():
         raise ValueError('Output must be a new directory')
     config = load_sources(args.sources)
-    old = []
-    if args.previous and (args.previous / 'api/v1/articles.json').exists():
-        old = expand_history(json.loads((args.previous / 'api/v1/articles.json').read_text(encoding='utf-8'))['articles'])
+    old = expand_history(read_previous_document(args.previous, 'articles.json', {'articles': []})['articles'])
     aliases = config.get('source_aliases', {})
     old = [replace(article, source_id=aliases.get(article.source_id, article.source_id)) for article in old]
     now = datetime.now(timezone.utc)
     started_at = now
-    def previous_document(name, default):
-        path = args.previous / 'api/v1' / name if args.previous else None
-        return json.loads(path.read_text(encoding='utf-8')) if path and path.exists() else default
-    states, due = prepare(config, previous_document('source-state.json', {}).get('sources', {}), now)
+    states, due = prepare(config, read_previous_document(args.previous, 'source-state.json', {}).get('sources', {}), now)
     sources = feed_sources({'sources': due})
     if args.offline:
         results = [FeedResult(source, error='Migration seed; waiting for first live collection') for source in sources]
@@ -70,7 +70,7 @@ def main():
                'policy': {'failures': 3, 'duration_hours': 24, 'retry_days': 7}})
     write_json(args.output / 'api/v1/source-archive.json', {'generated_at': stamp(now), 'sources': [
         {**source, **states[source['id']]} for source in config['sources'] if states[source['id']]['status'] == 'archived']})
-    discovery = previous_document('source-discovery.json', {})
+    discovery = read_previous_document(args.previous, 'source-discovery.json', {})
     if not args.offline:
         settings = json.loads((ROOT / 'discovery-sources.json').read_text(encoding='utf-8'))
         discovery = discover(config, settings['directories'], discovery, now, seed_sources=settings.get('seed_sources', []))
@@ -79,18 +79,17 @@ def main():
     if not args.offline:
         finished = datetime.now(timezone.utc)
         article_count = len(json.loads((args.output / 'api/v1/articles.json').read_text(encoding='utf-8'))['articles'])
-        write_json(args.output / 'api/v1/sync.json', publication_log(previous_document('sync.json', {}),
+        write_json(args.output / 'api/v1/sync.json', publication_log(read_previous_document(args.previous, 'sync.json', {}),
                    run_results, states, started_at, finished, article_count, args.code_revision,
                    os.environ.get('GITHUB_RUN_ID', '')))
     # Keep at most the current and immediately previous immutable snapshot.
-    if args.previous and (args.previous / 'api/v1/meta.json').exists():
-        previous = validate_snapshot(args.previous)['snapshot_id']
-        source = args.previous / 'api/v1/snapshots' / previous
-        dest = args.output / 'api/v1/snapshots' / previous
-        if not dest.exists():
-            shutil.copytree(source, dest)
+    retain_previous_snapshot(args.output, args.previous)
     validate_snapshot(args.output)
     print(f'Collected {sum(len(result.articles) for result in results)} source entries into a validated snapshot')
+
+
+def main():
+    collect(parse_arguments())
 
 
 if __name__ == '__main__':

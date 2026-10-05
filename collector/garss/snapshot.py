@@ -1,5 +1,6 @@
 """Bounded article snapshots. Source relations remain separate from article identity."""
 import json
+import shutil
 from dataclasses import replace
 from hashlib import sha256
 from pathlib import Path
@@ -10,6 +11,21 @@ from .article_identity import article_key
 def write_json(path: Path, payload):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+
+def read_previous_document(root: Path | None, name: str, default):
+    path = root / 'api/v1' / name if root else None
+    return json.loads(path.read_text(encoding='utf-8')) if path and path.exists() else default
+
+
+def retain_previous_snapshot(root: Path, previous: Path | None):
+    """Copy only the validated preceding immutable snapshot, never its history."""
+    if previous and (previous / 'api/v1/meta.json').exists():
+        identity = validate_snapshot(previous)['snapshot_id']
+        source = previous / 'api/v1/snapshots' / identity
+        destination = root / 'api/v1/snapshots' / identity
+        if not destination.exists():
+            shutil.copytree(source, destination)
 
 
 def consolidate(results):

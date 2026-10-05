@@ -12,6 +12,8 @@ GitHub Actions 采集 RSS，GitHub Pages 展示文章与管理来源，Flutter �
 - `sources.json`：唯一的公共采集来源配置。`enabled: false` 会停止 CI 采集。
 - `tools/`：校验、采集、静态构建、数据分支发布。
 
+模块职责、行为保持重构的范围与验证记录见 [重构记录](docs/REFACTORING.md)。
+
 ## 分支与发布
 
 `main` 只保存源码、测试、依赖锁文件和来源配置。`rss-data` 是由 CI 管理的独立滚动快照分支：每次只有一个根提交，使用 `--force-with-lease` 校验旧版本后替换，绝不合并回 main。每次采集保留当前与前一份不可变 JSON 快照；备份 artifact 保留 14 天。分支替换限制可达历史，GitHub 对不可达对象的物理回收不由项目控制。

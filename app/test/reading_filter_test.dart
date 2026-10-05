@@ -85,6 +85,10 @@ void main() {
       'shared',
     );
     expect(state.unreadCounts, {'a': 1, 'b': 1});
-    expect(state.copyWith(read: {'shared'}).unreadCounts, isEmpty);
+    expect(state.articleCounts, {'a': 1, 'b': 1});
+    final readState = state.copyWith(read: {'shared'}, hidden: {'a'});
+    expect(readState.unreadCounts, isEmpty);
+    expect(readState.articleCounts, {'a': 1, 'b': 1});
+    expect(state.unreadCounts, {'a': 1, 'b': 1});
   });
 }
