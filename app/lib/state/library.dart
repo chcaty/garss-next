@@ -89,6 +89,23 @@ class LibraryState {
         .toList();
   }
 
+  List<String> get savedCategories =>
+      saved.values
+          .expand((article) => categoriesFor(article, savedOnly: true))
+          .where((category) => category.isNotEmpty)
+          .toSet()
+          .toList()
+        ..sort();
+
+  Iterable<String> categoriesFor(Article article, {bool savedOnly = false}) {
+    if (savedOnly && article.savedCategories.isNotEmpty) {
+      return article.savedCategories;
+    }
+    return catalog.feeds
+        .where((feed) => article.sources.contains(feed.id))
+        .map((feed) => feed.category);
+  }
+
   List<Article> visible({
     String query = '',
     bool savedOnly = false,
@@ -104,9 +121,6 @@ class LibraryState {
         if (feed.enabled && !hidden.contains(feed.id)) feed.id,
     };
     final canonical = catalog.sourceAliases[source] ?? source;
-    final categories = {
-      for (final feed in catalog.feeds) feed.id: feed.category,
-    };
     final readingNow = now ?? DateTime.now();
     return (savedOnly ? saved.values : catalog.articles)
         .where(
@@ -114,7 +128,10 @@ class LibraryState {
               (savedOnly || article.sources.any(enabled.contains)) &&
               (!unreadOnly || !read.contains(article.id)) &&
               (category.isEmpty ||
-                  article.sources.any((id) => categories[id] == category)) &&
+                  categoriesFor(
+                    article,
+                    savedOnly: savedOnly,
+                  ).contains(category)) &&
               inReadingPeriod(article, period, readingNow) &&
               (canonical.isEmpty || article.sources.contains(canonical)) &&
               (needle.isEmpty ||
@@ -178,6 +195,30 @@ class LibraryController extends AsyncNotifier<LibraryState> {
         );
         message = '暂时无法同步，你的收藏仍可阅读';
       }
+    }
+    for (final entry in saved.entries.toList()) {
+      if (entry.value.savedCategories.isEmpty) {
+        final categories = catalog.feeds
+            .where((feed) => entry.value.sources.contains(feed.id))
+            .map((feed) => feed.category)
+            .where((value) => value.isNotEmpty)
+            .toSet()
+            .toList();
+        if (categories.isNotEmpty) {
+          saved[entry.key] = Article.fromJson({
+            ...entry.value.toJson(),
+            'saved_categories': categories,
+          });
+        }
+      }
+    }
+    try {
+      await _preferences.setString(
+        'saved-v2',
+        jsonEncode(saved.values.map((article) => article.toJson()).toList()),
+      );
+    } catch (_) {
+      message = '本机保存失败，现有收藏仍可阅读；请检查存储空间';
     }
     return LibraryState(
       catalog: catalog,
@@ -260,16 +301,38 @@ class LibraryController extends AsyncNotifier<LibraryState> {
     final current = state.requireValue, saved = {...state.requireValue.saved};
     saved.containsKey(article.id)
         ? saved.remove(article.id)
-        : saved[article.id] = article;
+        : saved[article.id] = Article.fromJson({
+            ...article.toJson(),
+            'saved_categories': current
+                .categoriesFor(article)
+                .where((category) => category.isNotEmpty)
+                .toSet()
+                .toList(),
+          });
     saveMutation(current.copyWith(saved: saved));
+  }
+
+  void restoreSaved(Article article) {
+    final current = state.requireValue;
+    if (current.saved.containsKey(article.id)) return;
+    saveMutation(
+      current.copyWith(saved: {...current.saved, article.id: article}),
+    );
   }
 
   void markRead(String id) => saveMutation(
     state.requireValue.copyWith(read: {...state.requireValue.read, id}),
   );
-  void markUnread(String id) => saveMutation(
-    state.requireValue.copyWith(read: {...state.requireValue.read}..remove(id)),
-  );
+  void markUnread(String id) {
+    final current = state.requireValue;
+    final aliases = [...current.catalog.articles, ...current.saved.values]
+        .where((article) => article.id == id)
+        .expand((article) => article.legacyIds);
+    saveMutation(
+      current.copyWith(read: {...current.read}..removeAll([id, ...aliases])),
+    );
+  }
+
   Set<String> markManyRead(Iterable<String> ids) {
     final changed = ids.toSet().difference(state.requireValue.read);
     if (changed.isNotEmpty) {

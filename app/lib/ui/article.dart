@@ -6,9 +6,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../data/models.dart';
 import '../state/library.dart';
 import 'appearance.dart';
+import 'reading_actions.dart';
 
 String articleDate(DateTime time) {
-  final local = time.toLocal();
+  final local = time.toUtc().add(const Duration(hours: 8));
   return '${local.month}月${local.day}日 ${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
 }
 
@@ -25,7 +26,10 @@ class ArticleImage extends StatelessWidget {
       width: double.infinity,
       fit: BoxFit.cover,
       cacheWidth: 900,
-      errorBuilder: (context, error, stack) => const SizedBox.shrink(),
+      errorBuilder: (context, error, stack) => const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text('图片暂时无法加载，可打开原文查看。'),
+      ),
       loadingBuilder: (context, child, progress) => progress == null
           ? child
           : SizedBox(
@@ -91,10 +95,49 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
           IconButton(
             tooltip: saved ? '移出稍后读' : '加入稍后读',
             icon: Icon(saved ? Icons.bookmark : Icons.bookmark_border),
-            onPressed: () =>
-                ref.read(libraryProvider.notifier).toggleSaved(article),
+            onPressed: () => toggleSavedWithFeedback(context, ref, article),
           ),
         ],
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: colors.outlineVariant)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '本次筛选 · 第 ${index + 1} / ${queue.length} 篇',
+                style: TextStyle(color: colors.onSurfaceVariant),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 24,
+                runSpacing: 8,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: index > 0 ? () => move(index - 1) : null,
+                    icon: const Icon(Icons.chevron_left),
+                    label: const Text('上一篇'),
+                  ),
+
+                  OutlinedButton.icon(
+                    onPressed: index < queue.length - 1
+                        ? () => move(index + 1)
+                        : null,
+                    icon: const Icon(Icons.chevron_right),
+                    label: const Text('下一篇'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
       body: SafeArea(
         top: false,
@@ -106,7 +149,7 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
               padding: const EdgeInsets.all(24),
               children: [
                 Text(
-                  '${article.sourceTitle} · ${article.dateInferred ? '首次发现 ' : ''}${articleDate(article.publishedAt)}',
+                  '${article.sourceTitle} · 北京时间 ${article.dateInferred ? '首次发现 ' : ''}${articleDate(article.publishedAt)}',
                   style: TextStyle(color: colors.onSurfaceVariant, height: 1.7),
                 ),
                 const SizedBox(height: 20),
@@ -180,30 +223,6 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                   child: Text(
                     library.read.contains(article.id) ? '标记为未读' : '标记为已读',
                   ),
-                ),
-                const SizedBox(height: 24),
-                const Divider(),
-                const SizedBox(height: 16),
-                Wrap(
-                  alignment: WrapAlignment.spaceBetween,
-                  spacing: 12,
-                  runSpacing: 8,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: index > 0 ? () => move(index - 1) : null,
-                      icon: const Icon(Icons.chevron_left),
-                      label: const Text('上一篇'),
-                    ),
-                    Text('${index + 1} / ${queue.length}'),
-                    OutlinedButton.icon(
-                      onPressed: index < queue.length - 1
-                          ? () => move(index + 1)
-                          : null,
-                      icon: const Icon(Icons.chevron_right),
-                      label: const Text('下一篇'),
-                    ),
-                  ],
                 ),
               ],
             ),

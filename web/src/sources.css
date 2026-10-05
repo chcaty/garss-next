@@ -40,3 +40,14 @@
 :root[data-theme="dark"] .bg-amber-50 { background:#382c18; }
 :root[data-theme="dark"] .text-amber-900 { color:#f2ce91; }
 @media(max-width:720px) { .app-nav { padding-top:.5rem; padding-bottom:.5rem; gap:.25rem; } .app-links { width:100%; justify-content:space-between; gap:.75rem; } .header-links { width:100%; justify-content:space-between; gap:.5rem; } }
+
+.review-panel { overflow-wrap:anywhere; }
+@media(max-width:640px) {
+ [role="dialog"]:has(.review-panel) > div.fixed { padding:0; }
+ .review-panel { min-height:100dvh; border-radius:0; padding:1.25rem; box-shadow:none; }
+ .page-intro { margin-bottom:1.25rem; }
+}
+
+.draft-status.has-changes { position:sticky; top:0; z-index:20; background:var(--color-paper); }
+
+.review-panel > div:first-child { position:sticky; top:0; z-index:1; background:var(--color-panel); padding-bottom:.5rem; }

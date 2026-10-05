@@ -1,11 +1,25 @@
 import type {Source, SourceConfig} from './catalog.ts';
-const keys = ['title','description','category','feed_url','enabled','recheck_requested_at','discovered_from'] as const;
+import {sourceFields as keys, type SourceField} from './source-management.ts';
+export interface DraftConflict {id:string;title:string;key:SourceField|'source';local:unknown;remote:unknown}
+export function draftConflicts(base:SourceConfig,draft:SourceConfig,remote:SourceConfig):DraftConflict[]{
+ const local=new Map(draft.sources.map(source=>[source.id,source])),latest=new Map(remote.sources.map(source=>[source.id,source])),result:DraftConflict[]=[];
+ for(const before of base.sources){const edited=local.get(before.id),current=latest.get(before.id);
+  const localChanged=!edited||keys.some(key=>edited[key]!==before[key]);
+  const remoteChanged=!current||keys.some(key=>current[key]!==before[key]);
+  if(!localChanged||!remoteChanged)continue;
+  if(!edited||!current){if(!!edited!==!!current)result.push({id:before.id,title:edited?.title??before.title,key:'source',local:edited?'保留并修改':'删除来源',remote:current?'保留并修改':'删除来源'});continue;}
+  for(const key of keys)if(edited[key]!==before[key]&&current[key]!==before[key]&&edited[key]!==current[key])result.push({id:before.id,title:edited.title,key,local:edited[key],remote:current[key]});
+ }
+ for(const edited of draft.sources){const current=latest.get(edited.id);if(!base.sources.some(source=>source.id===edited.id)&&current&&keys.some(key=>current[key]!==edited[key]))result.push({id:edited.id,title:edited.title,key:'source',local:'本机新增来源',remote:'远程已存在相同 ID'});}
+ return result;
+}
 export function rebaseDraft(base: SourceConfig, draft: SourceConfig, remote: SourceConfig): SourceConfig {
   const prior = new Map(base.sources.map(source => [source.id,source]));
   const local = new Map(draft.sources.map(source => [source.id,source]));
   const sources = remote.sources.filter(source => !prior.has(source.id) || local.has(source.id)).map(source => {
     const before = prior.get(source.id), edited = local.get(source.id);
-    if (!before || !edited) return source;
+    if (!edited) return source;
+    if (!before) return {...source,...edited};
     const merged = {...source};
     for (const key of keys) if (edited[key] !== before[key]) Object.assign(merged,{[key]:edited[key]});
     return merged;

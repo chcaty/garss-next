@@ -15,6 +15,7 @@ class LifecycleTests(unittest.TestCase):
         for hours in [0,6,25]: update(state,[self.bad,self.good],self.now + timedelta(hours=hours))
         self.assertEqual(state['a']['status'],'archived')
         self.assertFalse(effective_config(self.config,state)['sources'][0]['enabled'])
+        self.assertEqual(effective_config(self.config,state)['sources'][0]['collection_status'], 'archived')
         _, due = prepare(self.config,state,self.now + timedelta(days=2))
         self.assertEqual([s['id'] for s in due],['b'])
         _, due = prepare(self.config,state,self.now + timedelta(days=9))
@@ -22,6 +23,14 @@ class LifecycleTests(unittest.TestCase):
         update(state,[FeedResult(self.bad.source),self.good],self.now + timedelta(days=9))
         self.assertEqual(state['a']['status'],'active')
         self.assertNotIn('archived_at',state['a'])
+    def test_manual_disable_is_distinct_from_archive_and_preserves_authored_config(self):
+        state, _ = prepare(self.config, {}, self.now)
+        state['a']['status'] = 'archived'
+        self.config['sources'][0]['enabled'] = False
+        effective = effective_config(self.config, state)
+        self.assertEqual(effective['sources'][0]['collection_status'], 'disabled')
+        self.assertNotIn('collection_status', self.config['sources'][0])
+
     def test_broad_outage_and_manual_retry(self):
         state,_ = prepare(self.config,{},self.now)
         update(state,[self.bad,FeedResult(self.good.source,error='timeout')],self.now)

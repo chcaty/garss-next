@@ -29,6 +29,99 @@ final catalog = Catalog(
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  test(
+    'undo restores an expired saved snapshot without replacing other saves',
+    () async {
+      final expired = Article.fromJson({
+        ...article.toJson(),
+        'saved_categories': ['技术'],
+      });
+      SharedPreferences.setMockInitialValues({
+        'catalog-v1': jsonEncode(
+          Catalog(
+            generatedAt: catalog.generatedAt,
+            feeds: [],
+            articles: [],
+          ).toJson(),
+        ),
+        'saved-v2': jsonEncode([expired.toJson()]),
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(libraryProvider.future);
+      final controller = container.read(libraryProvider.notifier);
+      controller.toggleSaved(expired);
+      final other = Article.fromJson({...article.toJson(), 'id': 'other'});
+      controller.toggleSaved(other);
+      controller.restoreSaved(expired);
+      final saved = container.read(libraryProvider).requireValue.saved;
+      expect(saved.keys, containsAll(['article', 'other']));
+      expect(saved['article']!.summary, expired.summary);
+      expect(saved['article']!.savedCategories, ['技术']);
+      controller.toggleSaved(expired);
+      controller.toggleSaved(
+        Article.fromJson({...expired.toJson(), 'summary': '后来保存'}),
+      );
+      controller.restoreSaved(expired);
+      expect(
+        container.read(libraryProvider).requireValue.saved['article']!.summary,
+        '后来保存',
+      );
+    },
+  );
+  test(
+    'saved categories survive removal of source metadata and remain filterable',
+    () {
+      final saved = Article.fromJson({
+        ...article.toJson(),
+        'saved_categories': ['技术'],
+      });
+      final state = LibraryState(
+        catalog: Catalog(
+          generatedAt: catalog.generatedAt,
+          feeds: [],
+          articles: [],
+        ),
+        saved: {saved.id: saved},
+      );
+      expect(state.savedCategories, ['技术']);
+      expect(
+        state.visible(savedOnly: true, category: '技术').single.id,
+        saved.id,
+      );
+      expect(state.visible(savedOnly: true, category: '其他'), isEmpty);
+      expect(Article.fromJson(saved.toJson()).savedCategories, ['技术']);
+    },
+  );
+  test(
+    'marking a migrated article unread clears aliases before the next refresh',
+    () async {
+      final migrated = Article.fromJson({
+        ...article.toJson(),
+        'legacy_ids': ['old'],
+      });
+      SharedPreferences.setMockInitialValues({
+        'catalog-v1': jsonEncode(
+          Catalog(
+            generatedAt: catalog.generatedAt,
+            feeds: catalog.feeds,
+            articles: [migrated],
+          ).toJson(),
+        ),
+        'read-v1': ['old'],
+      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(libraryProvider.future);
+      final controller = container.read(libraryProvider.notifier);
+      controller.markUnread(article.id);
+      final data = container.read(libraryProvider).requireValue;
+      expect(
+        controller.migrateRead(data.catalog, data.read),
+        isNot(contains(article.id)),
+      );
+    },
+  );
   test('shared article remains readable from another followed source', () {
     final shared = Article(
       id: 'shared',

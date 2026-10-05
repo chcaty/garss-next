@@ -49,6 +49,7 @@ def update(states, results, now):
 def effective_config(config, states):
     effective = deepcopy(config)
     for source in effective['sources']:
+        source['collection_status'] = states[source['id']]['status'] if source.get('enabled', True) else 'disabled'
         if states[source['id']]['status'] == 'archived':
             source['enabled'] = False
     return effective

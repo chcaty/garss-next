@@ -6,7 +6,7 @@ export interface Source {
 }
 export interface Article {
   id: string; source_id: string; source_ids?: string[]; title: string;
-  url: string; published_at: string; date_inferred?: boolean; summary?: string; image_url?: string;
+  url: string; published_at: string; date_inferred?: boolean; summary?: string; image_url?: string; legacy_ids?: string[];
 }
 export interface SourceConfig {
   schema_version: '1.0'; sources: Source[];

@@ -34,8 +34,15 @@ class SyncScreen extends ConsumerStatefulWidget {
 
 class _SyncScreenState extends ConsumerState<SyncScreen> {
   bool started = false;
-  String filter = 'error';
+  String filter = 'error', query = '';
   int limit = 20;
+  final search = TextEditingController();
+  @override
+  void dispose() {
+    search.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen(syncProvider, (before, next) {
@@ -69,7 +76,16 @@ class _SyncScreenState extends ConsumerState<SyncScreen> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),
             child: data.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(semanticsLabel: '正在读取同步记录'),
+                    SizedBox(height: 16),
+                    Text('正在读取同步记录…'),
+                  ],
+                ),
+              ),
               error: (error, stack) => Padding(
                 padding: const EdgeInsets.all(24),
                 child: Column(
@@ -103,11 +119,18 @@ class _SyncScreenState extends ConsumerState<SyncScreen> {
                 final entries = report.sources.entries
                     .where(
                       (entry) =>
-                          filter == 'all' || entry.value.status == filter,
+                          (filter == 'all' ||
+                              report.statusFor(entry.key) == filter) &&
+                          '${report.feeds[entry.key]?.title ?? entry.key} ${report.feeds[entry.key]?.category ?? ''}'
+                              .toLowerCase()
+                              .contains(query.trim().toLowerCase()),
                     )
                     .toList();
                 final names = {
-                  for (final feed in library?.catalog.feeds ?? <Feed>[])
+                  for (final feed
+                      in report.feeds.isNotEmpty
+                          ? report.feeds.values
+                          : library?.catalog.feeds ?? <Feed>[])
                     feed.id: feed.title,
                 };
                 return RefreshIndicator(
@@ -133,18 +156,21 @@ class _SyncScreenState extends ConsumerState<SyncScreen> {
                         '北京时间 ${syncDate(report.generatedAt)}',
                         style: TextStyle(color: colors.onSurfaceVariant),
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        '每天 06:00、13:00、17:00、22:00（北京时间）计划采集。实际启动可能受 GitHub 排队影响。',
-                        style: TextStyle(
-                          color: colors.onSurfaceVariant,
-                          height: 1.8,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        '手机刷新只下载已发布 JSON。运行中或未发布的失败任务，请查看采集日志。',
-                        style: TextStyle(height: 1.8),
+                      ExpansionTile(
+                        tilePadding: EdgeInsets.zero,
+                        title: const Text('采集计划与发布说明'),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Text(
+                              '每天 06:00、13:00、17:00、22:00（北京时间）计划采集，实际启动可能受 GitHub 排队影响。手机刷新只下载已发布数据；运行中或未发布的失败任务，请查看日志。',
+                              style: TextStyle(
+                                color: colors.onSurfaceVariant,
+                                height: 1.8,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 16),
                       OutlinedButton.icon(
@@ -165,11 +191,15 @@ class _SyncScreenState extends ConsumerState<SyncScreen> {
                           for (final entry in const {
                             'error': '采集异常',
                             'active': '采集正常',
-                            'archived': '已归档',
+                            'archived': '自动归档',
+                            'disabled': '公共停用',
+                            'pending': '等待采集',
                             'all': '全部',
                           }.entries)
                             ChoiceChip(
-                              label: Text(entry.value),
+                              label: Text(
+                                '${entry.value} ${entry.key == 'all' ? report.sources.length : report.sources.keys.where((id) => report.statusFor(id) == entry.key).length}',
+                              ),
                               selected: filter == entry.key,
                               onSelected: (_) => setState(() {
                                 filter = entry.key;
@@ -179,19 +209,51 @@ class _SyncScreenState extends ConsumerState<SyncScreen> {
                         ],
                       ),
                       const SizedBox(height: 12),
+                      TextField(
+                        controller: search,
+                        decoration: const InputDecoration(
+                          labelText: '搜索来源',
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                        onChanged: (value) => setState(() {
+                          query = value;
+                          limit = 20;
+                        }),
+                      ),
+                      const SizedBox(height: 12),
                       Text(
                         '${entries.length} 个来源',
                         style: TextStyle(color: colors.onSurfaceVariant),
                       ),
                       if (entries.isEmpty)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Text('没有匹配的来源。'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                filter == 'error' && query.isEmpty
+                                    ? '当前没有采集异常的来源。'
+                                    : '没有匹配的来源。',
+                              ),
+                              const SizedBox(height: 12),
+                              OutlinedButton(
+                                onPressed: () => setState(() {
+                                  filter = 'all';
+                                  query = '';
+                                  search.clear();
+                                  limit = 20;
+                                }),
+                                child: const Text('查看全部来源'),
+                              ),
+                            ],
+                          ),
                         ),
                       for (final entry in entries.take(limit))
                         SourceSyncRow(
                           title: names[entry.key] ?? entry.key,
                           state: entry.value,
+                          status: report.statusFor(entry.key),
                         ),
                       if (entries.length > limit)
                         TextButton(
@@ -264,9 +326,15 @@ class _SyncScreenState extends ConsumerState<SyncScreen> {
 }
 
 class SourceSyncRow extends StatelessWidget {
-  const SourceSyncRow({super.key, required this.title, required this.state});
+  const SourceSyncRow({
+    super.key,
+    required this.title,
+    required this.state,
+    required this.status,
+  });
   final String title;
   final SourceHealth state;
+  final String status;
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -274,7 +342,7 @@ class SourceSyncRow extends StatelessWidget {
       tilePadding: EdgeInsets.zero,
       title: Text(title),
       subtitle: Text(
-        '最近检查 ${syncDate(state.lastCheckedAt)}',
+        '${collectionStatusLabel(status)} · 最近检查 ${syncDate(state.lastCheckedAt)}',
         style: TextStyle(color: colors.onSurfaceVariant),
       ),
       children: [

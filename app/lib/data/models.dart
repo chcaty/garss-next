@@ -8,8 +8,27 @@ class Feed {
     this.enabled = true,
     this.category = '',
     this.error = '',
+    this.collectionStatus = '',
   });
-  final String id, title, url, description, status, category, error;
+  final String id,
+      title,
+      url,
+      description,
+      status,
+      category,
+      error,
+      collectionStatus;
+  String get effectiveStatus => !enabled
+      ? collectionStatus == 'archived'
+            ? 'archived'
+            : 'disabled'
+      : status == 'error'
+      ? 'error'
+      : collectionStatus.isNotEmpty
+      ? collectionStatus
+      : status == 'ok'
+      ? 'active'
+      : status;
   final bool enabled;
   factory Feed.fromJson(Map<String, dynamic> json) => Feed(
     id: json['id'] as String,
@@ -20,6 +39,7 @@ class Feed {
     enabled: json['enabled'] as bool? ?? true,
     category: json['category'] as String? ?? '',
     error: json['error'] as String? ?? '',
+    collectionStatus: json['collection_status'] as String? ?? '',
   );
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -30,6 +50,7 @@ class Feed {
     'enabled': enabled,
     'category': category,
     'error': error,
+    'collection_status': collectionStatus,
   };
 }
 
@@ -46,11 +67,12 @@ class Article {
     this.sourceIds = const [],
     this.legacyIds = const [],
     this.dateInferred = false,
+    this.savedCategories = const [],
   });
   final String id, sourceId, title, url, sourceTitle, summary, imageUrl;
   final DateTime publishedAt;
   final bool dateInferred;
-  final List<String> sourceIds, legacyIds;
+  final List<String> sourceIds, legacyIds, savedCategories;
   List<String> get sources => sourceIds.isEmpty ? [sourceId] : sourceIds;
   factory Article.fromJson(
     Map<String, dynamic> json, [
@@ -62,6 +84,8 @@ class Article {
       id: json['id'] as String,
       sourceIds: (json['source_ids'] as List<dynamic>? ?? []).cast<String>(),
       legacyIds: (json['legacy_ids'] as List<dynamic>? ?? []).cast<String>(),
+      savedCategories: (json['saved_categories'] as List<dynamic>? ?? [])
+          .cast<String>(),
       sourceId: json['source_id'] as String,
       title: json['title'] as String,
       url: url,
@@ -82,6 +106,7 @@ class Article {
     'source_id': sourceId,
     'source_ids': sources,
     'legacy_ids': legacyIds,
+    'saved_categories': savedCategories,
     'source_title': sourceTitle,
     'title': title,
     'url': url,

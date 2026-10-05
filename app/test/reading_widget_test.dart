@@ -28,7 +28,12 @@ void main() {
     ],
     articles: [article],
   );
-  Future<void> setup(WidgetTester tester, {double scale = 1}) async {
+  Future<void> setup(
+    WidgetTester tester, {
+    double scale = 1,
+    Catalog? snapshot,
+    List<String> hidden = const [],
+  }) async {
     tester.view.physicalSize = const Size(360, 720);
     tester.view.devicePixelRatio = 1;
     tester.platformDispatcher.textScaleFactorTestValue = scale;
@@ -36,7 +41,8 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     SharedPreferences.setMockInitialValues({
-      'catalog-v1': jsonEncode(catalog.toJson()),
+      'catalog-v1': jsonEncode((snapshot ?? catalog).toJson()),
+      'hidden-v1': hidden,
       'show-images': false,
     });
     await tester.pumpWidget(
@@ -48,9 +54,15 @@ void main() {
             ),
           ),
         ],
-        child: MediaQuery(
-          data: MediaQueryData(textScaler: TextScaler.linear(scale)),
-          child: const GarssApp(),
+        child: MediaQuery.fromView(
+          view: tester.view,
+          child: Builder(
+            builder: (context) => MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: TextScaler.linear(scale)),
+              child: const GarssApp(),
+            ),
+          ),
         ),
       ),
     );
@@ -82,6 +94,92 @@ void main() {
     expect(find.text('打开原文'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+  testWidgets('removing a saved article offers undo in the focused reader', (
+    tester,
+  ) async {
+    await setup(tester);
+    await tester.scrollUntilVisible(
+      find.text(article.title),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byType(CustomScrollView),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.tap(find.byTooltip('加入稍后读'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(article.title));
+    await tester.pumpAndSettle();
+    expect(find.text('本次筛选 · 第 1 / 1 篇'), findsOneWidget);
+    await tester.tap(find.byTooltip('移出稍后读'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('撤销'));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('移出稍后读'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+  testWidgets('source search and health combine with local follow scope', (
+    tester,
+  ) async {
+    await setup(
+      tester,
+      snapshot: Catalog(
+        generatedAt: catalog.generatedAt,
+        articles: [article],
+        feeds: const [
+          Feed(
+            id: 's',
+            title: '关注的异常来源',
+            url: 'https://example.com/rss',
+            status: 'error',
+          ),
+          Feed(
+            id: 'hidden',
+            title: '未关注的异常来源',
+            url: 'https://example.net/rss',
+            status: 'error',
+          ),
+        ],
+      ),
+      hidden: ['hidden'],
+    );
+    await tester.tap(find.text('订阅源').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('只看本机关注'));
+    await tester.tap(find.text('采集异常'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('关注的异常来源'),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byType(CustomScrollView),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    expect(find.text('未关注的异常来源'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+  testWidgets(
+    'reading sources can be searched without changing the query filter',
+    (tester) async {
+      await setup(tester);
+      await tester.tap(find.text('选择阅读来源'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(TextField, '搜索来源或分类'), '不匹配');
+      await tester.pumpAndSettle();
+      expect(find.text('没有匹配的来源，试试其他关键词。'), findsOneWidget);
+      await tester.enterText(find.widgetWithText(TextField, '搜索来源或分类'), '示例');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('示例来源').last);
+      await tester.pumpAndSettle();
+      expect(find.text(article.title), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
   testWidgets('reading controls remain usable at accessibility text scale', (
     tester,
   ) async {
@@ -132,12 +230,12 @@ void main() {
 
   testWidgets('current results can be marked read and undone', (tester) async {
     await setup(tester);
-    await tester.tap(find.text('当前结果全部已读'));
+    await tester.tap(find.text('当前结果 1 篇全部已读'));
     await tester.pumpAndSettle();
     expect(find.text('已将 1 篇文章标为已读'), findsOneWidget);
     await tester.tap(find.text('撤销'));
     await tester.pumpAndSettle();
-    expect(find.text('当前结果全部已读'), findsOneWidget);
+    expect(find.text('当前结果 1 篇全部已读'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
   testWidgets(

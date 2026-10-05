@@ -4,9 +4,53 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:garss_app/state/appearance.dart';
 import 'package:garss_app/data/sync_report.dart';
+import 'package:garss_app/data/models.dart';
+import 'package:garss_app/ui/article.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  test(
+    'source state distinguishes public disable, archive and transient errors',
+    () {
+      final report = SyncReport(
+        generatedAt: DateTime.utc(2026, 10, 3),
+        runs: [],
+        sources: {
+          'disabled': const SourceHealth(status: 'active'),
+          'archived': const SourceHealth(status: 'archived'),
+          'error': const SourceHealth(status: 'active'),
+        },
+        feeds: {
+          'disabled': const Feed(
+            id: 'disabled',
+            title: 'Disabled',
+            url: 'https://example.com/rss',
+            enabled: false,
+            collectionStatus: 'disabled',
+          ),
+          'archived': const Feed(
+            id: 'archived',
+            title: 'Archived',
+            url: 'https://example.com/rss',
+            enabled: false,
+            collectionStatus: 'archived',
+          ),
+          'error': const Feed(
+            id: 'error',
+            title: 'Error',
+            url: 'https://example.com/rss',
+            status: 'error',
+            collectionStatus: 'active',
+          ),
+        },
+      );
+      final restored = SyncReport.fromJson(report.toJson());
+      expect(restored.statusFor('disabled'), 'disabled');
+      expect(restored.statusFor('archived'), 'archived');
+      expect(restored.statusFor('error'), 'error');
+      expect(articleDate(DateTime.utc(2026, 10, 2, 17)), '10月3日 01:00');
+    },
+  );
   test('appearance persists independently of catalog availability', () async {
     SharedPreferences.setMockInitialValues({});
     var container = ProviderContainer();

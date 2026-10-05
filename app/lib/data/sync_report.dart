@@ -1,3 +1,15 @@
+import 'models.dart';
+
+String collectionStatusLabel(String status) =>
+    const {
+      'active': '采集正常',
+      'error': '采集异常',
+      'archived': '自动归档，等待复查',
+      'disabled': '公共采集已停用',
+      'pending': '等待采集',
+    }[status] ??
+    '等待采集';
+
 class SyncRun {
   const SyncRun({
     required this.generatedAt,
@@ -63,13 +75,27 @@ class SyncReport {
     required this.generatedAt,
     required List<SyncRun> runs,
     required Map<String, SourceHealth> sources,
+    Map<String, Feed> feeds = const {},
   }) : runs = List.unmodifiable(runs.take(30)),
-       sources = Map.unmodifiable(sources);
+       sources = Map.unmodifiable(sources),
+       feeds = Map.unmodifiable(feeds);
   final DateTime generatedAt;
   final List<SyncRun> runs;
   final Map<String, SourceHealth> sources;
+  final Map<String, Feed> feeds;
+  String statusFor(String id) {
+    final feed = feeds[id], health = sources[id];
+    if (feed?.collectionStatus == 'disabled') return 'disabled';
+    if (health?.status == 'archived') return 'archived';
+    return feed?.effectiveStatus ?? health?.status ?? 'pending';
+  }
+
   factory SyncReport.fromJson(Map<String, dynamic> json) => SyncReport(
     generatedAt: DateTime.parse(json['generated_at'] as String),
+    feeds: {
+      for (final value in json['feeds'] as List<dynamic>? ?? [])
+        (value as Map<String, dynamic>)['id'] as String: Feed.fromJson(value),
+    },
     runs: (json['runs'] as List<dynamic>? ?? [])
         .map((value) => SyncRun.fromJson(value as Map<String, dynamic>))
         .toList(),
@@ -80,6 +106,7 @@ class SyncReport {
   );
   Map<String, dynamic> toJson() => {
     'generated_at': generatedAt.toUtc().toIso8601String(),
+    'feeds': feeds.values.map((feed) => feed.toJson()).toList(),
     'runs': runs.map((run) => run.toJson()).toList(),
     'sources': sources.map((id, value) => MapEntry(id, value.toJson())),
   };

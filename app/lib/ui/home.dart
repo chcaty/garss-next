@@ -4,10 +4,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../data/models.dart';
 import '../data/reading_filter.dart';
+import '../data/sync_report.dart';
 import 'reading_filters.dart';
 import '../state/library.dart';
 import '../state/appearance.dart';
 import 'appearance.dart';
+import 'reading_actions.dart';
+import 'reading_source_sheet.dart';
 import 'article.dart';
 import 'sync.dart';
 
@@ -39,7 +42,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     final content = library.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(semanticsLabel: '正在读取文章'),
+            SizedBox(height: 16),
+            Text('正在读取文章…'),
+          ],
+        ),
+      ),
       error: (error, stack) => Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -206,11 +218,13 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
     final canonical = library.catalog.sourceAliases[source] ?? source;
     final selected = feeds.any((feed) => feed.id == canonical) ? canonical : '';
     final categories =
-        feeds
-            .map((feed) => feed.category)
-            .where((value) => value.isNotEmpty)
-            .toSet()
-            .toList()
+        widget.savedOnly
+              ? library.savedCategories
+              : feeds
+                    .map((feed) => feed.category)
+                    .where((value) => value.isNotEmpty)
+                    .toSet()
+                    .toList()
           ..sort();
     final hasFilters =
         query.isNotEmpty ||
@@ -254,7 +268,7 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
                   Text(
                     library.message.isNotEmpty
                         ? library.message
-                        : '最近采集 ${articleDate(library.catalog.generatedAt)}',
+                        : '最近采集（北京时间）${articleDate(library.catalog.generatedAt)}',
                     style: TextStyle(
                       fontSize: 12,
                       color: colors.onSurfaceVariant,
@@ -370,28 +384,36 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
                     ],
                   ),
                   if (!widget.savedOnly)
-                    DropdownButtonFormField<String>(
-                      key: ValueKey(selected),
-                      initialValue: selected,
-                      isExpanded: true,
-                      decoration: const InputDecoration(labelText: '阅读来源'),
-                      items: [
-                        const DropdownMenuItem(
-                          value: '',
-                          child: Text('全部有文章的来源'),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.rss_feed, size: 18),
+                        label: Text(
+                          selected.isEmpty
+                              ? '选择阅读来源'
+                              : feeds
+                                    .firstWhere((feed) => feed.id == selected)
+                                    .title,
+                          maxLines: 2,
                         ),
-                        for (final feed in feeds)
-                          DropdownMenuItem(
-                            value: feed.id,
-                            child: Text(
-                              '${feed.title} · ${unreadBySource[feed.id] ?? 0} 未读',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                        onPressed: () async {
+                          final value = await showModalBottomSheet<String>(
+                            context: context,
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            showDragHandle: true,
+                            constraints: const BoxConstraints(maxWidth: 640),
+                            builder: (context) => ReadingSourceSheet(
+                              feeds: feeds,
+                              selected: selected,
+                              unread: unreadBySource,
                             ),
-                          ),
-                      ],
-                      onChanged: (value) =>
-                          setState(() => source = value ?? ''),
+                          );
+                          if (mounted && value != null) {
+                            setState(() => source = value);
+                          }
+                        },
+                      ),
                     ),
                   if (articles.any(
                     (article) => !library.read.contains(article.id),
@@ -400,7 +422,7 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
                       alignment: Alignment.centerRight,
                       child: TextButton.icon(
                         icon: const Icon(Icons.done_all, size: 18),
-                        label: const Text('当前结果全部已读'),
+                        label: Text('当前结果 ${filtered.length} 篇全部已读'),
                         onPressed: () {
                           final controller = ref.read(libraryProvider.notifier);
                           final changed = controller.markManyRead(
@@ -587,8 +609,7 @@ class ArticleRow extends ConsumerWidget {
             const SizedBox(width: 8),
             IconButton(
               tooltip: saved ? '移出稍后读' : '加入稍后读',
-              onPressed: () =>
-                  ref.read(libraryProvider.notifier).toggleSaved(article),
+              onPressed: () => toggleSavedWithFeedback(context, ref, article),
               icon: Icon(
                 saved ? Icons.bookmark : Icons.bookmark_border,
                 color: colors.primary,
@@ -611,6 +632,7 @@ class SourcesPage extends ConsumerStatefulWidget {
 class _SourcesPageState extends ConsumerState<SourcesPage> {
   final search = TextEditingController();
   String query = '', filter = 'all', category = 'all';
+  bool followedOnly = false;
   @override
   void dispose() {
     search.dispose();
@@ -635,12 +657,13 @@ class _SourcesPageState extends ConsumerState<SourcesPage> {
               ('${feed.title} ${feed.description} ${feed.url} ${feed.category}'
                   .toLowerCase()
                   .contains(query.trim().toLowerCase())) &&
+              (!followedOnly ||
+                  feed.enabled && !library.hidden.contains(feed.id)) &&
               (filter == 'all' ||
-                  filter == 'ok' && feed.enabled && feed.status == 'ok' ||
-                  filter == 'error' && feed.enabled && feed.status == 'error' ||
-                  filter == 'followed' &&
-                      feed.enabled &&
-                      !library.hidden.contains(feed.id) ||
+                  filter == 'ok' && feed.effectiveStatus == 'active' ||
+                  filter == 'error' && feed.effectiveStatus == 'error' ||
+                  filter == 'archived' && feed.effectiveStatus == 'archived' ||
+                  filter == 'disabled' && feed.effectiveStatus == 'disabled' ||
                   filter == 'empty' && (counts[feed.id] ?? 0) == 0),
         )
         .toList();
@@ -652,7 +675,7 @@ class _SourcesPageState extends ConsumerState<SourcesPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('整理你的信息入口', style: Theme.of(context).textTheme.titleLarge),
+                Text('本机关注', style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 8),
                 Text(
                   '关注只影响本机阅读。公共采集配置在网页订阅源中管理。',
@@ -684,11 +707,18 @@ class _SourcesPageState extends ConsumerState<SourcesPage> {
                   spacing: 8,
                   runSpacing: 4,
                   children: [
+                    FilterChip(
+                      label: const Text('只看本机关注'),
+                      selected: followedOnly,
+                      onSelected: (value) =>
+                          setState(() => followedOnly = value),
+                    ),
                     for (final entry in const {
                       'all': '全部',
                       'ok': '采集正常',
                       'error': '采集异常',
-                      'followed': '已关注',
+                      'archived': '自动归档',
+                      'disabled': '公共停用',
                       'empty': '暂无文章',
                     }.entries)
                       ChoiceChip(
@@ -724,10 +754,28 @@ class _SourcesPageState extends ConsumerState<SourcesPage> {
           ),
         ),
         if (feeds.isEmpty)
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Text('没有找到来源，试试其他关键词或筛选。'),
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('没有匹配的来源。'),
+                  const SizedBox(height: 12),
+                  OutlinedButton(
+                    onPressed: () {
+                      search.clear();
+                      setState(() {
+                        query = '';
+                        filter = 'all';
+                        category = 'all';
+                        followedOnly = false;
+                      });
+                    },
+                    child: const Text('清除来源筛选'),
+                  ),
+                ],
+              ),
             ),
           )
         else
@@ -741,13 +789,9 @@ class _SourcesPageState extends ConsumerState<SourcesPage> {
                 key: ValueKey(feed.id),
                 title: Text(feed.title),
                 subtitle: Text(
-                  '${feed.category} · ${counts[feed.id] ?? 0} 篇文章 · ${!feed.enabled
-                      ? '公共采集已停用'
-                      : feed.status == 'error'
-                      ? '采集异常'
-                      : '采集正常'}',
+                  '${feed.category} · ${counts[feed.id] ?? 0} 篇文章 · ${collectionStatusLabel(feed.effectiveStatus)}${feed.enabled && library.hidden.contains(feed.id) ? ' · 本机未关注' : ''}',
                   style: TextStyle(
-                    color: feed.status == 'error' && feed.enabled
+                    color: feed.effectiveStatus == 'error'
                         ? colors.error
                         : colors.onSurfaceVariant,
                   ),

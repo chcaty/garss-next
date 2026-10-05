@@ -20,3 +20,9 @@ test('duplicate detection ignores fragments and domain case but keeps distinct f
  const other={...source,id:'b',feed_url:'https://EXAMPLE.com/feed#comments'};
  assert.deepEqual([...duplicateUrls([source,other,{...source,id:'c',feed_url:'https://example.com/news/feed'}])],[source.feed_url,other.feed_url]);
 });
+
+test('review includes before and after values for every submitted field',()=>{
+ const result=changes([source],[{...source,enabled:false,allow_undated:true}])[0];
+ assert.deepEqual(result.fields.map(field=>[field.key,field.before,field.after]),[['enabled',true,false],['allow_undated',undefined,true]]);
+ assert.ok(changes([source],[])[0].fields.some(field=>field.key==='feed_url'&&field.before===source.feed_url));
+});

@@ -98,11 +98,19 @@ class CatalogRepository {
     final documents = await Future.wait([
       get(base.resolve('api/v1/sync.json')),
       get(base.resolve('api/v1/source-state.json')),
+      get(base.resolve('api/v1/feeds.json')),
     ]);
-    final ledger = decode(documents[0]), health = decode(documents[1]);
-    if (ledger['generated_at'] != health['generated_at']) {
+    final ledger = decode(documents[0]),
+        health = decode(documents[1]),
+        feeds = decode(documents[2]);
+    if (ledger['generated_at'] != health['generated_at'] ||
+        ledger['generated_at'] != feeds['generated_at']) {
       throw const FormatException('Mixed sync records');
     }
-    return SyncReport.fromJson({...ledger, 'sources': health['sources']});
+    return SyncReport.fromJson({
+      ...ledger,
+      'sources': health['sources'],
+      'feeds': feeds['feeds'],
+    });
   }
 }
