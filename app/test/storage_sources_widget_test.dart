@@ -25,7 +25,7 @@ void main() {
       overrides: [libraryStorageProvider.overrideWith((ref) async => storage)],
     );
     addTearDown(container.dispose);
-    await container.read(libraryProvider.future);
+    await tester.runAsync(() => container.read(libraryProvider.future));
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -81,8 +81,10 @@ void main() {
           isEmpty,
         );
         expect(container.read(libraryProvider).requireValue.visible(), isEmpty);
-        await tester.tap(find.text('只看本机关注'));
-        await tester.tap(find.text(status == 'archived' ? '自动归档' : '公共停用'));
+        await tester.runAsync(() => tester.tap(find.text('只看本机关注')));
+        await tester.runAsync(
+          () => tester.tap(find.text(status == 'archived' ? '自动归档' : '公共停用')),
+        );
         await tester.pumpAndSettle();
         expect(find.text('已关注来源'), findsOneWidget);
         expect(find.text('未关注来源'), findsNothing);
@@ -91,21 +93,25 @@ void main() {
         );
         expect(tile.value, isTrue);
         expect(tile.onChanged, isNotNull);
-        await tester.tap(find.byKey(const ValueKey('source')));
+        await tester.runAsync(
+          () => tester.tap(find.byKey(const ValueKey('source'))),
+        );
         await tester.pumpAndSettle();
         expect(find.text('已关注来源'), findsNothing);
         expect(
           container.read(libraryProvider).requireValue.hidden,
           contains('source'),
         );
-        await tester.tap(find.text('清除来源筛选'));
+        await tester.runAsync(() => tester.tap(find.text('清除来源筛选')));
         await tester.pumpAndSettle();
         final hidden = tester.widget<SwitchListTile>(
           find.byKey(const ValueKey('source')),
         );
         expect(hidden.value, isFalse);
         expect(hidden.onChanged, isNotNull);
-        await tester.tap(find.byKey(const ValueKey('source')));
+        await tester.runAsync(
+          () => tester.tap(find.byKey(const ValueKey('source'))),
+        );
         await tester.pumpAndSettle();
         expect(
           container.read(libraryProvider).requireValue.isFollowed('source'),
@@ -128,17 +134,20 @@ void main() {
         'catalog-v1': jsonEncode(cachedCatalog.toJson()),
         'saved-v2': raw,
       });
-      await setup(tester, storage, notice: true);
+      final container = await setup(tester, storage, notice: true);
       expect(find.textContaining('原始内容未被覆盖'), findsOneWidget);
-      await tester.tap(find.text('恢复可读收藏'));
+      await tester.runAsync(() => tester.tap(find.text('恢复可读收藏')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('取消'));
+      await tester.runAsync(() => tester.tap(find.text('取消')));
       await tester.pumpAndSettle();
       expect(storage.values['saved-v2'], raw);
       expect(storage.writes, isEmpty);
-      await tester.tap(find.text('恢复可读收藏'));
+      await tester.runAsync(() => tester.tap(find.text('恢复可读收藏')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('备份并恢复'));
+      await tester.runAsync(() => tester.tap(find.text('备份并恢复')));
+      await tester.runAsync(
+        () => container.read(libraryProvider.notifier).pendingWrites,
+      );
       await tester.pumpAndSettle();
       expect(storage.values[storage.writes.first], raw);
       expect(find.text('恢复可读收藏'), findsNothing);

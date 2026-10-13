@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/library_storage.dart';
+import '../data/library_codec.dart';
 import '../data/models.dart';
 import '../data/repository.dart';
 import 'library_state.dart';
@@ -33,6 +33,7 @@ final libraryProvider = AsyncNotifierProvider<LibraryController, LibraryState>(
 
 class LibraryController extends AsyncNotifier<LibraryState> {
   late LibraryStorage _storage;
+  Catalog? _persistedCatalog;
   Future<void> _writes = Future.value();
   final Set<String> _unreadableKeys = {};
   bool _savedWritesBlocked = false;
@@ -86,10 +87,7 @@ class LibraryController extends AsyncNotifier<LibraryState> {
       await _backupSaved(original);
       _pendingSavedBackup = null;
     }
-    await _write(
-      'saved-v2',
-      jsonEncode(saved.values.map((article) => article.toJson()).toList()),
-    );
+    await _write('saved-v2', await compute(encodeSavedDocument, saved));
   }
 
   @override
@@ -103,31 +101,17 @@ class LibraryController extends AsyncNotifier<LibraryState> {
     try {
       final value = _read<String>('catalog-v1');
       if (value != null) {
-        cached = Catalog.fromJson(jsonDecode(value) as Map<String, dynamic>);
+        cached = await compute(decodeCachedCatalog, value);
       }
     } catch (_) {
       // A public cache can be replaced; personal records must be preserved.
     }
-    final saved = <String, Article>{};
+    _persistedCatalog = cached;
     final original = _read<String>('saved-v2');
-    if (original != null) {
-      try {
-        for (final value in jsonDecode(original) as List<dynamic>) {
-          try {
-            final article = Article.fromJson(value as Map<String, dynamic>);
-            if (saved.containsKey(article.id)) {
-              throw const FormatException('Duplicate saved identity');
-            }
-            saved[article.id] = article;
-          } catch (_) {
-            _savedWritesBlocked = true;
-          }
-        }
-      } catch (_) {
-        _savedWritesBlocked = true;
-      }
-      if (_savedWritesBlocked) _savedOriginal = original;
-    }
+    final document = await compute(decodeSavedDocument, original);
+    final saved = {...document.saved};
+    _savedWritesBlocked = document.requiresRecovery;
+    if (_savedWritesBlocked) _savedOriginal = original;
     _savedWritesBlocked =
         _savedWritesBlocked || _unreadableKeys.contains('saved-v2');
     String message = '', storageMessage = '';
@@ -151,18 +135,18 @@ class LibraryController extends AsyncNotifier<LibraryState> {
       }
       if (fetched) {
         try {
-          await _write('catalog-v1', jsonEncode(catalog.toJson()));
+          await _write('catalog-v1', await compute(encodeCatalog, catalog));
+          _persistedCatalog = catalog;
         } catch (_) {
-          storageMessage = '目录缓存保存失败，本次同步内容仅在本次会话有效';
+          storageMessage = _catalogSaveFailure;
         }
       }
     }
     var migrated = false;
     for (final entry in saved.entries.toList()) {
       if (entry.value.savedCategories.isEmpty) {
-        final categories = catalog.feeds
-            .where((feed) => entry.value.sources.contains(feed.id))
-            .map((feed) => feed.category)
+        final categories = entry.value.sources
+            .map((id) => catalog.feedsById[id]?.category ?? '')
             .where((value) => value.isNotEmpty)
             .toSet()
             .toList();
@@ -215,6 +199,8 @@ class LibraryController extends AsyncNotifier<LibraryState> {
       if (article.legacyIds.any(read.contains)) article.id,
   };
 
+  static const _catalogSaveFailure = '目录缓存保存失败，本次同步内容仅在本次会话有效';
+
   Future<void> refresh() async {
     final current = state.asData?.value;
     if (current == null || current.syncing) return;
@@ -223,9 +209,16 @@ class LibraryController extends AsyncNotifier<LibraryState> {
       final catalog = await ref.read(repositoryProvider).fetch();
       String? storageMessage;
       try {
-        await _write('catalog-v1', jsonEncode(catalog.toJson()));
+        if (!identical(catalog, _persistedCatalog)) {
+          await _write('catalog-v1', await compute(encodeCatalog, catalog));
+          _persistedCatalog = catalog;
+        }
+        if (ref.mounted &&
+            state.requireValue.storageMessage == _catalogSaveFailure) {
+          storageMessage = '';
+        }
       } catch (_) {
-        storageMessage = '目录缓存保存失败，本次同步内容仅在本次会话有效';
+        storageMessage = _catalogSaveFailure;
       }
       if (ref.mounted) {
         state = AsyncData(
@@ -237,7 +230,10 @@ class LibraryController extends AsyncNotifier<LibraryState> {
             },
             read: migrateRead(catalog, state.requireValue.read),
             syncing: false,
-            message: '已同步最新文章',
+            message: identical(catalog, current.catalog)
+                ? '已检查，目录未变化'
+                : '目录已更新',
+            lastCheckedAt: DateTime.now(),
             storageMessage: storageMessage,
           ),
         );
@@ -315,11 +311,7 @@ class LibraryController extends AsyncNotifier<LibraryState> {
       // Keep the guard set until the replacement has actually been accepted.
       await _write(
         'saved-v2',
-        jsonEncode(
-          state.requireValue.saved.values
-              .map((article) => article.toJson())
-              .toList(),
-        ),
+        await compute(encodeSavedDocument, state.requireValue.saved),
       );
       _savedWritesBlocked = false;
       _savedOriginal = null;

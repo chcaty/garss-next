@@ -28,20 +28,13 @@ class _SourcesPageState extends ConsumerState<SourcesPage> {
   Widget build(BuildContext context) {
     final library = widget.library, colors = Theme.of(context).colorScheme;
     final counts = library.articleCounts;
-    final categories =
-        library.catalog.feeds
-            .map((feed) => feed.category)
-            .where((value) => value.isNotEmpty)
-            .toSet()
-            .toList()
-          ..sort();
+    final categories = library.catalog.categories;
+    final needle = query.trim().toLowerCase();
     final feeds = library.catalog.feeds
         .where(
           (feed) =>
               (category == 'all' || feed.category == category) &&
-              ('${feed.title} ${feed.description} ${feed.url} ${feed.category}'
-                  .toLowerCase()
-                  .contains(query.trim().toLowerCase())) &&
+              library.catalog.feedSearch[feed.id]!.contains(needle) &&
               (!followedOnly || library.isFollowed(feed.id)) &&
               (filter == 'all' ||
                   filter == 'ok' && feed.effectiveStatus == 'active' ||

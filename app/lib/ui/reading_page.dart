@@ -53,15 +53,14 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
     final unreadBySource = library.unreadCounts;
     final canonical = library.catalog.sourceAliases[source] ?? source;
     final selected = feeds.any((feed) => feed.id == canonical) ? canonical : '';
-    final categories =
-        widget.savedOnly
-              ? library.savedCategories
-              : feeds
-                    .map((feed) => feed.category)
-                    .where((value) => value.isNotEmpty)
-                    .toSet()
-                    .toList()
-          ..sort();
+    final categories = widget.savedOnly
+        ? library.savedCategories
+        : (feeds
+              .map((feed) => feed.category)
+              .where((value) => value.isNotEmpty)
+              .toSet()
+              .toList()
+            ..sort());
     final hasFilters =
         query.isNotEmpty ||
         unread ||
@@ -104,12 +103,28 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
                   Text(
                     library.message.isNotEmpty
                         ? library.message
-                        : '最近采集（北京时间）${articleDate(library.catalog.generatedAt)}',
+                        : '公共采集（北京时间）${articleDate(library.catalog.generatedAt)}',
                     style: TextStyle(
                       fontSize: 12,
                       color: colors.onSurfaceVariant,
                     ),
                   ),
+                  if (library.message.isNotEmpty)
+                    Text(
+                      '公共采集（北京时间）${articleDate(library.catalog.generatedAt)}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.onSurfaceVariant,
+                      ),
+                    ),
+                  if (library.lastCheckedAt != null)
+                    Text(
+                      '本机检查（北京时间）${articleDate(library.lastCheckedAt!)}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.onSurfaceVariant,
+                      ),
+                    ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: search,

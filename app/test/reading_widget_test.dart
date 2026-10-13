@@ -28,6 +28,48 @@ void main() {
     ],
     articles: [article],
   );
+  Future<void> finishIo(
+    WidgetTester tester,
+    Future<void> work,
+    ProviderContainer container,
+  ) async {
+    var done = false;
+    Object? failure;
+    work.then(
+      (_) => done = true,
+      onError: (Object error) {
+        failure = error;
+        done = true;
+      },
+    );
+    final elapsed = Stopwatch()..start();
+    // Real isolates finish outside fake time; pump their scheduled continuations
+    // without moving Flutter animations or Snackbar timers into a real zone.
+    do {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 1)),
+      );
+      await tester.pump();
+      if (elapsed.elapsed > const Duration(seconds: 10)) {
+        fail('Library I/O did not settle');
+      }
+    } while (!done ||
+        (container.read(libraryProvider).asData?.value.syncing ?? false));
+    if (failure != null) throw failure!;
+  }
+
+  Future<void> tap(WidgetTester tester, Finder target) async {
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(GarssApp)),
+    );
+    await tester.tap(target);
+    await finishIo(
+      tester,
+      container.read(libraryProvider.notifier).pendingWrites,
+      container,
+    );
+  }
+
   Future<void> setup(
     WidgetTester tester, {
     double scale = 1,
@@ -45,15 +87,22 @@ void main() {
       'hidden-v1': hidden,
       'show-images': false,
     });
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          repositoryProvider.overrideWithValue(
-            CatalogRepository(
-              MockClient((request) async => http.Response('offline', 503)),
-            ),
+    final container = ProviderContainer(
+      overrides: [
+        repositoryProvider.overrideWithValue(
+          CatalogRepository(
+            MockClient((request) async => http.Response('offline', 503)),
           ),
-        ],
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    // Native compute work must finish outside the widget test's fake clock.
+    await tester.runAsync(() => container.read(libraryProvider.future));
+    final controller = container.read(libraryProvider.notifier);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
         child: MediaQuery.fromView(
           view: tester.view,
           child: Builder(
@@ -66,6 +115,8 @@ void main() {
         ),
       ),
     );
+    // Match startup's real async refresh before exercising fake-clock UI timers.
+    await finishIo(tester, controller.refresh(), container);
     await tester.pumpAndSettle();
   }
 
@@ -83,12 +134,12 @@ void main() {
           )
           .first,
     );
-    await tester.tap(find.byTooltip('加入稍后读'));
+    await tap(tester, find.byTooltip('加入稍后读'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('稍后读').last);
+    await tap(tester, find.text('稍后读').last);
     await tester.pumpAndSettle();
     expect(find.text(article.title), findsOneWidget);
-    await tester.tap(find.text(article.title));
+    await tap(tester, find.text(article.title));
     await tester.pumpAndSettle();
     expect(find.text(article.summary), findsOneWidget);
     expect(find.text('打开原文'), findsOneWidget);
@@ -108,14 +159,14 @@ void main() {
           )
           .first,
     );
-    await tester.tap(find.byTooltip('加入稍后读'));
+    await tap(tester, find.byTooltip('加入稍后读'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(article.title));
+    await tap(tester, find.text(article.title));
     await tester.pumpAndSettle();
     expect(find.text('本次筛选 · 第 1 / 1 篇'), findsOneWidget);
-    await tester.tap(find.byTooltip('移出稍后读'));
+    await tap(tester, find.byTooltip('移出稍后读'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('撤销'));
+    await tap(tester, find.text('撤销'));
     await tester.pumpAndSettle();
     expect(find.byTooltip('移出稍后读'), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -145,10 +196,10 @@ void main() {
       ),
       hidden: ['hidden'],
     );
-    await tester.tap(find.text('订阅源').last);
+    await tap(tester, find.text('订阅源').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('只看本机关注'));
-    await tester.tap(find.text('采集异常'));
+    await tap(tester, find.text('只看本机关注'));
+    await tap(tester, find.text('采集异常'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('关注的异常来源'),
@@ -167,14 +218,14 @@ void main() {
     'reading sources can be searched without changing the query filter',
     (tester) async {
       await setup(tester);
-      await tester.tap(find.text('选择阅读来源'));
+      await tap(tester, find.text('选择阅读来源'));
       await tester.pumpAndSettle();
       await tester.enterText(find.widgetWithText(TextField, '搜索来源或分类'), '不匹配');
       await tester.pumpAndSettle();
       expect(find.text('没有匹配的来源，试试其他关键词。'), findsOneWidget);
       await tester.enterText(find.widgetWithText(TextField, '搜索来源或分类'), '示例');
       await tester.pumpAndSettle();
-      await tester.tap(find.text('示例来源').last);
+      await tap(tester, find.text('示例来源').last);
       await tester.pumpAndSettle();
       expect(find.text(article.title), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -206,20 +257,20 @@ void main() {
     await tester.enterText(find.byType(TextField), '没有这个关键词');
     await tester.pumpAndSettle();
     expect(find.text('没有匹配的文章'), findsOneWidget);
-    await tester.tap(find.text('稍后读').last);
+    await tap(tester, find.text('稍后读').last);
     await tester.pumpAndSettle();
     expect(find.text('这里留给想再读的文章'), findsOneWidget);
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
       isEmpty,
     );
-    await tester.tap(find.text('信息流').last);
+    await tap(tester, find.text('信息流').last);
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
       '没有这个关键词',
     );
-    await tester.tap(find.text('重置筛选').first);
+    await tap(tester, find.text('重置筛选').first);
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
@@ -230,10 +281,10 @@ void main() {
 
   testWidgets('current results can be marked read and undone', (tester) async {
     await setup(tester);
-    await tester.tap(find.text('当前结果 1 篇全部已读'));
+    await tap(tester, find.text('当前结果 1 篇全部已读'));
     await tester.pumpAndSettle();
     expect(find.text('已将 1 篇文章标为已读'), findsOneWidget);
-    await tester.tap(find.text('撤销'));
+    await tap(tester, find.text('撤销'));
     await tester.pumpAndSettle();
     expect(find.text('当前结果 1 篇全部已读'), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -249,10 +300,10 @@ void main() {
       ]) {
         tester.view.physicalSize = size;
         await tester.pumpAndSettle();
-        await tester.tap(find.text('订阅源').last);
+        await tap(tester, find.text('订阅源').last);
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        await tester.tap(find.text('设置').last);
+        await tap(tester, find.text('设置').last);
         await tester.pumpAndSettle();
         await tester.scrollUntilVisible(
           find.text('当前字号 100%'),
@@ -273,10 +324,10 @@ void main() {
     'reading filters can be applied and reset at enlarged text scale',
     (tester) async {
       await setup(tester, scale: 2);
-      await tester.tap(find.text('分类与时间'));
+      await tap(tester, find.text('分类与时间'));
       await tester.pumpAndSettle();
       expect(find.text('筛选文章'), findsOneWidget);
-      await tester.tap(find.text('今天'));
+      await tap(tester, find.text('今天'));
       await tester.scrollUntilVisible(
         find.text('应用筛选'),
         100,
@@ -287,12 +338,12 @@ void main() {
             )
             .last,
       );
-      await tester.tap(find.text('应用筛选'));
+      await tap(tester, find.text('应用筛选'));
       await tester.pumpAndSettle();
       expect(find.text('筛选文章'), findsNothing);
       expect(find.text('今天'), findsOneWidget);
       expect(tester.takeException(), isNull);
-      await tester.tap(find.text('重置筛选').first);
+      await tap(tester, find.text('重置筛选').first);
       await tester.pumpAndSettle();
       expect(find.text('分类与时间'), findsOneWidget);
       expect(tester.takeException(), isNull);

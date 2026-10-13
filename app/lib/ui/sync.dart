@@ -48,7 +48,7 @@ class _SyncScreenState extends ConsumerState<SyncScreen> {
     ref.listen(syncProvider, (before, next) {
       if (!started && next.hasValue) {
         started = true;
-        if (next.requireValue.message.contains('缓存')) {
+        if (next.requireValue.fromCache) {
           Future.microtask(() => ref.read(syncProvider.notifier).refresh());
         }
       }

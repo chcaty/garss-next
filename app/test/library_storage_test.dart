@@ -416,6 +416,56 @@ void main() {
     },
   );
 
+  test('unchanged refresh skips cache writes but retries an earlier rejected cache write', () async {
+    final storage = stored('[]');
+    final fresh = Catalog(
+      generatedAt: cachedCatalog.generatedAt.add(const Duration(hours: 1)),
+      feeds: cachedCatalog.feeds,
+      articles: cachedCatalog.articles,
+    );
+    final container = ProviderContainer(
+      overrides: [
+        libraryStorageProvider.overrideWith((ref) async => storage),
+        repositoryProvider.overrideWithValue(_FixedRepository(fresh)),
+      ],
+    );
+    addTearDown(container.dispose);
+    await container.read(libraryProvider.future);
+    final controller = container.read(libraryProvider.notifier);
+    storage.rejectPrefix = 'catalog-v1';
+    await controller.refresh();
+    expect(
+      container.read(libraryProvider).requireValue.storageMessage,
+      contains('目录缓存保存失败'),
+    );
+    storage.rejectPrefix = null;
+    await controller.refresh();
+    expect(storage.writes.where((key) => key == 'catalog-v1'), hasLength(2));
+    await controller.refresh();
+    expect(storage.writes.where((key) => key == 'catalog-v1'), hasLength(2));
+    final state = container.read(libraryProvider).requireValue;
+    expect(state.storageMessage, isEmpty);
+    expect(state.message, '已检查，目录未变化');
+    expect(state.lastCheckedAt, isNotNull);
+  });
+
+  test('queued background bookmark serialization preserves the latest ordered mutation', () async {
+    final storage = stored('[]');
+    final container = open(storage);
+    await container.read(libraryProvider.future);
+    final controller = container.read(libraryProvider.notifier);
+    controller.toggleSaved(savedArticle);
+    controller.toggleSaved(savedArticle);
+    controller.toggleSaved(
+      Article.fromJson({...savedArticle.toJson(), 'summary': 'latest'}),
+    );
+    await controller.pendingWrites;
+    final raw = jsonDecode(storage.values['saved-v2'] as String) as List;
+    expect(raw, hasLength(1));
+    expect(raw.single['summary'], 'latest');
+    expect(storage.writes, ['saved-v2', 'saved-v2', 'saved-v2']);
+  });
+
   test(
     'corrupt bookmarks expose recovery even without cache or connectivity',
     () async {
@@ -436,4 +486,12 @@ class _RejectReplacement implements LibraryStorage {
   @override
   Future<bool> write(String key, Object value) async =>
       key == 'saved-v2' ? false : storage.write(key, value);
+}
+
+class _FixedRepository extends CatalogRepository {
+  _FixedRepository(this.catalog)
+    : super(MockClient((request) async => http.Response('unused', 500)));
+  final Catalog catalog;
+  @override
+  Future<Catalog> fetch() async => catalog;
 }
