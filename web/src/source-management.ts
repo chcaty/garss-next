@@ -26,3 +26,11 @@ export function changes(before: Source[], after: Source[]): SourceChange[] {
   for (const source of before) if (!current.has(source.id)) result.push({id:source.id,title:source.title,kind:'删除',fields:sourceFields.filter(key=>source[key]!==undefined).map(key=>({key,before:source[key],after:undefined}))});
   return result;
 }
+
+/** Discovery observations belong to rolling data, never the authored source config. */
+export function sourceForDraft(source: Source): Source {
+  return Object.fromEntries([
+    ['id', source.id],
+    ...sourceFields.filter(key => source[key] !== undefined).map(key => [key, source[key]]),
+  ]) as unknown as Source;
+}

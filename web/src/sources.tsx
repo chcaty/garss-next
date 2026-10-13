@@ -6,7 +6,7 @@ import {Shell} from './shell.tsx';
 import {createRoot} from 'react-dom/client';
 import {Button, Checkbox, Dialog, DialogBackdrop, DialogPanel, DialogTitle, Description, Field, Label, Input, Textarea, Switch, Listbox, ListboxButton, ListboxOptions, ListboxOption, Menu, MenuButton, MenuItems, MenuItem, TabGroup, TabList, Tab, TabPanels, TabPanel} from '@headlessui/react';
 import {readJson, validateConfig, webUrl, type Source, type SourceConfig} from './catalog.ts';
-import {changes, duplicateUrls, matchesSource, fieldLabels, fieldValue} from './source-management.ts';
+import {changes, duplicateUrls, matchesSource, fieldLabels, fieldValue, sourceForDraft} from './source-management.ts';
 import {archived, rebaseDraft, draftConflicts, importOpml, exportOpml, type Health} from './source-manager-model.ts';
 
 const draftKey = `garss-next-sources:${location.pathname}`;
@@ -77,7 +77,7 @@ function Manager() {
   const download=(name:string,content:string,type:string)=>{const url=URL.createObjectURL(new Blob([content],{type}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
   const configText=()=>{if(!config)throw Error('配置尚未加载');validateConfig(config);return JSON.stringify(config,null,2)+'\n';};
   const closeEditor=()=>{if(dirty)setConfirmAction({title:'放弃尚未保存的输入？',description:'已保存的来源草稿会保留，当前编辑面板的输入将被丢弃。',run:()=>setEditing(undefined)});else setEditing(undefined);};
-  const openEditor=(source:Source)=>{setEditing({...source});setEditorInitial({...source});setEditError('');};
+  const openEditor=(source:Source)=>{const editable=tab===1?sourceForDraft(source):{...source};setEditing(editable);setEditorInitial({...editable});setEditError('');};
   const commitEditor=(event:React.FormEvent)=>{event.preventDefault();if(!editing||!config)return;const next={...editing,title:editing.title.trim(),feed_url:editing.feed_url.trim(),category:editing.category.trim(),description:editing.description.trim()};
     if(!next.title||!next.category||!webUrl(next.feed_url)){setEditError('请填写名称和分类，以及有效的 HTTP(S) RSS 地址。');return;}
     const old=authored.find(source=>source.id===next.id);if(next.feed_url!==old?.feed_url&&duplicateUrls([next,...authored.filter(source=>source.id!==next.id)]).has(next.feed_url)){setEditError('这个 RSS 地址已存在，请编辑已有来源。');return;}
