@@ -68,10 +68,13 @@ export class ReadingLibrary {
       const aliases = article.legacy_ids ?? [];
       if (aliases.some(id => this.read.has(id))) this.read.add(article.id);
       if (!this.saved.has(article.id) && !aliases.some(id => this.saved.has(id))) continue;
+      const previous = aliases.map(id => this.bookmarks.get(id)).find((item): item is SavedArticle => !!item);
       for (const id of aliases) if (id !== article.id) { this.saved.delete(id); this.bookmarks.delete(id); }
       this.saved.add(article.id);
       // Keep the content and categories selected at the time of saving.
-      if (!this.bookmarks.has(article.id)) this.bookmarks.set(article.id, this.snapshot(article, sources));
+      if (!this.bookmarks.has(article.id)) this.bookmarks.set(article.id, previous ? {
+        ...previous, id: article.id, legacy_ids: [...new Set([previous.id, ...(previous.legacy_ids ?? []), ...aliases])].filter(id => id !== article.id),
+      } : this.snapshot(article, sources));
     }
   }
 

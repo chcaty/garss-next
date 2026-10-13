@@ -207,3 +207,26 @@ test('state revision changes only when an accepted local or remote state changes
   a.refresh();assert.equal(a.revision,initial);save(a,'one');assert.equal(a.revision,initial+1);
   a.refresh();assert.equal(a.revision,initial+1);save(b,'two');a.refresh();assert.equal(a.revision,initial+2);
 });
+
+test('stale undo retains a newer snapshot already re-saved in another tab',()=>{
+  const {open}=setup({version:2,saved:['one'],bookmarks:[article()]}),a=open('a'),b=open('b');
+  const removed=a.library.bookmarks.get('one');a.library.toggleSaved(article(),[]);a.persist();
+  b.refresh();b.library.toggleSaved({...article(),summary:'newer content'},[]);b.persist();
+  a.library.restoreSaved(removed);assert.equal(a.persist(),true);
+  assert.equal(open().library.bookmarks.get('one').summary,'newer content');
+});
+
+test('deliberate remove then re-save still accepts a new snapshot',()=>{
+  const {open}=setup({version:2,saved:['one'],bookmarks:[article()]}),store=open();
+  store.library.toggleSaved(article(),[]);store.persist();store.library.toggleSaved({...article(),summary:'newer content'},[]);store.persist();
+  assert.equal(open().library.bookmarks.get('one').summary,'newer content');
+});
+
+test('canonical migration retains the original saved content and categories',()=>{
+  const old={...article('old'),summary:'original content',saved_sources:[{id:'source',title:'original source',category:'original category'}]},current={...article('new'),legacy_ids:['old'],summary:'updated content'};
+  const {open}=setup({version:2,saved:['old'],bookmarks:[old]}),store=open();
+  assert.equal(store.reconcile([current],[{id:'source',title:'updated source',category:'updated category'}]),true);
+  const saved=open().library.bookmarks.get('new');
+  assert.equal(saved.summary,'original content');assert.equal(saved.title,'old');assert.equal(saved.url,old.url);assert.equal(saved.saved_sources[0].category,'original category');
+  assert.deepEqual(saved.legacy_ids,['old']);assert.equal(open().library.saved.has('old'),false);
+});

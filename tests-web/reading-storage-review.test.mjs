@@ -136,3 +136,22 @@ test('a newly damaged recovery receipt is itself quarantined without replacing a
   const recovered = JSON.parse(port.getItem(`${READING_STORAGE_PREFIX}quarantine:second`));
   assert.ok(recovered.records.some(record => record.key === receiptKey && record.raw === '{damaged receipt'));
 });
+
+test('canonical identity migration keeps the original saved snapshot and source categories', () => {
+  const port = new SharedStorage();
+  const original = {...old, summary: 'Original saved summary', saved_sources: [{id: 'source', title: 'Original source title', category: 'Original category'}]};
+  port.setItem(LEGACY_READING_KEY, JSON.stringify({version: 2, read: [], saved: ['old'], bookmarks: [original]}));
+  const storage = new ReadingStorage(port, () => 'canonical-migration');
+  assert.equal(storage.reconcile(
+    [{...canonical, summary: 'Changed public summary', published_at: '2026-10-13T00:00:00Z'}],
+    [{id: 'source', title: 'Changed public source', category: 'Changed category'}],
+  ), true);
+  const saved = new ReadingStorage(port).library.bookmarks.get('new');
+  assert.ok(saved);
+  assert.equal(saved.title, original.title);
+  assert.equal(saved.summary, original.summary);
+  assert.equal(saved.url, original.url);
+  assert.equal(saved.published_at, original.published_at);
+  assert.deepEqual(saved.saved_sources, original.saved_sources);
+  assert.ok(saved.legacy_ids.includes('old'));
+});

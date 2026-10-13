@@ -188,7 +188,9 @@ export class ReadingStorage {
         if (change.value) library[change.field].add(change.id); else library[change.field].delete(change.id);
         if (change.field === 'saved') {
           if (!change.value) library.bookmarks.delete(change.id);
-          else if (change.bookmark) library.bookmarks.set(change.id, change.bookmark);
+          // A stale save/undo must not replace content another tab has already saved.
+          // Deliberate remove-then-save clears the snapshot before adding a new one.
+          else if (change.bookmark && !library.bookmarks.has(change.id)) library.bookmarks.set(change.id, change.bookmark);
         }
       }
     }
