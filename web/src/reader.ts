@@ -1,6 +1,7 @@
-import {readingSelection,unreadCounts,type ReadingWindow} from './reading-filter.ts';
+import {ReadingIndex} from './reading-index.ts';
+import {unreadCounts,type ReadingWindow} from './reading-filter.ts';
 import {currentTheme,setTheme,type Theme} from './theme.ts';
-import {loadCatalog, filterArticles, sourceIds, type Article, type Source} from './catalog.ts';
+import {loadCatalog, sourceIds, type Article, type Source, type Catalog} from './catalog.ts';
 import {bookmarkSources, type SavedArticle} from './reading-state.ts';
 import {ReadingStorage, LEGACY_READING_KEY, READING_STORAGE_PREFIX} from './reading-storage.ts';
 const byId = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -14,6 +15,18 @@ const library = readingStorage.library;
 let storageAvailable=readingStorage.status.kind==='ready';
 const readIds=library.read, savedIds=library.saved;
 let catalogNotice='';
+let verifiedCatalog: Catalog | undefined;
+let loadGeneration=0;
+let streamIndex=new ReadingIndex([],[]);
+let savedIndex:ReadingIndex|undefined, indexedBookmarks:SavedArticle[]=[];
+function currentIndex(){
+ if(mode!=='saved')return streamIndex;
+ const bookmarks=[...library.bookmarks.values()];
+ if(!savedIndex||bookmarks.length!==indexedBookmarks.length||bookmarks.some((article,index)=>article!==indexedBookmarks[index])){
+  savedIndex=new ReadingIndex(bookmarks,[]);indexedBookmarks=bookmarks;
+ }
+ return savedIndex;
+}
 let removedBookmark:SavedArticle|undefined;let feedbackTimer:ReturnType<typeof setTimeout>;let returnArticle='';let returnScroll=0;
 function feedback(message:string,removed?:SavedArticle){const dialog=byId<HTMLDialogElement>('focus-reader');(dialog.open?dialog:document.body).append(byId('reading-feedback'));clearTimeout(feedbackTimer);removedBookmark=removed;byId('feedback-text').textContent=message;byId('undo-save').hidden=!removed;byId('reading-feedback').hidden=false;feedbackTimer=setTimeout(()=>{byId('reading-feedback').hidden=true;removedBookmark=undefined;},8000);}
 byId('undo-save').onclick=()=>{if(!removedBookmark)return;if(!storageAvailable)return;library.restoreSaved(removedBookmark);if(!persistReading())return;renderCategories();renderSources();renderArticles();if(byId<HTMLDialogElement>('focus-reader').open)showFocus(false);feedback('已恢复稍后读');};
@@ -44,10 +57,14 @@ function toggleSaved(article:Article){
  }
 }
 function matchingArticles(){
- const category=byId<HTMLSelectElement>('reading-category').value,window=byId<HTMLSelectElement>('reading-window').value as ReadingWindow;
- let selection=readingSelection(visibleArticles(),visibleSources(),mode==='saved'?'':category,window);
- if(mode==='saved'&&category)selection=selection.filter(article=>articleSources(article).some(item=>item.category===category));
- return filterArticles(selection,byId<HTMLInputElement>('article-search').value,source,visibleSources()).filter(article=>(mode==='unread'||byId<HTMLInputElement>('saved-unread').checked)?!readIds.has(article.id):true).sort((a,b)=>(Date.parse(b.published_at)-Date.parse(a.published_at))*(byId<HTMLSelectElement>('article-sort').value==='oldest'?-1:1));
+ return currentIndex().select({
+  category:byId<HTMLSelectElement>('reading-category').value,
+  window:byId<HTMLSelectElement>('reading-window').value as ReadingWindow,
+  query:byId<HTMLInputElement>('article-search').value,
+  source, read:readIds,
+  unreadOnly:mode==='unread'||byId<HTMLInputElement>('saved-unread').checked,
+  oldest:byId<HTMLSelectElement>('article-sort').value==='oldest',
+ });
 }
 function showFocus(markRead=true){
   const article=focusQueue[focusIndex];if(!article)return;
@@ -121,26 +138,40 @@ function renderArticles() {
 }
 function renderCategories(){const select=byId<HTMLSelectElement>('reading-category'),previous=select.value,pool=mode==='saved'?[...library.bookmarks.values()].flatMap(article=>article.saved_sources):sources;select.replaceChildren(new Option('全部分类',''));[...new Set(pool.map(item=>item.category))].sort((a,b)=>a.localeCompare(b,'zh')).forEach(value=>select.add(new Option(value,value)));select.value=[...select.options].some(option=>option.value===previous)?previous:'';}
 async function load() {
+  const generation=++loadGeneration;
   byId('articles').setAttribute('aria-busy', 'true'); byId('retry-load').hidden = true;
+  byId<HTMLButtonElement>('refresh-catalog').disabled=true;
   try {
-    const data = await loadCatalog(location.href); articles = data.articles;
-    sourceCounts.clear();
-    for (const article of articles) for (const id of new Set(sourceIds(article))) sourceCounts.set(id, (sourceCounts.get(id) ?? 0) + 1);
-    sources = data.sources.filter(item => (sourceCounts.get(item.id) ?? 0) > 0);
-    readingStorage.reconcile(articles,data.sources);readingNotice();catalogNotice='';
+    const data = await loadCatalog(location.href,verifiedCatalog);
+    if(generation!==loadGeneration)return;
+    const unchanged=data===verifiedCatalog;
+    if(!unchanged){
+      articles=data.articles;sourceCounts.clear();
+      for (const article of articles) for (const id of new Set(sourceIds(article))) sourceCounts.set(id, (sourceCounts.get(id) ?? 0) + 1);
+      sources=data.sources.filter(item => (sourceCounts.get(item.id) ?? 0) > 0);
+      streamIndex=new ReadingIndex(articles,sources);
+      readingStorage.reconcile(articles,data.sources);
+      verifiedCatalog=data;
+    }
+    catalogNotice=unchanged?'已检查，公共目录暂无变化。':'';
     source = data.sourceAliases[source] ?? source;
-    if (source && !sources.some(item => item.id === source)) source = '';
+    if (source && !visibleSources().some(item => item.id === source)) source = '';
     byId('edition-date').textContent = new Intl.DateTimeFormat('zh-CN', {dateStyle: 'long', timeZone: 'Asia/Shanghai'}).format(new Date(data.generatedAt));
-    byId('snapshot-info').textContent = `最近同步 ${date.format(new Date(data.generatedAt))} · ${sources.length} 个有文章的来源`;
+    byId('snapshot-info').textContent = `公共采集 ${date.format(new Date(data.generatedAt))} · 本机检查 ${date.format(new Date())} · ${sources.length} 个有文章的来源`;
     renderCategories();
     byId('source-count').textContent = String(sources.length); renderSources(); renderArticles();
   } catch {
-    byId('edition-date').textContent='同步暂时不可用';byId('snapshot-info').textContent='公共目录读取失败 · 稍后读可继续使用';
-    catalogNotice='公共目录读取失败，请检查网络后重试；已备份的稍后读仍可查看。';
-    if(library.bookmarks.size){switchMode('saved');}
-    byId('reader-message').hidden = false; byId('reader-message').textContent = '读取失败，请检查网络后重试'; byId('retry-load').hidden = false;
-    if(library.bookmarks.size)renderArticles();readingNotice();
-  } finally { byId('articles').setAttribute('aria-busy', 'false'); }
+    if(generation!==loadGeneration)return;
+    if(!verifiedCatalog){
+      byId('edition-date').textContent='同步暂时不可用';byId('snapshot-info').textContent='公共目录读取失败 · 稍后读可继续使用';
+      if(library.bookmarks.size)switchMode('saved');
+    }
+    catalogNotice=verifiedCatalog?'检查更新失败，继续显示上次通过校验的目录。':'公共目录读取失败，请检查网络后重试；已备份的稍后读仍可查看。';
+    byId('retry-load').hidden=false;
+    renderArticles();readingNotice();
+  } finally {
+    if(generation===loadGeneration){byId('articles').setAttribute('aria-busy', 'false');byId<HTMLButtonElement>('refresh-catalog').disabled=false;}
+  }
 }
 byId('source-search').oninput = renderSources;
 byId('article-search').oninput = () => { page = 1; renderArticles(); };
@@ -150,6 +181,7 @@ byId('clear-filters').onclick = () => { source = ''; if(mode==='unread')mode='al
 byId('previous-page').onclick = () => { page--; renderArticles(); byId('stream-title').scrollIntoView(); };
 byId('next-page').onclick = () => { page++; renderArticles(); byId('stream-title').scrollIntoView(); };
 byId('retry-load').onclick = load;
+byId('refresh-catalog').onclick = load;
 void load();
 
 type Filters={source:string;query:string;category:string;window:string;unread:boolean;sort:string};
