@@ -11,6 +11,11 @@ class LibraryState {
     this.message = '',
     this.fontScale = 1,
     this.showImages = true,
+    this.storageMessage = '',
+    this.storageReadFailed = false,
+    this.savedRecoveryRequired = false,
+    this.savedRecoveryCanRestore = false,
+    this.recoveringSaved = false,
   }) : saved = Map.unmodifiable(saved),
        read = Set.unmodifiable(read),
        hidden = Set.unmodifiable(hidden);
@@ -18,7 +23,9 @@ class LibraryState {
   final Map<String, Article> saved;
   final Set<String> read, hidden;
   final bool syncing, showImages;
-  final String message;
+  final String message, storageMessage;
+  final bool storageReadFailed;
+  final bool savedRecoveryRequired, savedRecoveryCanRestore, recoveringSaved;
   final double fontScale;
   LibraryState copyWith({
     Catalog? catalog,
@@ -29,6 +36,11 @@ class LibraryState {
     String? message,
     double? fontScale,
     bool? showImages,
+    String? storageMessage,
+    bool? storageReadFailed,
+    bool? savedRecoveryRequired,
+    bool? savedRecoveryCanRestore,
+    bool? recoveringSaved,
   }) => LibraryState(
     catalog: catalog ?? this.catalog,
     saved: saved ?? this.saved,
@@ -38,7 +50,15 @@ class LibraryState {
     message: message ?? this.message,
     fontScale: fontScale ?? this.fontScale,
     showImages: showImages ?? this.showImages,
+    storageMessage: storageMessage ?? this.storageMessage,
+    storageReadFailed: storageReadFailed ?? this.storageReadFailed,
+    savedRecoveryRequired: savedRecoveryRequired ?? this.savedRecoveryRequired,
+    savedRecoveryCanRestore:
+        savedRecoveryCanRestore ?? this.savedRecoveryCanRestore,
+    recoveringSaved: recoveringSaved ?? this.recoveringSaved,
   );
+  bool isFollowed(String id) => !hidden.contains(id);
+
   Map<String, int> get articleCounts => _countArticles();
 
   Map<String, int> get unreadCounts => _countArticles(unreadOnly: true);

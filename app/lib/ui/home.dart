@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../state/library.dart';
+import '../data/library_storage.dart';
+import 'storage_notice.dart';
 import 'appearance.dart';
 import 'reading_page.dart';
 import 'sources_page.dart';
@@ -61,29 +63,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             children: [
               const Icon(Icons.cloud_off_outlined, size: 48),
               const SizedBox(height: 16),
-              Text('暂时无法同步文章', style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                error is LibraryStorageException ? '暂时无法读取本机记录' : '暂时无法同步文章',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               const SizedBox(height: 8),
-              const Text('首次使用需要联网。请检查网络后重试。', textAlign: TextAlign.center),
+              Text(
+                error is LibraryStorageException
+                    ? '原始记录未被覆盖。请检查设备存储空间后重试。'
+                    : '首次使用需要联网。请检查网络后重试。',
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 20),
               FilledButton(
-                onPressed: () => ref.invalidate(libraryProvider),
+                onPressed: () {
+                  ref.invalidate(libraryStorageProvider);
+                  ref.invalidate(libraryProvider);
+                },
                 child: const Text('重新同步'),
               ),
             ],
           ),
         ),
       ),
-      data: (data) => IndexedStack(
-        index: tab,
+      data: (data) => Column(
         children: [
-          ReadingPage(library: data, onSources: () => select(2)),
-          ReadingPage(
-            library: data,
-            savedOnly: true,
-            onSources: () => select(0),
+          StorageNotice(library: data),
+          Expanded(
+            child: IndexedStack(
+              index: tab,
+              children: [
+                ReadingPage(library: data, onSources: () => select(2)),
+                ReadingPage(
+                  library: data,
+                  savedOnly: true,
+                  onSources: () => select(0),
+                ),
+                SourcesPage(library: data),
+                SettingsPage(library: data),
+              ],
+            ),
           ),
-          SourcesPage(library: data),
-          SettingsPage(library: data),
         ],
       ),
     );

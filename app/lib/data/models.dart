@@ -80,12 +80,16 @@ class Article {
   ]) {
     final url = json['url'] as String;
     if (!isWebUrl(url)) throw const FormatException('Invalid article URL');
+    if ((json['id'] as String).isEmpty) {
+      throw const FormatException('Missing article identity');
+    }
     return Article(
       id: json['id'] as String,
-      sourceIds: (json['source_ids'] as List<dynamic>? ?? []).cast<String>(),
-      legacyIds: (json['legacy_ids'] as List<dynamic>? ?? []).cast<String>(),
-      savedCategories: (json['saved_categories'] as List<dynamic>? ?? [])
-          .cast<String>(),
+      sourceIds: List<String>.from(json['source_ids'] as List<dynamic>? ?? []),
+      legacyIds: List<String>.from(json['legacy_ids'] as List<dynamic>? ?? []),
+      savedCategories: List<String>.from(
+        json['saved_categories'] as List<dynamic>? ?? [],
+      ),
       sourceId: json['source_id'] as String,
       title: json['title'] as String,
       url: url,
