@@ -63,10 +63,10 @@ def _collect_feeds(sources, workers, fetch_one):
                 result = FeedResult(source=source, error=str(error))
             for member in group:
                 # One download, but distinct article IDs and independent lists.
-                results_by_id[member.id] = FeedResult(
+                results_by_id[member.id] = replace(result,
                     source=member,
                     articles=[replace(article, source_id=member.id) for article in result.articles],
-                    error=result.error,
+                    drop_reasons=dict(result.drop_reasons) if result.drop_reasons is not None else None,
                 )
             completed += len(group)
             LOGGER.info("Progress: %d/%d", completed, len(sources))

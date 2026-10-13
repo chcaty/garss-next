@@ -85,7 +85,8 @@ def create_snapshot(root: Path, results, config, generated_at, *, code_revision=
         result = by_id.get(item['id'])
         feeds.append({**item, 'status': 'disabled' if not item.get('enabled', True) else result.status if result else 'error',
                       'article_count': counts.get(item['id'], 0),
-                      'error': result.error if result else None})
+                      'error': result.error if result else None,
+                      **({'health': result.health()} if result and result.health() else {})})
     feed_doc = {'api_version': '1.0', 'generated_at': generated, 'feeds': feeds, 'source_aliases': aliases}
     article_doc = {'api_version': '1.0', 'generated_at': generated, 'articles': articles}
     identity = sha256(json.dumps([feed_doc, article_doc], sort_keys=True).encode()).hexdigest()[:20]

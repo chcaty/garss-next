@@ -97,3 +97,24 @@ class CollectionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'new directory'):
                 self.invoke(root, '--offline', '--output', output)
             self.assertEqual(marker.read_text(encoding='utf-8'), 'keep')
+
+    def test_new_counts_are_measured_before_retained_history_is_merged(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            previous = root / 'previous'
+            old = Article('current', 'Existing article', 'https://example.com/old', self.now)
+            create_snapshot(previous, [FeedResult(self.source, [old])], self.config, self.now)
+            output = root / 'output'
+            result = FeedResult(self.source, raw_entry_count=0, valid_article_count=0, drop_reasons={})
+            with patch.object(collect, 'FeedCache'), \
+                    patch.object(collect, 'fetch_all', return_value=[result]), \
+                    patch.object(collect, 'discover', return_value={'candidates': []}):
+                self.invoke(root, '--previous', previous, '--output', output)
+            state = json.loads((output / 'api/v1/source-state.json').read_text(encoding='utf-8'))
+            feeds = json.loads((output / 'api/v1/feeds.json').read_text(encoding='utf-8'))
+            self.assertEqual(state['sources']['current']['status'], 'active')
+            self.assertEqual(feeds['feeds'][0]['health']['new_article_count'], 0)
+            self.assertEqual(feeds['feeds'][0]['health']['raw_entry_count'], 0)
+            self.assertEqual(feeds['feeds'][0]['article_count'], 1)
+            self.assertEqual(state['upstream_failures'], [])
+            validate_snapshot(output)

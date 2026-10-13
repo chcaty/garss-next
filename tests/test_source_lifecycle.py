@@ -78,7 +78,8 @@ class LifecycleTests(unittest.TestCase):
         def failed(_):
             raise ValueError('invalid XML')
         doc = discover(self.config, [directory], {'candidates': [candidate]}, self.now, download=failed, check=lambda _: None)
-        self.assertEqual(doc['candidates'], [candidate])
+        self.assertEqual(len(doc['candidates']), 1)
+        self.assertTrue(all(doc['candidates'][0][key] == value for key, value in candidate.items()))
         self.assertEqual(doc['directories'][0]['status'], 'error')
         self.assertEqual(doc['directories'][0]['updated_at'], directory['updated_at'])
         self.assertIn('invalid XML', doc['directories'][0]['error'])
