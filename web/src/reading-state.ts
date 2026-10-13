@@ -7,23 +7,60 @@ export class ReadingLibrary {
   readonly read = new Set<string>();
   readonly saved = new Set<string>();
   readonly bookmarks = new Map<string, SavedArticle>();
+  /** Parsing is deliberately loss-aware. Storage must not write a salvaged view back silently. */
+  readonly issues: string[] = [];
 
   constructor(value: unknown = {}) {
-    const data = value && typeof value === 'object' ? value as Record<string, unknown> : {};
-    for (const key of ['read', 'saved'] as const) {
-      if (Array.isArray(data[key])) for (const id of data[key]) if (typeof id === 'string') this[key].add(id);
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      this.issues.push('阅读记录不是对象'); return;
     }
+    const data = value as Record<string, unknown>;
+    if (data.version !== undefined && data.version !== 1 && data.version !== 2) this.issues.push('阅读记录版本不受支持');
+    for (const key of ['read', 'saved'] as const) {
+      if (data[key] === undefined) continue;
+      if (!Array.isArray(data[key])) { this.issues.push(`${key} 不是列表`); continue; }
+      for (const id of data[key]) {
+        if (typeof id === 'string' && id) this[key].add(id);
+        else this.issues.push(`${key} 包含损坏的 ID`);
+      }
+    }
+    if (data.bookmarks !== undefined && !Array.isArray(data.bookmarks)) this.issues.push('收藏内容不是列表');
     if (Array.isArray(data.bookmarks)) for (const item of data.bookmarks) {
-      if (!item || typeof item !== 'object') continue;
+      if (!item || typeof item !== 'object' || Array.isArray(item)) { this.issues.push('收藏记录不是对象'); continue; }
       const article = item as SavedArticle;
-      if (typeof article.id !== 'string' || typeof article.title !== 'string' || !webUrl(article.url) ||
-          !Number.isFinite(Date.parse(article.published_at)) || typeof article.source_id !== 'string') continue;
-      const sources = Array.isArray(article.saved_sources) ? article.saved_sources.filter(source =>
-        source && typeof source.id === 'string' && typeof source.title === 'string' && typeof source.category === 'string') : [];
-      const ids = (value:unknown) => Array.isArray(value) ? value.filter(id=>typeof id==='string') : undefined;
-      this.bookmarks.set(article.id, {...article, source_ids: ids(article.source_ids), legacy_ids: ids(article.legacy_ids), saved_sources: sources});
+      if (typeof article.id !== 'string' || !article.id || typeof article.title !== 'string' || typeof article.url !== 'string' || !webUrl(article.url) ||
+          typeof article.published_at !== 'string' || !Number.isFinite(Date.parse(article.published_at)) || typeof article.source_id !== 'string' || !article.source_id) {
+        this.issues.push('收藏记录的必需字段损坏'); continue;
+      }
+      if (this.bookmarks.has(article.id)) { this.issues.push('收藏记录的 ID 重复'); continue; }
+      const sources: Source[] = [];
+      if (article.saved_sources !== undefined && !Array.isArray(article.saved_sources)) this.issues.push('收藏来源列表损坏');
+      if (Array.isArray(article.saved_sources)) for (const source of article.saved_sources) {
+        if (source && typeof source.id === 'string' && typeof source.title === 'string' && typeof source.category === 'string') sources.push({...source});
+        else this.issues.push('收藏来源记录损坏');
+      }
+      const ids = (value: unknown) => {
+        if (value === undefined) return undefined;
+        if (!Array.isArray(value)) { this.issues.push('收藏关联 ID 列表损坏'); return undefined; }
+        if (value.some(id => typeof id !== 'string')) this.issues.push('收藏关联 ID 损坏');
+        return value.filter((id): id is string => typeof id === 'string');
+      };
+      const clean: SavedArticle = {...article, source_ids: ids(article.source_ids), legacy_ids: ids(article.legacy_ids), saved_sources: sources};
+      for (const key of ['summary', 'image_url'] as const) if (clean[key] !== undefined && typeof clean[key] !== 'string') {
+        this.issues.push(`收藏 ${key} 损坏`); delete clean[key];
+      }
+      if (clean.date_inferred !== undefined && typeof clean.date_inferred !== 'boolean') { this.issues.push('收藏日期标记损坏'); delete clean.date_inferred; }
+      this.bookmarks.set(article.id, clean);
       this.saved.add(article.id);
     }
+  }
+
+  /** Keep Set/Map identities stable for reader views and indexes. */
+  replace(value: ReadingLibrary) {
+    this.read.clear(); for (const id of value.read) this.read.add(id);
+    this.saved.clear(); for (const id of value.saved) this.saved.add(id);
+    this.bookmarks.clear(); for (const [id, article] of value.bookmarks) this.bookmarks.set(id, article);
+    this.issues.splice(0, this.issues.length, ...value.issues);
   }
 
   reconcile(articles: Article[], sources: Source[]) {
