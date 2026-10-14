@@ -62,6 +62,21 @@ class FeedResult:
     source: FeedSource
     articles: list[Article] = field(default_factory=list)
     error: str | None = None
+    # Optional observations keep old producers and v1 consumers compatible.
+    raw_entry_count: int | None = None
+    valid_article_count: int | None = None
+    new_article_count: int | None = None
+    drop_reasons: dict[str, int] | None = None
+    last_new_article_at: datetime | None = None
+    http_status: int | None = None
+
+    def health(self):
+        values = {name: getattr(self, name) for name in (
+            'raw_entry_count', 'valid_article_count', 'new_article_count', 'drop_reasons',
+        ) if getattr(self, name) is not None}
+        if self.last_new_article_at is not None:
+            values['last_new_article_at'] = self.last_new_article_at.isoformat().replace('+00:00', 'Z')
+        return values
 
     @property
     def status(self):

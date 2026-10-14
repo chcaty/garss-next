@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {transform} from 'esbuild';
 import {readFile} from 'node:fs/promises';
 const code = await transform(await readFile(new URL('../web/src/source-management.ts', import.meta.url),'utf8'),{loader:'ts',format:'esm'});
-const {changes,duplicateUrls,matchesSource} = await import(`data:text/javascript;base64,${Buffer.from(code.code).toString('base64')}`);
+const {changes,duplicateUrls,matchesSource,sourceForDraft} = await import(`data:text/javascript;base64,${Buffer.from(code.code).toString('base64')}`);
 const source = {id:'a',title:'来源 A',category:'技术',description:'',feed_url:'https://example.com/feed',enabled:true};
 test('review retains deletions and distinguishes added, edited and collection-only updates', () => {
   assert.deepEqual(changes([source],[{...source,status:'error',article_count:3}]),[]);
@@ -25,4 +25,15 @@ test('review includes before and after values for every submitted field',()=>{
  const result=changes([source],[{...source,enabled:false,allow_undated:true}])[0];
  assert.deepEqual(result.fields.map(field=>[field.key,field.before,field.after]),[['enabled',true,false],['allow_undated',undefined,true]]);
  assert.ok(changes([source],[])[0].fields.some(field=>field.key==='feed_url'&&field.before===source.feed_url));
+});
+
+
+test('candidate quality and sample observations do not enter authored drafts', () => {
+  const candidate={id:'new',title:'New',description:'Description',category:'Tech',feed_url:'https://example.test/feed',enabled:true,discovered_from:'https://example.test/list',verified_at:'2026-10-13T00:00:00Z',validation_status:'verified',health:{new_article_count:5},recent_articles:[{title:'Sample',url:'https://example.test/sample'}],health_checked_at:'2026-10-13T00:00:00Z'};
+  const draft=sourceForDraft(candidate);
+  assert.equal(draft.discovered_from,candidate.discovered_from);
+  assert.equal(draft.verified_at,candidate.verified_at);
+  assert.equal(draft.title,candidate.title);
+  for(const key of ['health','recent_articles','validation_status','health_checked_at'])assert.equal(key in draft,false);
+  assert.equal(candidate.recent_articles.length,1);
 });

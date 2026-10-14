@@ -32,8 +32,11 @@ def update(states, results, now):
         state = states[result.source.id]
         state['last_checked_at'] = stamp(now)
         state['last_error'] = (result.error or '')[:500]
+        state['last_http_status'] = result.http_status
         if not result.error:
             state.update(status='active', failures=0, last_success_at=stamp(now))
+            if result.health():
+                state['health'] = {**state.get('health', {}), **result.health()}
             state.pop('first_failed_at', None)
             state.pop('archived_at', None)
         elif not outage or state['status'] == 'archived':

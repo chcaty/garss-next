@@ -28,22 +28,14 @@ class _SourcesPageState extends ConsumerState<SourcesPage> {
   Widget build(BuildContext context) {
     final library = widget.library, colors = Theme.of(context).colorScheme;
     final counts = library.articleCounts;
-    final categories =
-        library.catalog.feeds
-            .map((feed) => feed.category)
-            .where((value) => value.isNotEmpty)
-            .toSet()
-            .toList()
-          ..sort();
+    final categories = library.catalog.categories;
+    final needle = query.trim().toLowerCase();
     final feeds = library.catalog.feeds
         .where(
           (feed) =>
               (category == 'all' || feed.category == category) &&
-              ('${feed.title} ${feed.description} ${feed.url} ${feed.category}'
-                  .toLowerCase()
-                  .contains(query.trim().toLowerCase())) &&
-              (!followedOnly ||
-                  feed.enabled && !library.hidden.contains(feed.id)) &&
+              library.catalog.feedSearch[feed.id]!.contains(needle) &&
+              (!followedOnly || library.isFollowed(feed.id)) &&
               (filter == 'all' ||
                   filter == 'ok' && feed.effectiveStatus == 'active' ||
                   filter == 'error' && feed.effectiveStatus == 'error' ||
@@ -174,19 +166,16 @@ class _SourcesPageState extends ConsumerState<SourcesPage> {
                 key: ValueKey(feed.id),
                 title: Text(feed.title),
                 subtitle: Text(
-                  '${feed.category} · ${counts[feed.id] ?? 0} 篇文章 · ${collectionStatusLabel(feed.effectiveStatus)}${feed.enabled && library.hidden.contains(feed.id) ? ' · 本机未关注' : ''}',
+                  '${feed.category} · ${counts[feed.id] ?? 0} 篇文章 · ${collectionStatusLabel(feed.effectiveStatus)}${library.hidden.contains(feed.id) ? ' · 本机未关注' : ' · 本机已关注'}',
                   style: TextStyle(
                     color: feed.effectiveStatus == 'error'
                         ? colors.error
                         : colors.onSurfaceVariant,
                   ),
                 ),
-                value: feed.enabled && !library.hidden.contains(feed.id),
-                onChanged: feed.enabled
-                    ? (enabled) => ref
-                          .read(libraryProvider.notifier)
-                          .follow(feed.id, enabled)
-                    : null,
+                value: library.isFollowed(feed.id),
+                onChanged: (enabled) =>
+                    ref.read(libraryProvider.notifier).follow(feed.id, enabled),
               );
             }, childCount: feeds.length * 2 - 1),
           ),

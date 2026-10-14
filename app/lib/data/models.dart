@@ -55,7 +55,7 @@ class Feed {
 }
 
 class Article {
-  const Article({
+  Article({
     required this.id,
     required this.sourceId,
     required this.title,
@@ -64,28 +64,39 @@ class Article {
     this.sourceTitle = '',
     this.summary = '',
     this.imageUrl = '',
-    this.sourceIds = const [],
-    this.legacyIds = const [],
+    List<String> sourceIds = const [],
+    List<String> legacyIds = const [],
     this.dateInferred = false,
-    this.savedCategories = const [],
-  });
+    List<String> savedCategories = const [],
+  }) : sourceIds = List.unmodifiable(sourceIds),
+       legacyIds = List.unmodifiable(legacyIds),
+       savedCategories = List.unmodifiable(savedCategories),
+       sources = List.unmodifiable(sourceIds.isEmpty ? [sourceId] : sourceIds),
+       searchText = '$title $sourceTitle $summary'.toLowerCase(),
+       publishedEpoch = publishedAt.microsecondsSinceEpoch;
   final String id, sourceId, title, url, sourceTitle, summary, imageUrl;
   final DateTime publishedAt;
   final bool dateInferred;
   final List<String> sourceIds, legacyIds, savedCategories;
-  List<String> get sources => sourceIds.isEmpty ? [sourceId] : sourceIds;
+  final List<String> sources;
+  final String searchText;
+  final int publishedEpoch;
   factory Article.fromJson(
     Map<String, dynamic> json, [
     Map<String, Feed> feeds = const {},
   ]) {
     final url = json['url'] as String;
     if (!isWebUrl(url)) throw const FormatException('Invalid article URL');
+    if ((json['id'] as String).isEmpty) {
+      throw const FormatException('Missing article identity');
+    }
     return Article(
       id: json['id'] as String,
-      sourceIds: (json['source_ids'] as List<dynamic>? ?? []).cast<String>(),
-      legacyIds: (json['legacy_ids'] as List<dynamic>? ?? []).cast<String>(),
-      savedCategories: (json['saved_categories'] as List<dynamic>? ?? [])
-          .cast<String>(),
+      sourceIds: List<String>.from(json['source_ids'] as List<dynamic>? ?? []),
+      legacyIds: List<String>.from(json['legacy_ids'] as List<dynamic>? ?? []),
+      savedCategories: List<String>.from(
+        json['saved_categories'] as List<dynamic>? ?? [],
+      ),
       sourceId: json['source_id'] as String,
       title: json['title'] as String,
       url: url,
@@ -132,9 +143,36 @@ class Catalog {
     required List<Article> articles,
     Map<String, String> sourceAliases = const {},
   }) : feeds = List.unmodifiable(feeds),
-       articles = List.unmodifiable(articles),
-       sourceAliases = Map.unmodifiable(sourceAliases);
+       articles = List.unmodifiable(sortArticles(articles)),
+       sourceAliases = Map.unmodifiable(sourceAliases) {
+    feedsById = Map.unmodifiable({for (final feed in feeds) feed.id: feed});
+    feedSearch = Map.unmodifiable({
+      for (final feed in feeds)
+        feed.id:
+            '${feed.title} ${feed.description} ${feed.url} ${feed.category}'
+                .toLowerCase(),
+    });
+    categories = List.unmodifiable(
+      feeds
+          .map((feed) => feed.category)
+          .where((value) => value.isNotEmpty)
+          .toSet()
+          .toList()
+        ..sort(),
+    );
+    final counts = <String, int>{};
+    for (final article in articles) {
+      for (final id in article.sources.toSet()) {
+        counts.update(id, (value) => value + 1, ifAbsent: () => 1);
+      }
+    }
+    articleCounts = Map.unmodifiable(counts);
+  }
   final DateTime generatedAt;
+  late final Map<String, Feed> feedsById;
+  late final Map<String, String> feedSearch;
+  late final Map<String, int> articleCounts;
+  late final List<String> categories;
   final List<Feed> feeds;
   final List<Article> articles;
   final Map<String, String> sourceAliases;
@@ -143,18 +181,13 @@ class Catalog {
         .map((value) => Feed.fromJson(value as Map<String, dynamic>))
         .toList();
     final byId = {for (final feed in feeds) feed.id: feed};
-    final articles =
-        (json['articles'] as List<dynamic>)
-            .where(
-              (value) => byId.containsKey(
-                (value as Map<String, dynamic>)['source_id'],
-              ),
-            )
-            .map(
-              (value) => Article.fromJson(value as Map<String, dynamic>, byId),
-            )
-            .toList()
-          ..sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+    final articles = (json['articles'] as List<dynamic>)
+        .where(
+          (value) =>
+              byId.containsKey((value as Map<String, dynamic>)['source_id']),
+        )
+        .map((value) => Article.fromJson(value as Map<String, dynamic>, byId))
+        .toList();
     return Catalog(
       generatedAt: DateTime.parse(json['generated_at'] as String),
       feeds: feeds,
@@ -169,4 +202,14 @@ class Catalog {
     'feeds': feeds.map((feed) => feed.toJson()).toList(),
     'articles': articles.map((article) => article.toJson()).toList(),
   };
+}
+
+/// Keep input order for equal timestamps, including after filtering a queue.
+List<Article> sortArticles(Iterable<Article> articles) {
+  final indexed = articles.indexed.toList()
+    ..sort((a, b) {
+      final byDate = b.$2.publishedEpoch.compareTo(a.$2.publishedEpoch);
+      return byDate != 0 ? byDate : a.$1.compareTo(b.$1);
+    });
+  return indexed.map((entry) => entry.$2).toList();
 }

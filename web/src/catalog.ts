@@ -1,8 +1,21 @@
+export interface FeedHealth {
+  raw_entry_count?: number;
+  valid_article_count?: number;
+  new_article_count?: number;
+  drop_reasons?: Record<string, number>;
+  latest_article_at?: string;
+  last_new_article_at?: string;
+}
+export interface CandidateArticle { title: string; url: string; published_at: string; date_inferred?: boolean }
 export interface Source {
   id: string; title: string; description: string; category: string;
   feed_url: string; enabled: boolean; status?: string; article_count?: number;
   allow_undated?: boolean;
   recheck_requested_at?: string; discovered_from?: string; verified_at?: string;
+  recent_articles?: CandidateArticle[];
+  health?: FeedHealth;
+  validation_status?: 'verified' | 'error' | 'empty';
+  checked_at?: string; expires_at?: string; validation_error?: string; health_checked_at?: string;
 }
 export interface Article {
   id: string; source_id: string; source_ids?: string[]; title: string;
@@ -39,23 +52,54 @@ export async function readJson<T>(url: URL | string): Promise<T> {
   if (!response.ok) throw Error(`读取失败 (${response.status})`);
   return response.json() as Promise<T>;
 }
-export async function loadCatalog(base: string): Promise<{sources: Source[]; articles: Article[]; generatedAt: string; sourceAliases: Record<string,string>}> {
+export interface Catalog {
+  sources: Source[];
+  articles: Article[];
+  generatedAt: string;
+  sourceAliases: Record<string, string>;
+}
+type Manifest = {snapshot_id: string; generated_at: string; files: Record<string, {sha256: string; bytes: number}>};
+type SnapshotIdentity = {manifestUrl: string; snapshotId: string; generatedAt: string; files: string};
+// Only reuse objects that this module fully verified during this page session.
+const verifiedCatalogs = new WeakMap<Catalog, SnapshotIdentity>();
+
+export async function loadCatalog(base: string, previous?: Catalog): Promise<Catalog> {
   const metaUrl = new URL('./api/v1/meta.json', base);
+  const apiRoot = new URL('./api/', base);
+  function withinApi(url: URL) {
+    if (url.origin !== metaUrl.origin || !url.pathname.startsWith(apiRoot.pathname) || url.username || url.password) throw Error('数据地址不合法');
+  }
   const meta = await readJson<{ snapshot_id: string; snapshot_endpoint: string; generated_at: string }>(metaUrl);
+  if (!meta.snapshot_id || !meta.snapshot_endpoint || !Number.isFinite(Date.parse(meta.generated_at))) throw Error('数据结构不正确');
   const manifestUrl = new URL(meta.snapshot_endpoint, metaUrl);
-  const manifest = await readJson<{ snapshot_id: string; generated_at: string; files: Record<string, {sha256: string; bytes: number}> }>(manifestUrl);
+  withinApi(manifestUrl);
+  const manifest = await readJson<Manifest>(manifestUrl);
   if (manifest.snapshot_id !== meta.snapshot_id || manifest.generated_at !== meta.generated_at) throw Error('数据版本变化，请重试');
+  const names = ['feeds.json', 'articles.json'];
+  for (const name of names) {
+    const file = manifest.files?.[name];
+    if (!file || !Number.isSafeInteger(file.bytes) || file.bytes < 0 || !/^[a-f0-9]{64}$/.test(file.sha256)) throw Error('数据校验信息不正确');
+  }
+  const identity: SnapshotIdentity = {
+    manifestUrl: manifestUrl.href, snapshotId: meta.snapshot_id, generatedAt: meta.generated_at,
+    files: JSON.stringify(names.map(name => [name, manifest.files[name].bytes, manifest.files[name].sha256])),
+  };
+  const prior = previous && verifiedCatalogs.get(previous);
+  if (prior && prior.manifestUrl === identity.manifestUrl && prior.snapshotId === identity.snapshotId &&
+      prior.generatedAt === identity.generatedAt && prior.files === identity.files) return previous!;
   async function verified<T>(name: string): Promise<T> {
     const url = new URL(name, manifestUrl);
-    if (url.origin !== metaUrl.origin || !url.pathname.startsWith(new URL('./api/', base).pathname)) throw Error('数据地址不合法');
+    withinApi(url);
     const response = await fetch(url, {cache: 'no-cache'});
     if (!response.ok) throw Error('快照读取失败');
     const bytes = await response.arrayBuffer();
     const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), value => value.toString(16).padStart(2, '0')).join('');
-    if (bytes.byteLength !== manifest.files[name]?.bytes || hash !== manifest.files[name]?.sha256) throw Error('数据校验失败');
-    return JSON.parse(new TextDecoder().decode(bytes)) as T;
+    if (bytes.byteLength !== manifest.files[name].bytes || hash !== manifest.files[name].sha256) throw Error('数据校验失败');
+    return JSON.parse(new TextDecoder('utf-8', {fatal: true}).decode(bytes)) as T;
   }
   const [feeds, entries] = await Promise.all([verified<{feeds: Source[]; generated_at: string; source_aliases?: Record<string,string>}>('feeds.json'), verified<{articles: Article[]; generated_at: string}>('articles.json')]);
   if (feeds.generated_at !== meta.generated_at || entries.generated_at !== meta.generated_at || !Array.isArray(feeds.feeds) || !Array.isArray(entries.articles)) throw Error('数据结构不正确');
-  return {sources: feeds.feeds.filter(source => source.enabled !== false), articles: entries.articles.filter(article => webUrl(article.url)), generatedAt: meta.generated_at, sourceAliases: feeds.source_aliases ?? {}};
+  const catalog: Catalog = {sources: feeds.feeds.filter(source => source.enabled !== false), articles: entries.articles.filter(article => webUrl(article.url)), generatedAt: meta.generated_at, sourceAliases: feeds.source_aliases ?? {}};
+  verifiedCatalogs.set(catalog, identity);
+  return catalog;
 }

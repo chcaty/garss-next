@@ -19,5 +19,10 @@
     "@headlessui/react": "^2.2.10",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
+  },
+  "overrides": {
+    "@tailwindcss/cli": {
+      "@parcel/watcher": "2.6.0"
+    }
   }
 }

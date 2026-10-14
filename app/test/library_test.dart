@@ -189,7 +189,7 @@ void main() {
             .id,
         article.id,
       );
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await container.read(libraryProvider.notifier).pendingWrites;
       container.dispose();
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(
@@ -269,7 +269,7 @@ void main() {
     });
     controller.markManyUnread(changed);
     expect(container.read(libraryProvider).requireValue.read, {'earlier'});
-    await Future<void>.delayed(const Duration(milliseconds: 100));
+    await container.read(libraryProvider.notifier).pendingWrites;
     container.dispose();
     final restarted = ProviderContainer();
     addTearDown(restarted.dispose);

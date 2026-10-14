@@ -1,5 +1,6 @@
 import logging
 import time
+from collections import Counter
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 
@@ -87,6 +88,7 @@ def _parse_articles(
     retention_days: int = 30,
     only_date=None,
     minimum_articles: int = MIN_ARTICLES_PER_SOURCE,
+    health=None,
 ) -> list[Article]:
     feed = feedparser.parse(payload)
     entries = feed.get("entries", [])
@@ -99,6 +101,7 @@ def _parse_articles(
     if today is None:
         today = app_date(first_seen)
     articles = []
+    drops = Counter()
     seen_urls = set()
     for entry in entries:
         published_at = entry_published_datetime(entry)
@@ -106,9 +109,11 @@ def _parse_articles(
         if inferred and source.allow_undated:
             published_at = first_seen
         if published_at is None:
+            drops['missing_or_invalid_date'] += 1
             continue
         published_date = app_date(published_at)
         if published_date > today:
+            drops['future_date'] += 1
             continue
         title = (
             str(entry.get("title", "")).replace("\r", " ").replace("\n", " ").strip()
@@ -116,9 +121,14 @@ def _parse_articles(
         try:
             url = safe_http_url(str(entry.get("link", "")))
         except ValueError:
+            drops['unsafe_or_missing_url'] += 1
             continue
         identity = article_key(url)
-        if not title or identity in seen_urls:
+        if not title:
+            drops['missing_title'] += 1
+            continue
+        if identity in seen_urls:
+            drops['duplicate_url'] += 1
             continue
         seen_urls.add(identity)
         articles.append(
@@ -132,7 +142,12 @@ def _parse_articles(
                 date_inferred=inferred,
             )
         )
-    return retain_articles(articles, today, retention_days, minimum_articles, only_date)
+    retained = retain_articles(articles, today, retention_days, minimum_articles, only_date)
+    if len(retained) < len(articles):
+        drops['outside_retention'] = len(articles) - len(retained)
+    if health is not None:
+        health.update(raw_entry_count=len(entries), valid_article_count=len(articles), drop_reasons=dict(drops))
+    return retained
 
 
 def fetch_feed(
@@ -151,6 +166,7 @@ def fetch_feed(
     cached = cache.get(source.feed_url) if cache is not None else None
     deadline = clock() + budget_seconds
     last_error = None
+    http_status = None
     for attempt in range(attempts):
         if clock() >= deadline:
             last_error = requests.Timeout("feed retry budget exceeded")
@@ -167,12 +183,14 @@ def fetch_feed(
             not_modified = metadata.pop("not_modified")
             if cache is not None and not cacheable:
                 cache.discard(source.feed_url)
+            health = {}
             articles = _parse_articles(
                 source,
                 payload,
                 today=today,
                 retention_days=retention_days,
                 only_date=only_date,
+                health=health,
             )
             if cache is not None and cacheable:
                 entry = CachedFeed(payload, **metadata)
@@ -181,7 +199,7 @@ def fetch_feed(
                 else:
                     cache.put(source.feed_url, entry)
             LOGGER.info("Fetched %s: %d recent article(s)", source.id, len(articles))
-            return FeedResult(source=source, articles=articles)
+            return FeedResult(source=source, articles=articles, **health)
         except (requests.RequestException, ValueError, TypeError) as error:
             last_error = error
             LOGGER.warning(
@@ -192,6 +210,7 @@ def fetch_feed(
                 error,
             )
             status = getattr(getattr(error, "response", None), "status_code", None)
+            http_status = status
             if isinstance(error, (ValueError, TypeError)) or (
                 status is not None and 400 <= status < 500 and status not in {408, 429}
             ):
@@ -204,7 +223,7 @@ def fetch_feed(
                 if delay >= deadline - clock():
                     break
                 sleep(delay)
-    return FeedResult(source=source, error=str(last_error or "unknown fetch error"))
+    return FeedResult(source=source, error=str(last_error or "unknown fetch error"), http_status=http_status)
 
 
 def _retry_after_seconds(value, now):

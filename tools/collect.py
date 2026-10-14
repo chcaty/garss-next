@@ -22,6 +22,7 @@ from garss.source_lifecycle import prepare, update, effective_config, stamp
 from garss.sync_log import publication_log
 from garss.discovery import discover
 from garss.timezones import app_date
+from garss.health import measure_new_articles, upstream_failures
 
 
 def parse_arguments():
@@ -58,6 +59,7 @@ def collect(args):
             raise RuntimeError('All enabled sources failed; previous data is preserved')
     run_results = list(results)
     if not args.offline:
+        measure_new_articles(results, old, states, now)
         update(states, results, now)
     effective = effective_config(config, states)
     # Archived sources leave the reading catalog but stay in authored configuration.
@@ -67,7 +69,8 @@ def collect(args):
                     code_revision=args.code_revision, source_revision=args.source_revision)
     write_json(args.output / 'api/v1/sources.json', config)
     write_json(args.output / 'api/v1/source-state.json', {'generated_at': stamp(now), 'sources': states,
-               'policy': {'failures': 3, 'duration_hours': 24, 'retry_days': 7}})
+               'policy': {'failures': 3, 'duration_hours': 24, 'retry_days': 7},
+               'upstream_failures': upstream_failures(config, states)})
     write_json(args.output / 'api/v1/source-archive.json', {'generated_at': stamp(now), 'sources': [
         {**source, **states[source['id']]} for source in config['sources'] if states[source['id']]['status'] == 'archived']})
     discovery = read_previous_document(args.previous, 'source-discovery.json', {})
