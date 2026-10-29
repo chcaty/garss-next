@@ -38,6 +38,11 @@ void main() {
       final groups = resultGroups(state());
       expect(groups.length, 2);
       expect(groups.last.articles.length, 1);
+      final stream = feedEntries(groups);
+      expect(stream, hasLength(1));
+      expect(stream.single.article.id, 'one');
+      expect(stream.single.feed.id, 'a');
+      expect(stream.single.isNew, isTrue);
       expect(Article.fromJson(entry.toJson()).metadata['views'], 12345);
       expect(Article.fromJson(entry.toJson()).contentType, 'video');
       expect(resultGroups(state(), kind: 'article'), isEmpty);
@@ -59,6 +64,56 @@ void main() {
       resultGroups(state(status: 'error')).any((group) => group.feed.id == 'a'),
       isFalse,
     );
+  });
+  test('ranked boards keep rank order while the feed uses publish time', () {
+    final newest = Article(
+      id: 'newest',
+      sourceId: 'ranked',
+      sourceIds: const ['ranked', 'rss'],
+      title: 'Newest',
+      url: 'https://example.com/newest',
+      publishedAt: time,
+      observations: const {
+        'ranked': {'rank': 2},
+      },
+    );
+    final rankedFirst = Article(
+      id: 'ranked-first',
+      sourceId: 'ranked',
+      sourceIds: const ['ranked', 'rss'],
+      title: 'Ranked first',
+      url: 'https://example.com/ranked-first',
+      publishedAt: time.subtract(const Duration(days: 1)),
+      observations: const {
+        'ranked': {'rank': 1},
+      },
+    );
+    final library = LibraryState(
+      catalog: Catalog(
+        generatedAt: time,
+        feeds: [
+          const Feed(
+            id: 'ranked',
+            title: 'Ranked',
+            url: 'https://example.com/ranked',
+            adapter: 'bilibili',
+          ),
+          const Feed(id: 'rss', title: 'RSS', url: 'https://example.com/rss'),
+        ],
+        articles: [newest, rankedFirst],
+      ),
+    );
+    final groups = resultGroups(library);
+    expect(groups.first.articles.map((article) => article.id), [
+      'ranked-first',
+      'newest',
+    ]);
+    expect(feedEntries(groups).map((entry) => entry.article.id), [
+      'newest',
+      'ranked-first',
+    ]);
+    expect(feedEntries(groups).every((item) => item.feed.id == 'rss'), isTrue);
+    expect(feedEntries([groups.first]), isEmpty);
   });
   test(
     'saved multi-type content outlives public catalog and retains categories',

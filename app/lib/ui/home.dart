@@ -15,6 +15,15 @@ export 'reading_page.dart' show ReadingPage;
 export 'sources_page.dart' show SourcesPage;
 export 'settings_page.dart' show SettingsPage;
 
+const _homeDestinations = [
+  (
+    label: '榜单',
+    icon: Icons.view_agenda_outlined,
+    selectedIcon: Icons.view_agenda,
+  ),
+  (label: '我的收藏', icon: Icons.bookmark_border, selectedIcon: Icons.bookmark),
+];
+
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
   @override
@@ -100,6 +109,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           PopupMenuButton<String>(
             tooltip: '更多',
             onSelected: (value) {
+              if (value == '采集记录') {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const SyncScreen(),
+                  ),
+                );
+                return;
+              }
               final data = library.asData?.value;
               if (data == null) return;
               Navigator.of(context).push(
@@ -108,7 +125,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     builder: (context, ref, child) {
                       final current =
                           ref.watch(libraryProvider).asData?.value ?? data;
-                      if (value == '采集记录') return const SyncScreen();
                       return Scaffold(
                         appBar: AppBar(title: Text(value)),
                         body: value == '来源管理'
@@ -122,9 +138,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               );
             },
-            itemBuilder: (_) => const [
-              PopupMenuItem(value: '来源管理', child: Text('来源管理')),
-              PopupMenuItem(value: '阅读设置', child: Text('阅读设置')),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: '来源管理',
+                enabled: library.hasValue,
+                child: const Text('来源管理'),
+              ),
+              PopupMenuItem(
+                value: '阅读设置',
+                enabled: library.hasValue,
+                child: const Text('阅读设置'),
+              ),
               PopupMenuItem(value: '采集记录', child: Text('采集记录')),
             ],
           ),
@@ -142,17 +166,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           : NavigationBar(
               selectedIndex: tab,
               onDestinationSelected: select,
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.view_agenda_outlined),
-                  selectedIcon: Icon(Icons.view_agenda),
-                  label: '全部更新',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.bookmark_border),
-                  selectedIcon: Icon(Icons.bookmark),
-                  label: '我的收藏',
-                ),
+              destinations: [
+                for (final destination in _homeDestinations)
+                  NavigationDestination(
+                    icon: Icon(destination.icon),
+                    selectedIcon: Icon(destination.selectedIcon),
+                    label: destination.label,
+                  ),
               ],
             ),
       body: SafeArea(
@@ -164,15 +184,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 selectedIndex: tab,
                 onDestinationSelected: select,
                 labelType: NavigationRailLabelType.all,
-                destinations: const [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.view_agenda_outlined),
-                    label: Text('全部更新'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.bookmark_border),
-                    label: Text('我的收藏'),
-                  ),
+                destinations: [
+                  for (final destination in _homeDestinations)
+                    NavigationRailDestination(
+                      icon: Icon(destination.icon),
+                      selectedIcon: Icon(destination.selectedIcon),
+                      label: Text(destination.label),
+                    ),
                 ],
               ),
             Expanded(

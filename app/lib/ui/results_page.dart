@@ -20,6 +20,7 @@ class ResultsPage extends ConsumerStatefulWidget {
 class _ResultsPageState extends ConsumerState<ResultsPage> {
   final search = TextEditingController();
   String query = '', source = '', category = '', kind = 'all';
+  String view = 'boards';
   bool onlyNew = false, compact = false;
   int limit = 12;
   final expanded = <String, int>{};
@@ -79,6 +80,17 @@ class _ResultsPageState extends ConsumerState<ResultsPage> {
       kind: kind,
       onlyNew: !widget.savedOnly && onlyNew,
     );
+    final available = resultGroups(library, savedOnly: widget.savedOnly);
+    final visibleSources = widget.savedOnly || view == 'boards'
+        ? available
+        : available.where((group) => isChronologicalFeed(group.feed)).toList();
+    final categories =
+        visibleSources.map((group) => group.feed.category).toSet().toList()
+          ..sort();
+    final sources = {
+      for (final group in visibleSources) group.feed.id: group.feed.title,
+    };
+    final entries = feedEntries(groups, includeRankedSources: widget.savedOnly);
     final count = {
       for (final group in groups)
         for (final article in group.articles) article.id,
@@ -88,18 +100,6 @@ class _ResultsPageState extends ConsumerState<ResultsPage> {
         for (final article in group.articles)
           if (group.newIds.contains(article.id)) article.id,
     }.length;
-    final available = resultGroups(library, savedOnly: widget.savedOnly);
-    final categories =
-        available.map((group) => group.feed.category).toSet().toList()..sort();
-    final sources = {
-      for (final group in available) group.feed.id: group.feed.title,
-    };
-    final highlights = groups
-        .where(
-          (group) => group.feed.status == 'ok' && group.articles.isNotEmpty,
-        )
-        .take(4)
-        .toList();
     final filtered =
         query.isNotEmpty ||
         source.isNotEmpty ||
@@ -128,8 +128,29 @@ class _ResultsPageState extends ConsumerState<ResultsPage> {
           ],
           const SizedBox(height: 12),
           Text(
-            '$count 条内容 · ${groups.length} 个来源${widget.savedOnly ? '' : ' · 较上次采集新增 ${known ? fresh : '—'}'}',
+            '$count 条内容 · ${groups.length} 个榜单${widget.savedOnly ? '' : ' · 新增 ${known ? fresh : '—'}'}',
             style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
+          ),
+          const SizedBox(height: 12),
+          SegmentedButton<String>(
+            segments: const [
+              ButtonSegment(value: 'boards', label: Text('榜单')),
+              ButtonSegment(value: 'feed', label: Text('信息流')),
+            ],
+            selected: {view},
+            onSelectionChanged: (selection) => setState(() {
+              view = selection.first;
+              if (selection.first == 'feed' &&
+                  !widget.savedOnly &&
+                  !available.any(
+                    (group) =>
+                        group.feed.id == source &&
+                        isChronologicalFeed(group.feed),
+                  )) {
+                source = '';
+              }
+              limit = 12;
+            }),
           ),
           const SizedBox(height: 12),
           TextField(
@@ -139,7 +160,7 @@ class _ResultsPageState extends ConsumerState<ResultsPage> {
               isDense: true,
               labelText: '搜索内容',
               floatingLabelBehavior: FloatingLabelBehavior.never,
-              hintText: '标题、摘要或来源',
+              hintText: '标题、摘要或榜单',
               prefixIcon: Icon(Icons.search, size: 20),
             ),
             onChanged: (value) => setState(() {
@@ -155,7 +176,7 @@ class _ResultsPageState extends ConsumerState<ResultsPage> {
             minTileHeight: 48,
             shape: const Border(),
             collapsedShape: const Border(),
-            title: const Text('来源、分类与类型', style: TextStyle(fontSize: 14)),
+            title: const Text('筛选', style: TextStyle(fontSize: 14)),
             subtitle: source.isEmpty && category.isEmpty && kind == 'all'
                 ? null
                 : Text(
@@ -171,9 +192,9 @@ class _ResultsPageState extends ConsumerState<ResultsPage> {
                 key: ValueKey('source-${widget.savedOnly}-$source'),
                 initialValue: source,
                 isExpanded: true,
-                decoration: const InputDecoration(labelText: '来源'),
+                decoration: const InputDecoration(labelText: '榜单'),
                 items: [
-                  const DropdownMenuItem(value: '', child: Text('全部来源')),
+                  const DropdownMenuItem(value: '', child: Text('全部榜单')),
                   for (final entry in sources.entries)
                     DropdownMenuItem(
                       value: entry.key,
@@ -244,183 +265,110 @@ class _ResultsPageState extends ConsumerState<ResultsPage> {
                 TextButton(onPressed: reset, child: const Text('清除筛选')),
             ],
           ),
-          if (!widget.savedOnly && highlights.isNotEmpty) ...[
+          if (view == 'feed' && entries.isNotEmpty) ...[
             const SizedBox(height: 20),
-            Text('当前看点', style: Theme.of(context).textTheme.titleMedium),
+            Text('最新更新', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 10),
-            ResultHighlights(groups: highlights, onOpen: open),
+            for (final entry in entries.take(limit))
+              ResultTile(
+                key: ValueKey(entry.article.id),
+                article: entry.article,
+                source: entry.feed.id,
+                sourceTitle: entry.feed.title,
+                sourceCategory: entry.feed.category,
+                compact: compact,
+                fresh: entry.isNew,
+                library: library,
+                onOpen: () => open(entry.article),
+              ),
           ],
-          for (final group in groups.take(limit)) ...[
-            const SizedBox(height: 24),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    group.feed.title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+          if (view == 'boards')
+            for (final group in groups.take(limit)) ...[
+              const SizedBox(height: 24),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      group.feed.title,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
+                  const SizedBox(width: 12),
+                  Text(
+                    '${group.articles.length} 条${group.newIds.isEmpty ? '' : ' · 新增 ${group.articles.where((article) => group.newIds.contains(article.id)).length}'}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Text(
+                '${group.feed.category} · ${widget.savedOnly ? '本机收藏' : collectionCondition(group.feed)}',
+                style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
+              ),
+              const Divider(height: 20),
+              for (final article in group.articles.take(
+                expanded[group.feed.id] ?? 6,
+              ))
+                ResultTile(
+                  key: ValueKey('${group.feed.id}-${article.id}'),
+                  article: article,
+                  source: group.feed.id,
+                  sourceTitle: group.feed.title,
+                  sourceCategory: group.feed.category,
+                  compact: compact,
+                  fresh: group.newIds.contains(article.id),
+                  library: library,
+                  onOpen: () => open(article),
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  '${group.articles.length} 条',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: colors.onSurfaceVariant,
+              if (group.articles.length > (expanded[group.feed.id] ?? 6))
+                OutlinedButton(
+                  onPressed: () => setState(
+                    () => expanded[group.feed.id] =
+                        (expanded[group.feed.id] ?? 6) + 12,
+                  ),
+                  child: Text(
+                    '展开更多 · 还有 ${group.articles.length - (expanded[group.feed.id] ?? 6)} 条',
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Text(
-              '${group.feed.category} · ${widget.savedOnly ? '本机收藏' : collectionCondition(group.feed)}',
-              style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              '最近成功 ${group.feed.collectedAt == null ? '暂无记录' : articleDate(group.feed.collectedAt!)}',
-              style: TextStyle(fontSize: 11, color: colors.onSurfaceVariant),
-            ),
-            const Divider(height: 20),
-            for (final article in group.articles.take(
-              expanded[group.feed.id] ?? 6,
-            ))
-              ResultTile(
-                key: ValueKey('${group.feed.id}-${article.id}'),
-                article: article,
-                source: group.feed.id,
-                compact: compact,
-                fresh: group.newIds.contains(article.id),
-                library: library,
-                onOpen: () => open(article),
-              ),
-            if (group.articles.length > (expanded[group.feed.id] ?? 6))
-              OutlinedButton(
-                onPressed: () => setState(
-                  () => expanded[group.feed.id] =
-                      (expanded[group.feed.id] ?? 6) + 12,
-                ),
-                child: const Text('展开更多'),
-              ),
-          ],
-          if (groups.isEmpty)
+            ],
+          if (view == 'boards' && groups.isEmpty ||
+              view == 'feed' && entries.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 36),
               child: Column(
                 children: [
                   Text(
-                    widget.savedOnly && !filtered ? '还没有收藏' : '没有匹配的内容',
+                    widget.savedOnly && !filtered ? '暂无收藏' : '没有符合条件的内容',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 12),
                   Text(
                     widget.savedOnly && !filtered
-                        ? '点击卡片旁的书签，把想看的内容留下。'
-                        : '试试其他关键词、来源或内容类型。',
+                        ? '收藏的内容会显示在这里。'
+                        : '调整筛选条件或清除筛选。',
                   ),
                   if (filtered)
                     TextButton(onPressed: reset, child: const Text('清除筛选')),
                 ],
               ),
             ),
-          if (groups.length > limit)
+          if (view == 'feed' && entries.length > limit)
             OutlinedButton(
               onPressed: () => setState(() => limit += 12),
-              child: const Text('显示更多来源'),
+              child: const Text('显示更多内容'),
+            ),
+          if (view == 'boards' && groups.length > limit)
+            OutlinedButton(
+              onPressed: () => setState(() => limit += 12),
+              child: const Text('显示更多榜单'),
             ),
           const SizedBox(height: 24),
         ],
       ),
-    );
-  }
-}
-
-class ResultHighlights extends StatelessWidget {
-  const ResultHighlights({
-    super.key,
-    required this.groups,
-    required this.onOpen,
-  });
-  final List<ResultGroup> groups;
-  final Future<void> Function(Article) onOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns = MediaQuery.textScalerOf(context).scale(1) > 1.4
-            ? 1
-            : constraints.maxWidth >= 600
-            ? 4
-            : 2;
-        final width = (constraints.maxWidth - (columns - 1) * 10) / columns;
-        return Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            for (final group in groups.take(columns == 4 ? 4 : 2))
-              SizedBox(
-                width: width,
-                child: Material(
-                  color: colors.surfaceContainerLow,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: colors.outlineVariant),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onTap: () => onOpen(group.articles.first),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            group.feed.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 11.5,
-                              color: colors.onSurfaceVariant,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          SizedBox(
-                            height:
-                                MediaQuery.textScalerOf(context).scale(13) * 3,
-                            child: Text(
-                              group.articles.first.title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                height: 1.5,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            contentLabels[group.articles.first.contentType] ??
-                                '条目',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: colors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
     );
   }
 }
@@ -430,13 +378,15 @@ class ResultTile extends ConsumerWidget {
     super.key,
     required this.article,
     required this.source,
+    required this.sourceTitle,
+    required this.sourceCategory,
     required this.compact,
     required this.fresh,
     required this.library,
     required this.onOpen,
   });
   final Article article;
-  final String source;
+  final String source, sourceTitle, sourceCategory;
   final bool compact, fresh;
   final LibraryState library;
   final VoidCallback onOpen;
@@ -574,6 +524,14 @@ class ResultTile extends ConsumerWidget {
                                 contentLabels[article.contentType] ?? '条目',
                                 style: metadataStyle,
                               ),
+                              Text(
+                                sourceTitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: metadataStyle,
+                              ),
+                              if (sourceCategory.isNotEmpty)
+                                Text(sourceCategory, style: metadataStyle),
                               if (fresh)
                                 Text(
                                   '新增',

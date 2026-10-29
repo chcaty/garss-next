@@ -19,6 +19,19 @@ class ResultGroup {
   final Set<String> newIds;
 }
 
+class FeedEntry {
+  const FeedEntry({
+    required this.article,
+    required this.feed,
+    required this.isNew,
+  });
+  final Article article;
+  final Feed feed;
+  final bool isNew;
+}
+
+bool isChronologicalFeed(Feed feed) => feed.adapter == 'rss';
+
 List<ResultGroup> resultGroups(
   LibraryState library, {
   bool savedOnly = false,
@@ -111,6 +124,30 @@ List<ResultGroup> resultGroups(
     groups.add(ResultGroup(feed, items, savedOnly: savedOnly));
   }
   return groups;
+}
+
+List<FeedEntry> feedEntries(
+  List<ResultGroup> groups, {
+  bool includeRankedSources = false,
+}) {
+  final entries = <String, FeedEntry>{};
+  for (final group in groups) {
+    if (!includeRankedSources && !isChronologicalFeed(group.feed)) continue;
+    for (final article in group.articles) {
+      final isNew = group.newIds.contains(article.id);
+      final existing = entries[article.id];
+      if (existing == null || isNew && !existing.isNew) {
+        entries[article.id] = FeedEntry(
+          article: article,
+          feed: group.feed,
+          isNew: isNew,
+        );
+      }
+    }
+  }
+  final result = entries.values.toList()
+    ..sort((a, b) => b.article.publishedAt.compareTo(a.article.publishedAt));
+  return result;
 }
 
 String collectionCondition(Feed feed) {

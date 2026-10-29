@@ -3,7 +3,9 @@ import {filterArticles, sourceIds, type Article, type Source} from './catalog.ts
 export const typeLabels: Record<string,string> = {article:'文章',topic:'话题',video:'视频',repository:'项目',item:'影视'};
 export interface BoardFilters {query:string;source:string;category:string;kind:string;onlyNew:boolean;savedOnly?:boolean}
 export interface SourceGroup {source:Source;articles:Article[];newIds:Set<string>}
+export interface FeedEntry {source:Source;article:Article;fresh:boolean}
 
+export const isChronologicalFeed=(source:Source)=>!source.adapter||source.adapter==='rss';
 export function observation(article:Article,source:string) {return article.observations?.[source]??article.metadata??{};}
 export function sourceGroups(articles:Article[],sources:Source[],filters:BoardFilters):SourceGroup[] {
   const entries=filterArticles(articles,filters.query,filters.source,sources)
@@ -21,6 +23,17 @@ export function sourceGroups(articles:Article[],sources:Source[],filters:BoardFi
       return {source,newIds,articles:[...entries].sort((a,b)=>ranked?
         Number(observation(a,source.id).rank??Infinity)-Number(observation(b,source.id).rank??Infinity):Date.parse(b.published_at)-Date.parse(a.published_at))};
     }).filter(group=>group.articles.length>0);
+}
+export function feedEntries(groups:SourceGroup[],includeRankedSources=false):FeedEntry[] {
+  const entries=new Map<string,FeedEntry>();
+  for(const group of groups) {
+    if(!includeRankedSources&&!isChronologicalFeed(group.source))continue;
+    for(const article of group.articles) {
+    const fresh=group.newIds.has(article.id),existing=entries.get(article.id);
+    if(!existing||fresh&&!existing.fresh)entries.set(article.id,{source:group.source,article,fresh});
+    }
+  }
+  return [...entries.values()].sort((a,b)=>Date.parse(b.article.published_at)-Date.parse(a.article.published_at));
 }
 export function boardTotals(groups:SourceGroup[]) {
   const all=new Set<string>(),fresh=new Set<string>();

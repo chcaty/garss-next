@@ -87,10 +87,17 @@ void main() {
     tester,
   ) async {
     await setup(tester);
-    expect(find.text('全部更新'), findsWidgets);
+    expect(find.text('榜单'), findsWidgets);
     expect(find.text('我的收藏'), findsOneWidget);
     expect(find.text('拾阅'), findsOneWidget);
+    expect(find.text('信息流'), findsOneWidget);
+    expect(find.text('示例来源'), findsWidgets);
     expect(find.text('订阅源'), findsNothing);
+    await tester.tap(find.text('信息流'));
+    await tester.pumpAndSettle();
+    expect(find.text('最新更新'), findsOneWidget);
+    await tester.tap(find.text('榜单').first);
+    await tester.pumpAndSettle();
     await showResult(tester, article.title);
     expect(find.text(article.title), findsWidgets);
     expect(tester.takeException(), isNull);
@@ -108,7 +115,7 @@ void main() {
     await showResult(tester, article.title);
     await tester.tap(find.byTooltip('移出收藏'));
     await tester.pumpAndSettle();
-    expect(find.text('还没有收藏'), findsOneWidget);
+    expect(find.text('暂无收藏'), findsOneWidget);
     await tester.tap(find.text('撤销'));
     await tester.pumpAndSettle();
     await showResult(tester, article.title);
@@ -121,14 +128,14 @@ void main() {
     await setup(tester);
     await tester.enterText(find.byType(TextField), '没有这个关键词');
     await tester.pumpAndSettle();
-    expect(find.text('没有匹配的内容'), findsOneWidget);
+    expect(find.text('没有符合条件的内容'), findsOneWidget);
     await tester.tap(find.text('我的收藏').last);
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
       isEmpty,
     );
-    await tester.tap(find.text('全部更新').last);
+    await tester.tap(find.text('榜单').last);
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
@@ -171,7 +178,13 @@ void main() {
         ],
       ),
     );
-    await tester.tap(find.text('来源、分类与类型'));
+    await tester.tap(find.text('信息流'));
+    await tester.pumpAndSettle();
+    expect(find.text('视频结果'), findsNothing);
+    expect(find.text('文章'), findsWidgets);
+    await tester.tap(find.text('榜单').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('筛选'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('视频').first);
     await tester.pumpAndSettle();
@@ -184,10 +197,10 @@ void main() {
     tester,
   ) async {
     await setup(tester);
-    expect(find.textContaining('较上次采集新增 —'), findsOneWidget);
+    expect(find.textContaining('新增 —'), findsOneWidget);
     await tester.tap(find.text('只看新增'));
     await tester.pumpAndSettle();
-    expect(find.text('没有匹配的内容'), findsOneWidget);
+    expect(find.text('没有符合条件的内容'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
   testWidgets('compact mode keeps metadata and hides excerpts', (tester) async {
