@@ -16,7 +16,7 @@ void toggleSavedWithFeedback(
   messenger.hideCurrentSnackBar();
   messenger.showSnackBar(
     SnackBar(
-      content: Text(removed == null ? '已加入稍后读' : '已移出稍后读'),
+      content: Text(removed == null ? '已加入收藏' : '已移出收藏'),
       duration: const Duration(seconds: 8),
       action: removed == null
           ? null

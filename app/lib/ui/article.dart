@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'image_headers.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -22,6 +25,7 @@ class ArticleImage extends StatelessWidget {
     borderRadius: BorderRadius.circular(12),
     child: Image.network(
       url,
+      headers: imageRequestHeaders(url),
       height: height,
       width: double.infinity,
       fit: BoxFit.cover,

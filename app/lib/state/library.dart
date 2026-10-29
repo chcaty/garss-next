@@ -136,7 +136,7 @@ class LibraryController extends AsyncNotifier<LibraryState> {
             },
             read: migrateRead(catalog, state.requireValue.read),
             syncing: false,
-            message: '已同步最新文章',
+            message: '已同步最新内容',
           ),
         );
       }
@@ -179,6 +179,10 @@ class LibraryController extends AsyncNotifier<LibraryState> {
         ? saved.remove(article.id)
         : saved[article.id] = Article.fromJson({
             ...article.toJson(),
+            'saved_sources': current.catalog.feeds
+                .where((feed) => article.sources.contains(feed.id))
+                .map((feed) => feed.toJson())
+                .toList(),
             'saved_categories': current
                 .categoriesFor(article)
                 .where((category) => category.isNotEmpty)

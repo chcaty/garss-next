@@ -9,6 +9,11 @@ class Feed {
     this.category = '',
     this.error = '',
     this.collectionStatus = '',
+    this.adapter = 'rss',
+    this.newIds = const [],
+    this.baselineKnown,
+    this.initialized,
+    this.collectedAt,
   });
   final String id,
       title,
@@ -30,6 +35,10 @@ class Feed {
       ? 'active'
       : status;
   final bool enabled;
+  final String adapter;
+  final List<String> newIds;
+  final bool? baselineKnown, initialized;
+  final DateTime? collectedAt;
   factory Feed.fromJson(Map<String, dynamic> json) => Feed(
     id: json['id'] as String,
     title: json['title'] as String,
@@ -40,6 +49,11 @@ class Feed {
     category: json['category'] as String? ?? '',
     error: json['error'] as String? ?? '',
     collectionStatus: json['collection_status'] as String? ?? '',
+    adapter: json['adapter'] as String? ?? 'rss',
+    newIds: (json['new_ids'] as List<dynamic>? ?? []).cast<String>(),
+    baselineKnown: json['baseline_known'] as bool?,
+    initialized: json['initialized'] as bool?,
+    collectedAt: DateTime.tryParse(json['collected_at'] as String? ?? ''),
   );
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -51,6 +65,11 @@ class Feed {
     'category': category,
     'error': error,
     'collection_status': collectionStatus,
+    'adapter': adapter,
+    'new_ids': newIds,
+    'baseline_known': baselineKnown,
+    'initialized': initialized,
+    'collected_at': collectedAt?.toUtc().toIso8601String(),
   };
 }
 
@@ -68,11 +87,21 @@ class Article {
     this.legacyIds = const [],
     this.dateInferred = false,
     this.savedCategories = const [],
+    this.contentType = 'article',
+    this.metadata = const {},
+    this.observations = const {},
+    this.savedSources = const [],
   });
   final String id, sourceId, title, url, sourceTitle, summary, imageUrl;
   final DateTime publishedAt;
   final bool dateInferred;
   final List<String> sourceIds, legacyIds, savedCategories;
+  final String contentType;
+  final Map<String, dynamic> metadata;
+  final Map<String, dynamic> observations;
+  final List<Feed> savedSources;
+  Map<String, dynamic> observation(String source) =>
+      (observations[source] as Map<String, dynamic>?) ?? metadata;
   List<String> get sources => sourceIds.isEmpty ? [sourceId] : sourceIds;
   factory Article.fromJson(
     Map<String, dynamic> json, [
@@ -91,6 +120,12 @@ class Article {
       url: url,
       publishedAt: DateTime.parse(json['published_at'] as String),
       dateInferred: json['date_inferred'] as bool? ?? false,
+      contentType: json['content_type'] as String? ?? 'article',
+      metadata: json['metadata'] as Map<String, dynamic>? ?? {},
+      observations: json['observations'] as Map<String, dynamic>? ?? {},
+      savedSources: (json['saved_sources'] as List<dynamic>? ?? [])
+          .map((value) => Feed.fromJson(value as Map<String, dynamic>))
+          .toList(),
       sourceTitle:
           feeds[json['source_id']]?.title ??
           json['source_title'] as String? ??
@@ -112,6 +147,10 @@ class Article {
     'url': url,
     'published_at': publishedAt.toUtc().toIso8601String(),
     'date_inferred': dateInferred,
+    'content_type': contentType,
+    'metadata': metadata,
+    'observations': observations,
+    'saved_sources': savedSources.map((feed) => feed.toJson()).toList(),
     'summary': summary,
     'image_url': imageUrl,
   };

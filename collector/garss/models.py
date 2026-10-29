@@ -10,6 +10,7 @@ class FeedSource:
     description: str
     feed_url: str
     allow_undated: bool = False
+    adapter: str = 'rss'
 
     def as_dict(self):
         return {
@@ -38,6 +39,8 @@ class Article:
     summary: str = ""
     image_url: str = ""
     date_inferred: bool = False
+    content_type: str = 'article'
+    metadata: dict = field(default_factory=dict)
 
     @property
     def id(self):
@@ -45,7 +48,7 @@ class Article:
         return sha256(value).hexdigest()[:20]
 
     def as_dict(self):
-        return {
+        value = {
             "id": self.id,
             "source_id": self.source_id,
             "title": self.title,
@@ -55,6 +58,9 @@ class Article:
             "image_url": self.image_url,
             "date_inferred": self.date_inferred,
         }
+        if self.content_type != 'article' or self.metadata:
+            value.update(content_type=self.content_type, metadata=self.metadata)
+        return value
 
 
 @dataclass

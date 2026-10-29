@@ -1,4 +1,4 @@
-"""Collect public RSS into a fresh output tree; never modify source files."""
+"""Collect public sources into a fresh output tree; never modify source files."""
 import argparse
 import json
 import os
@@ -64,7 +64,9 @@ def collect(args):
     results = [result for result in results if states[result.source.id]['status'] != 'archived']
     results = merge_recent_history(results, old, app_date(now), 30)
     create_snapshot(args.output, results, effective, now,
-                    code_revision=args.code_revision, source_revision=args.source_revision)
+                    code_revision=args.code_revision, source_revision=args.source_revision,
+                    previous_articles=old,
+                    previous_feeds=read_previous_document(args.previous, 'feeds.json', {}).get('feeds', []))
     write_json(args.output / 'api/v1/sources.json', config)
     write_json(args.output / 'api/v1/source-state.json', {'generated_at': stamp(now), 'sources': states,
                'policy': {'failures': 3, 'duration_hours': 24, 'retry_days': 7}})

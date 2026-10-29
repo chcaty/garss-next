@@ -1,4 +1,6 @@
 import logging
+import json
+import re
 import time
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
@@ -23,8 +25,9 @@ REQUEST_HEADERS = {
 }
 
 
-def _download_feed(url: str, timeout: int, request_get=requests.get, *, cached=None, metadata=None, deadline=None, clock=time.monotonic) -> bytes:
+def _download_feed(url: str, timeout: int, request_get=requests.get, *, cached=None, metadata=None, deadline=None, clock=time.monotonic, request_headers=None) -> bytes:
     headers = dict(REQUEST_HEADERS)
+    headers.update(request_headers or {})
     if cached is not None:
         if cached.etag:
             headers["If-None-Match"] = cached.etag
@@ -87,7 +90,11 @@ def _parse_articles(
     retention_days: int = 30,
     only_date=None,
     minimum_articles: int = MIN_ARTICLES_PER_SOURCE,
+    fetch_json=None,
 ) -> list[Article]:
+    if source.adapter != 'rss':
+        from .adapters import parse_adapter
+        return parse_adapter(source, payload, fetch_json=fetch_json)
     feed = feedparser.parse(payload)
     entries = feed.get("entries", [])
     if not feed.get("version"):
@@ -151,6 +158,16 @@ def fetch_feed(
     cached = cache.get(source.feed_url) if cache is not None else None
     deadline = clock() + budget_seconds
     last_error = None
+    adapter_headers = None
+    if source.adapter != 'rss':
+        from .adapters import ADAPTERS
+        adapter_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+                           'Accept': '*/*', **ADAPTERS[source.adapter].get('headers', {})}
+
+    def fetch_json(url):
+        if source.adapter != 'hn' or not re.fullmatch(r'https://hacker-news\.firebaseio\.com/v0/item/\d+\.json', url):
+            raise ValueError('Unexpected secondary adapter endpoint')
+        return json.loads(_download_feed(url, 8, request_get=request_get, deadline=deadline, clock=clock, request_headers=adapter_headers))
     for attempt in range(attempts):
         if clock() >= deadline:
             last_error = requests.Timeout("feed retry budget exceeded")
@@ -162,6 +179,7 @@ def fetch_feed(
                 timeout=8,
                 request_get=request_get,
                 cached=cached, metadata=metadata, deadline=deadline, clock=clock,
+                request_headers=adapter_headers,
             )
             cacheable = metadata.pop("cacheable")
             not_modified = metadata.pop("not_modified")
@@ -173,6 +191,7 @@ def fetch_feed(
                 today=today,
                 retention_days=retention_days,
                 only_date=only_date,
+                fetch_json=fetch_json,
             )
             if cache is not None and cacheable:
                 entry = CachedFeed(payload, **metadata)

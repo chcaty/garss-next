@@ -5,7 +5,7 @@ import json
 import re
 
 MARKER = '<!-- shiyue-source-request:v1 -->'
-FIELDS = {'title', 'description', 'category', 'feed_url', 'enabled', 'allow_undated',
+FIELDS = {'title', 'description', 'category', 'feed_url', 'enabled', 'allow_undated', 'adapter',
           'recheck_requested_at', 'discovered_from', 'verified_at'}
 
 

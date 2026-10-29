@@ -2,6 +2,272 @@
   "schema_version": "1.0",
   "sources": [
     {
+      "id": "direct-github-trending",
+      "title": "GitHub Trending",
+      "description": "公开HTML来源",
+      "category": "开源项目",
+      "feed_url": "https://github.com/trending?since=daily",
+      "adapter": "github-trending",
+      "enabled": true
+    },
+    {
+      "id": "hot-weibo",
+      "title": "微博热搜榜",
+      "feed_url": "https://weibo.com/ajax/side/hotSearch",
+      "category": "社交热点",
+      "description": "通过 RSSHub 转换微博热搜；无原始发布时间时使用首次发现时间。",
+      "enabled": true,
+      "allow_undated": true,
+      "discovered_from": "https://github.com/DIYgod/RSSHub",
+      "adapter": "weibo_hot"
+    },
+    {
+      "id": "direct-toutiao",
+      "title": "今日头条热榜",
+      "description": "公开JSON来源",
+      "category": "热榜",
+      "feed_url": "https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc",
+      "enabled": true,
+      "adapter": "toutiao"
+    },
+    {
+      "id": "direct-bilibili",
+      "title": "B站热门",
+      "description": "公开JSON来源",
+      "category": "视频",
+      "feed_url": "https://api.bilibili.com/x/web-interface/ranking/v2?rid=0&type=all",
+      "adapter": "bilibili",
+      "enabled": true
+    },
+    {
+      "id": "direct-v2ex",
+      "title": "V2EX 热议",
+      "description": "公开JSON来源",
+      "category": "开发者社区",
+      "feed_url": "https://www.v2ex.com/api/topics/hot.json",
+      "adapter": "v2ex",
+      "enabled": true
+    },
+    {
+      "id": "D001-127ccd1f",
+      "title": "少数派",
+      "description": "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
+      "feed_url": "https://sspai.com/api/v1/article/index/page/get?limit=20&offset=0",
+      "category": "数码",
+      "enabled": true,
+      "adapter": "sspai"
+    },
+    {
+      "id": "direct-bili-hotword",
+      "title": "B站热搜",
+      "description": "公开JSON来源",
+      "category": "热榜",
+      "feed_url": "https://s.search.bilibili.com/main/hotword",
+      "enabled": true,
+      "adapter": "bili_hotword"
+    },
+    {
+      "id": "direct-zhihu-daily",
+      "title": "知乎日报",
+      "description": "公开JSON来源",
+      "category": "资讯",
+      "feed_url": "https://news-at.zhihu.com/api/4/news/latest",
+      "enabled": true,
+      "adapter": "zhihu_daily"
+    },
+    {
+      "id": "direct-douban-hot",
+      "title": "豆瓣热门电影",
+      "description": "公开JSON来源",
+      "category": "影视",
+      "feed_url": "https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0",
+      "enabled": true,
+      "adapter": "douban_hot"
+    },
+    {
+      "id": "direct-douban-new",
+      "title": "豆瓣新片",
+      "description": "公开JSON来源",
+      "category": "影视",
+      "feed_url": "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start=0",
+      "enabled": true,
+      "adapter": "douban_new"
+    },
+    {
+      "id": "direct-juejin",
+      "title": "掘金",
+      "description": "公开JSON来源",
+      "category": "资讯",
+      "feed_url": "https://api.juejin.cn/content_api/v1/content/article_rank?category_id=1&type=hot",
+      "enabled": true,
+      "adapter": "juejin"
+    },
+    {
+      "id": "direct-hn",
+      "title": "Hacker News",
+      "description": "公开JSON来源",
+      "category": "资讯",
+      "feed_url": "https://hacker-news.firebaseio.com/v0/topstories.json",
+      "enabled": true,
+      "adapter": "hn"
+    },
+    {
+      "id": "direct-lobsters",
+      "title": "Lobsters",
+      "description": "公开JSON来源",
+      "category": "资讯",
+      "feed_url": "https://lobste.rs/hottest.json",
+      "enabled": true,
+      "adapter": "lobsters"
+    },
+    {
+      "id": "direct-devto",
+      "title": "DEV Community 文章",
+      "description": "公开JSON来源",
+      "category": "开发者社区",
+      "feed_url": "https://dev.to/api/articles?top=1&per_page=20",
+      "adapter": "devto",
+      "enabled": true
+    },
+    {
+      "id": "direct-stackoverflow",
+      "title": "Stack Overflow",
+      "description": "公开JSON来源",
+      "category": "热榜",
+      "feed_url": "https://api.stackexchange.com/2.3/questions?order=desc&sort=hot&site=stackoverflow&pagesize=20&filter=default",
+      "enabled": true,
+      "adapter": "stackoverflow"
+    },
+    {
+      "id": "direct-baidu-pc",
+      "title": "百度热搜",
+      "description": "公开JSON来源",
+      "category": "热榜",
+      "feed_url": "https://top.baidu.com/api/board?platform=pc&tab=realtime",
+      "enabled": true,
+      "adapter": "baidu_pc"
+    },
+    {
+      "id": "C006",
+      "title": "IT之家",
+      "description": "IT之家 - 软媒旗下网站",
+      "feed_url": "https://www.ithome.com/rss/",
+      "category": "内容平台",
+      "enabled": true
+    },
+    {
+      "id": "C003",
+      "title": "爱范儿",
+      "description": "让未来触手可及",
+      "feed_url": "https://www.ifanr.com/feed",
+      "category": "内容平台",
+      "enabled": true
+    },
+    {
+      "id": "C028",
+      "title": "cnBeta 精选（聚合）",
+      "description": "中文业界资讯",
+      "feed_url": "https://feedx.net/rss/cnbetatop.xml",
+      "category": "内容平台",
+      "enabled": true
+    },
+    {
+      "id": "T002",
+      "title": "奇客Solidot–传递最新科技情报",
+      "description": "奇客的资讯，重要的东西",
+      "feed_url": "https://www.solidot.org/index.rss",
+      "category": "科技类",
+      "enabled": true
+    },
+    {
+      "id": "feed-qbitai",
+      "title": "量子位",
+      "description": "AI 媒体",
+      "category": "AI 媒体",
+      "feed_url": "https://www.qbitai.com/feed",
+      "enabled": true
+    },
+    {
+      "id": "feed-leiphone",
+      "title": "雷峰网",
+      "description": "AI 媒体",
+      "category": "AI 媒体",
+      "feed_url": "https://www.leiphone.com/feed",
+      "enabled": true
+    },
+    {
+      "id": "C016",
+      "title": "开源中国",
+      "description": "开源中国社区推荐文章",
+      "feed_url": "https://www.oschina.net/blog/rss",
+      "category": "内容平台",
+      "enabled": true
+    },
+    {
+      "id": "B001",
+      "title": "阮一峰的网络日志",
+      "description": "一个科技博客，讲解的知识通俗易懂",
+      "feed_url": "https://www.ruanyifeng.com/blog/atom.xml",
+      "category": "活着的个人独立博客",
+      "enabled": true
+    },
+    {
+      "id": "feed-techcrunch",
+      "title": "TechCrunch",
+      "description": "海外科技",
+      "category": "海外科技",
+      "feed_url": "https://techcrunch.com/feed/",
+      "enabled": true
+    },
+    {
+      "id": "feed-oschina",
+      "title": "开源中国",
+      "description": "开源中国参考结果页来源",
+      "feed_url": "https://www.oschina.net/news/rss",
+      "category": "开发者",
+      "enabled": true
+    },
+    {
+      "id": "feed-cnbeta",
+      "title": "cnBeta",
+      "description": "cnBeta参考结果页来源",
+      "feed_url": "https://www.cnbeta.com.tw/backend.php",
+      "category": "科技媒体",
+      "enabled": true
+    },
+    {
+      "id": "feed-theverge",
+      "title": "The Verge",
+      "description": "海外科技",
+      "category": "海外科技",
+      "feed_url": "https://www.theverge.com/rss/index.xml",
+      "enabled": true
+    },
+    {
+      "id": "feed-arstechnica",
+      "title": "Ars Technica",
+      "description": "海外科技",
+      "category": "海外科技",
+      "feed_url": "https://feeds.arstechnica.com/arstechnica/index",
+      "enabled": true
+    },
+    {
+      "id": "feed-bbc_zh",
+      "title": "BBC 中文",
+      "description": "新闻",
+      "category": "新闻",
+      "feed_url": "https://feeds.bbci.co.uk/zhongwen/simp/rss.xml",
+      "enabled": true
+    },
+    {
+      "id": "feed-nytimes_zh",
+      "title": "纽约时报中文",
+      "description": "新闻",
+      "category": "新闻",
+      "feed_url": "https://cn.nytimes.com/rss/",
+      "enabled": true
+    },
+    {
       "id": "S001",
       "title": "不死鸟",
       "description": "不死鸟:专注分享优质资源",
@@ -63,14 +329,6 @@
       "description": "极具人气和特色的软件网站！专注于推荐优秀软件、APP应用和互联网资源，每篇图文评测都极其用心，并提供大量软件资源下载。",
       "feed_url": "https://rsshub.v2fy.com/iplay/home",
       "category": "软件工具",
-      "enabled": true
-    },
-    {
-      "id": "B001",
-      "title": "阮一峰的网络日志",
-      "description": "一个科技博客，讲解的知识通俗易懂",
-      "feed_url": "http://www.ruanyifeng.com/blog/atom.xml",
-      "category": "活着的个人独立博客",
       "enabled": true
     },
     {
@@ -1090,14 +1348,6 @@
       "enabled": true
     },
     {
-      "id": "D001-127ccd1f",
-      "title": "少数派",
-      "description": "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
-      "feed_url": "https://sspai.com/feed",
-      "category": "数码",
-      "enabled": true
-    },
-    {
       "id": "D002-c0f1da39",
       "title": "数字尾巴",
       "description": "分享美好数字生活",
@@ -1238,14 +1488,6 @@
       "title": "Hack News",
       "description": "极其优质的极客新闻",
       "feed_url": "https://news.ycombinator.com/rss",
-      "category": "科技类",
-      "enabled": true
-    },
-    {
-      "id": "T002",
-      "title": "奇客Solidot–传递最新科技情报",
-      "description": "奇客的资讯，重要的东西",
-      "feed_url": "https://www.solidot.org/index.rss",
       "category": "科技类",
       "enabled": true
     },
@@ -1442,26 +1684,10 @@
       "enabled": true
     },
     {
-      "id": "C003",
-      "title": "爱范儿",
-      "description": "让未来触手可及",
-      "feed_url": "https://www.ifanr.com/feed",
-      "category": "内容平台",
-      "enabled": true
-    },
-    {
       "id": "C005",
       "title": "199IT",
       "description": "互联网数据资讯网",
       "feed_url": "https://www.199it.com/feed",
-      "category": "内容平台",
-      "enabled": true
-    },
-    {
-      "id": "C006",
-      "title": "IT之家",
-      "description": "IT之家 - 软媒旗下网站",
-      "feed_url": "https://www.ithome.com/rss",
       "category": "内容平台",
       "enabled": true
     },
@@ -1534,14 +1760,6 @@
       "title": "豆瓣",
       "description": "豆瓣最受欢迎的乐评",
       "feed_url": "https://www.douban.com/feed/review/music",
-      "category": "内容平台",
-      "enabled": true
-    },
-    {
-      "id": "C016",
-      "title": "开源中国",
-      "description": "开源中国社区推荐文章",
-      "feed_url": "https://www.oschina.net/blog/rss",
       "category": "内容平台",
       "enabled": true
     },
@@ -1630,14 +1848,6 @@
       "title": "Pixiv(艺术家社区)",
       "description": "Pixiv每月排行 - 前20",
       "feed_url": "http://rakuen.thec.me/PixivRss/monthly-20",
-      "category": "内容平台",
-      "enabled": true
-    },
-    {
-      "id": "C028",
-      "title": "cnBeta",
-      "description": "中文业界资讯",
-      "feed_url": "https://feedx.net/rss/cnbetatop.xml",
       "category": "内容平台",
       "enabled": true
     },
@@ -1890,16 +2100,6 @@
       "enabled": true
     },
     {
-      "id": "hot-weibo",
-      "title": "微博热搜榜",
-      "feed_url": "https://rsshub.chyi.org/weibo/search/hot",
-      "category": "社交热点",
-      "description": "通过 RSSHub 转换微博热搜；无原始发布时间时使用首次发现时间。",
-      "enabled": true,
-      "allow_undated": true,
-      "discovered_from": "https://github.com/DIYgod/RSSHub"
-    },
-    {
       "id": "hot-wechat",
       "title": "微信24小时热文榜",
       "feed_url": "https://rsshub.yfi.moe/tophub/WnBe01o371",
@@ -1908,6 +2108,24 @@
       "enabled": true,
       "allow_undated": true,
       "discovered_from": "https://tophub.today/n/WnBe01o371"
+    },
+    {
+      "id": "direct-javdb",
+      "title": "JavDB 有碼日排行（Top 60）",
+      "description": "公开HTML来源",
+      "category": "影视",
+      "feed_url": "https://javdb.com/rankings/movies?p=daily&t=censored",
+      "enabled": false,
+      "adapter": "javdb"
+    },
+    {
+      "id": "direct-gossip",
+      "title": "黑料不打烊 最新",
+      "description": "公开HTML来源",
+      "category": "资讯",
+      "feed_url": "https://access.xgmxzbij.cc/",
+      "enabled": false,
+      "adapter": "gossip"
     }
   ],
   "repository": {
@@ -1919,6 +2137,7 @@
   "source_aliases": {
     "B090": "B089",
     "C004": "S005",
-    "TG007": "TG006"
+    "TG007": "TG006",
+    "feed-ruanyifeng": "B001"
   }
 }

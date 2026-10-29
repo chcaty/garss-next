@@ -1,7 +1,7 @@
 import type {Source} from './catalog.ts';
-export const sourceFields = ['title','feed_url','description','category','enabled','allow_undated','recheck_requested_at','discovered_from','verified_at'] as const;
+export const sourceFields = ['title','feed_url','description','category','enabled','allow_undated','adapter','recheck_requested_at','discovered_from','verified_at'] as const;
 export type SourceField = typeof sourceFields[number];
-export const fieldLabels: Record<SourceField,string> = {title:'名称',feed_url:'RSS 地址',description:'简介',category:'分类',enabled:'参与公共采集',allow_undated:'允许推断时间',recheck_requested_at:'复查请求',discovered_from:'发现出处',verified_at:'验证时间'};
+export const fieldLabels: Record<SourceField,string> = {title:'名称',feed_url:'采集地址',description:'简介',category:'分类',enabled:'参与公共采集',allow_undated:'允许推断时间',adapter:'采集适配',recheck_requested_at:'复查请求',discovered_from:'发现出处',verified_at:'验证时间'};
 export const fieldValue = (value:unknown) => value===undefined||value===''?'未设置':typeof value==='boolean'?value?'是':'否':String(value);
 export interface SourceChange {id:string;title:string;kind:string;fields:{key:SourceField;before:unknown;after:unknown}[]}
 export function duplicateUrls(sources: Source[]): Set<string> {

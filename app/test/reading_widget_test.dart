@@ -10,6 +10,7 @@ import 'package:garss_app/main.dart';
 import 'package:garss_app/data/models.dart';
 import 'package:garss_app/data/repository.dart';
 import 'package:garss_app/state/library.dart';
+import 'package:garss_app/ui/results_page.dart';
 
 void main() {
   final article = Article(
@@ -69,177 +70,154 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('bookmarks and article summaries work without connectivity', (
-    tester,
-  ) async {
-    await setup(tester);
+  Future<void> showResult(WidgetTester tester, String title) async {
     await tester.scrollUntilVisible(
-      find.text(article.title),
+      find.descendant(of: find.byType(ResultTile), matching: find.text(title)),
       200,
       scrollable: find
           .descendant(
-            of: find.byType(CustomScrollView),
+            of: find.byType(ListView),
             matching: find.byType(Scrollable),
           )
           .first,
     );
-    await tester.tap(find.byTooltip('加入稍后读'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('稍后读').last);
-    await tester.pumpAndSettle();
-    expect(find.text(article.title), findsOneWidget);
-    await tester.tap(find.text(article.title));
-    await tester.pumpAndSettle();
-    expect(find.text(article.summary), findsOneWidget);
-    expect(find.text('打开原文'), findsOneWidget);
+  }
+
+  testWidgets('result page shows unified update and bookmark navigation', (
+    tester,
+  ) async {
+    await setup(tester);
+    expect(find.text('全部更新'), findsWidgets);
+    expect(find.text('我的收藏'), findsOneWidget);
+    expect(find.text('拾阅'), findsOneWidget);
+    expect(find.text('订阅源'), findsNothing);
+    await showResult(tester, article.title);
+    expect(find.text(article.title), findsWidgets);
     expect(tester.takeException(), isNull);
   });
-  testWidgets('removing a saved article offers undo in the focused reader', (
+  testWidgets('bookmarks and undo work on result cards without connectivity', (
     tester,
   ) async {
     await setup(tester);
-    await tester.scrollUntilVisible(
-      find.text(article.title),
-      200,
-      scrollable: find
-          .descendant(
-            of: find.byType(CustomScrollView),
-            matching: find.byType(Scrollable),
-          )
-          .first,
-    );
-    await tester.tap(find.byTooltip('加入稍后读'));
+    await showResult(tester, article.title);
+    await tester.tap(find.byTooltip('加入收藏'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(article.title));
+    expect(find.text('已加入收藏'), findsOneWidget);
+    await tester.tap(find.text('我的收藏').last);
     await tester.pumpAndSettle();
-    expect(find.text('本次筛选 · 第 1 / 1 篇'), findsOneWidget);
-    await tester.tap(find.byTooltip('移出稍后读'));
+    await showResult(tester, article.title);
+    await tester.tap(find.byTooltip('移出收藏'));
     await tester.pumpAndSettle();
+    expect(find.text('还没有收藏'), findsOneWidget);
     await tester.tap(find.text('撤销'));
     await tester.pumpAndSettle();
-    expect(find.byTooltip('移出稍后读'), findsOneWidget);
+    await showResult(tester, article.title);
+    expect(find.byTooltip('移出收藏'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
-  testWidgets('source search and health combine with local follow scope', (
+  testWidgets('updates and bookmarks retain independent search filters', (
     tester,
   ) async {
-    await setup(
-      tester,
-      snapshot: Catalog(
-        generatedAt: catalog.generatedAt,
-        articles: [article],
-        feeds: const [
-          Feed(
-            id: 's',
-            title: '关注的异常来源',
-            url: 'https://example.com/rss',
-            status: 'error',
-          ),
-          Feed(
-            id: 'hidden',
-            title: '未关注的异常来源',
-            url: 'https://example.net/rss',
-            status: 'error',
-          ),
-        ],
-      ),
-      hidden: ['hidden'],
-    );
-    await tester.tap(find.text('订阅源').last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('只看本机关注'));
-    await tester.tap(find.text('采集异常'));
-    await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text('关注的异常来源'),
-      200,
-      scrollable: find
-          .descendant(
-            of: find.byType(CustomScrollView),
-            matching: find.byType(Scrollable),
-          )
-          .first,
-    );
-    expect(find.text('未关注的异常来源'), findsNothing);
-    expect(tester.takeException(), isNull);
-  });
-  testWidgets(
-    'reading sources can be searched without changing the query filter',
-    (tester) async {
-      await setup(tester);
-      await tester.tap(find.text('选择阅读来源'));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.widgetWithText(TextField, '搜索来源或分类'), '不匹配');
-      await tester.pumpAndSettle();
-      expect(find.text('没有匹配的来源，试试其他关键词。'), findsOneWidget);
-      await tester.enterText(find.widgetWithText(TextField, '搜索来源或分类'), '示例');
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('示例来源').last);
-      await tester.pumpAndSettle();
-      expect(find.text(article.title), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    },
-  );
-  testWidgets('reading controls remain usable at accessibility text scale', (
-    tester,
-  ) async {
-    await setup(tester, scale: 2);
-    expect(tester.takeException(), isNull);
-    expect(
-      MediaQuery.textScalerOf(tester.element(find.text('信息流').first)).scale(10),
-      greaterThan(10),
-    );
-    await tester.scrollUntilVisible(
-      find.text(article.title),
-      200,
-      scrollable: find
-          .descendant(
-            of: find.byType(CustomScrollView),
-            matching: find.byType(Scrollable),
-          )
-          .first,
-    );
-    expect(tester.takeException(), isNull);
-  });
-  testWidgets('reading and bookmarks keep independent filters', (tester) async {
     await setup(tester);
     await tester.enterText(find.byType(TextField), '没有这个关键词');
     await tester.pumpAndSettle();
-    expect(find.text('没有匹配的文章'), findsOneWidget);
-    await tester.tap(find.text('稍后读').last);
+    expect(find.text('没有匹配的内容'), findsOneWidget);
+    await tester.tap(find.text('我的收藏').last);
     await tester.pumpAndSettle();
-    expect(find.text('这里留给想再读的文章'), findsOneWidget);
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
       isEmpty,
     );
-    await tester.tap(find.text('信息流').last);
+    await tester.tap(find.text('全部更新').last);
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
       '没有这个关键词',
     );
-    await tester.tap(find.text('重置筛选').first);
+    await tester.tap(find.text('清除筛选').first);
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
       isEmpty,
     );
+  });
+  testWidgets('type and new filters use the same result groups and counts', (
+    tester,
+  ) async {
+    final video = Article(
+      id: 'video',
+      sourceId: 'video-source',
+      title: '视频结果',
+      url: 'https://example.com/video',
+      publishedAt: article.publishedAt,
+      contentType: 'video',
+      metadata: const {'views': 12345, 'duration': '1:30'},
+    );
+    await setup(
+      tester,
+      snapshot: Catalog(
+        generatedAt: catalog.generatedAt,
+        articles: [article, video],
+        feeds: [
+          catalog.feeds.first,
+          const Feed(
+            id: 'video-source',
+            title: '视频来源',
+            url: 'https://example.com/json',
+            adapter: 'bilibili',
+            baselineKnown: true,
+            newIds: ['video'],
+          ),
+        ],
+      ),
+    );
+    await tester.tap(find.text('来源、分类与类型'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('视频').first);
+    await tester.pumpAndSettle();
+    await showResult(tester, '视频结果');
+    expect(find.text(article.title), findsNothing);
+    expect(find.text('视频结果'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
-
-  testWidgets('current results can be marked read and undone', (tester) async {
+  testWidgets('unknown source baseline does not claim zero new content', (
+    tester,
+  ) async {
     await setup(tester);
-    await tester.tap(find.text('当前结果 1 篇全部已读'));
+    expect(find.textContaining('较上次采集新增 —'), findsOneWidget);
+    await tester.tap(find.text('只看新增'));
     await tester.pumpAndSettle();
-    expect(find.text('已将 1 篇文章标为已读'), findsOneWidget);
-    await tester.tap(find.text('撤销'));
+    expect(find.text('没有匹配的内容'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+  testWidgets('compact mode keeps metadata and hides excerpts', (tester) async {
+    await setup(tester);
+    await tester.tap(find.text('紧凑视图'));
     await tester.pumpAndSettle();
-    expect(find.text('当前结果 1 篇全部已读'), findsOneWidget);
+    await showResult(tester, article.title);
+    expect(find.text(article.summary), findsNothing);
+    expect(find.text(article.title), findsWidgets);
+  });
+  testWidgets('source management and reading settings live in the more menu', (
+    tester,
+  ) async {
+    await setup(tester);
+    await tester.tap(find.byTooltip('更多'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('来源管理').last);
+    await tester.pumpAndSettle();
+    expect(find.text('本机关注'), findsOneWidget);
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('更多'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('阅读设置').last);
+    await tester.pumpAndSettle();
+    expect(find.text('阅读与外观'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
   testWidgets(
-    'source and settings pages support enlarged text and wide layouts',
+    'result cards and filters support large text, wide and landscape layouts',
     (tester) async {
       await setup(tester, scale: 2);
       for (final size in [
@@ -249,53 +227,9 @@ void main() {
       ]) {
         tester.view.physicalSize = size;
         await tester.pumpAndSettle();
-        await tester.tap(find.text('订阅源').last);
-        await tester.pumpAndSettle();
-        expect(tester.takeException(), isNull);
-        await tester.tap(find.text('设置').last);
-        await tester.pumpAndSettle();
-        await tester.scrollUntilVisible(
-          find.text('当前字号 100%'),
-          100,
-          scrollable: find
-              .descendant(
-                of: find.byType(ListView),
-                matching: find.byType(Scrollable),
-              )
-              .first,
-        );
-        expect(find.text('当前字号 100%'), findsOneWidget);
+        await showResult(tester, article.title);
         expect(tester.takeException(), isNull);
       }
-    },
-  );
-  testWidgets(
-    'reading filters can be applied and reset at enlarged text scale',
-    (tester) async {
-      await setup(tester, scale: 2);
-      await tester.tap(find.text('分类与时间'));
-      await tester.pumpAndSettle();
-      expect(find.text('筛选文章'), findsOneWidget);
-      await tester.tap(find.text('今天'));
-      await tester.scrollUntilVisible(
-        find.text('应用筛选'),
-        100,
-        scrollable: find
-            .descendant(
-              of: find.byType(SingleChildScrollView),
-              matching: find.byType(Scrollable),
-            )
-            .last,
-      );
-      await tester.tap(find.text('应用筛选'));
-      await tester.pumpAndSettle();
-      expect(find.text('筛选文章'), findsNothing);
-      expect(find.text('今天'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-      await tester.tap(find.text('重置筛选').first);
-      await tester.pumpAndSettle();
-      expect(find.text('分类与时间'), findsOneWidget);
-      expect(tester.takeException(), isNull);
     },
   );
 }

@@ -38,6 +38,8 @@ def consolidate(results):
                 value = article.as_dict()
                 value.update(id=sha256(key.encode()).hexdigest()[:20], source_ids=[], legacy_ids=[])
                 unique[key] = value
+            if article.metadata:
+                value.setdefault('observations', {})[article.source_id] = article.metadata
             if article.source_id not in value['source_ids']:
                 value['source_ids'].append(article.source_id)
             if article.id not in value['legacy_ids']:
@@ -58,14 +60,18 @@ def expand_history(articles):
         try:
             article = Article(item['source_id'], item['title'], item['url'],
                               datetime.fromisoformat(item['published_at'].replace('Z', '+00:00')),
-                              item.get('summary', ''), item.get('image_url', ''), bool(item.get('date_inferred', False)))
-            result.extend(replace(article, source_id=source) for source in item.get('source_ids', [article.source_id]))
+                              item.get('summary', ''), item.get('image_url', ''), bool(item.get('date_inferred', False)),
+                              item.get('content_type', 'article'), item.get('metadata', {}))
+            result.extend(replace(article, source_id=source,
+                                  metadata=item.get('observations', {}).get(source, article.metadata))
+                          for source in item.get('source_ids', [article.source_id]))
         except (KeyError, TypeError, ValueError):
             continue
     return result
 
 
-def create_snapshot(root: Path, results, config, generated_at, *, code_revision='local', source_revision='local'):
+def create_snapshot(root: Path, results, config, generated_at, *, code_revision='local', source_revision='local',
+                    previous_articles=None, previous_feeds=None):
     generated = generated_at.isoformat().replace('+00:00', 'Z')
     articles = consolidate(results)
     aliases = config.get('source_aliases', {})
@@ -83,9 +89,21 @@ def create_snapshot(root: Path, results, config, generated_at, *, code_revision=
     feeds = []
     for item in config['sources']:
         result = by_id.get(item['id'])
-        feeds.append({**item, 'status': 'disabled' if not item.get('enabled', True) else result.status if result else 'error',
+        feed = {**item, 'status': 'disabled' if not item.get('enabled', True) else result.status if result else 'error',
                       'article_count': counts.get(item['id'], 0),
-                      'error': result.error if result else None})
+                      'error': result.error if result else None}
+        if previous_articles is not None:
+            prior = next((old for old in previous_feeds or [] if old['id'] == item['id']
+                          and old['feed_url'] == item['feed_url'] and old.get('adapter', 'rss') == item.get('adapter', 'rss')), {})
+            known = bool(prior) and prior.get('initialized', prior.get('status') == 'ok')
+            success = result is not None and not result.error
+            old_urls = {article_key(article.url) for article in previous_articles if article.source_id == item['id']}
+            new_ids = [article['id'] for article in articles if item['id'] in article['source_ids']
+                       and article_key(article['url']) not in old_urls] if known and success else []
+            feed.update(initialized=bool(known or success), baseline_known=bool(known and success),
+                        new_ids=new_ids, new_count=len(new_ids) if known and success else None,
+                        collected_at=generated if success else prior.get('collected_at'))
+        feeds.append(feed)
     feed_doc = {'api_version': '1.0', 'generated_at': generated, 'feeds': feeds, 'source_aliases': aliases}
     article_doc = {'api_version': '1.0', 'generated_at': generated, 'articles': articles}
     identity = sha256(json.dumps([feed_doc, article_doc], sort_keys=True).encode()).hexdigest()[:20]

@@ -1,5 +1,6 @@
 @import "tailwindcss" source(none);
 @source "./sources.tsx";
+@source "./board.tsx";
 @source "./sync.tsx";
 @source "./sync-page.tsx";
 @source "./sync-sections.tsx";

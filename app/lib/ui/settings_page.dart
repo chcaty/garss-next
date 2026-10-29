@@ -105,7 +105,7 @@ class SettingsPage extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          '数据由 GitHub 定时采集并发布。手机只同步文章快照，文章离开目录后，稍后读仍然保留。',
+          '数据由 GitHub 定时采集并发布。手机同步同一份多源内容快照，内容离开目录后，本机收藏仍然保留。',
           style: TextStyle(color: colors.onSurfaceVariant, height: 1.8),
         ),
       ],

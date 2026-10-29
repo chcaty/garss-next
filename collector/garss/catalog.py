@@ -23,6 +23,7 @@ def feed_key(url):
 
 
 def load_sources(path: Path) -> dict:
+    from .adapters import ADAPTERS
     config = json.loads(path.read_text(encoding='utf-8'))
     if config.get('schema_version') != '1.0' or not isinstance(config.get('sources'), list):
         raise ValueError('Unsupported source configuration')
@@ -38,6 +39,9 @@ def load_sources(path: Path) -> dict:
         if not item['title'].strip() or not item['category'].strip():
             raise ValueError('Source title and category are required')
         key = feed_key(item['feed_url'])
+        adapter = item.get('adapter', 'rss')
+        if not isinstance(adapter, str) or adapter not in ADAPTERS or (adapter != 'rss' and key != feed_key(ADAPTERS[adapter]['url'])):
+            raise ValueError('Unsupported adapter or endpoint')
         if key in urls:
             raise ValueError(f'Duplicate RSS URL: {item["feed_url"]}')
         urls.add(key)
@@ -52,5 +56,5 @@ def load_sources(path: Path) -> dict:
 
 
 def feed_sources(config: dict) -> list[FeedSource]:
-    return [FeedSource(item['id'], item['title'], item['description'], item['feed_url'], item.get('allow_undated', False))
+    return [FeedSource(item['id'], item['title'], item['description'], item['feed_url'], item.get('allow_undated', False), item.get('adapter', 'rss'))
             for item in config['sources'] if item.get('enabled', True)]

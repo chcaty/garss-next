@@ -88,6 +88,7 @@ def merge_recent_history(
 ) -> list[FeedResult]:
     """Merge the feed and cache, keeping the window plus each source's latest posts."""
     articles_by_source = {result.source.id: {} for result in results}
+    fetched_keys = {result.source.id: {article_key(article.url) for article in result.articles} for result in results}
     for article in cached_articles:
         if article.source_id in articles_by_source:
             articles_by_source[article.source_id].setdefault(article_key(article.url), article)
@@ -106,6 +107,10 @@ def merge_recent_history(
             merged[key] = article if candidate == article else candidate
 
     for result in results:
+        if result.source.adapter not in {'rss', 'devto', 'sspai', 'gossip'} and not result.error:
+            result.articles = [article for key, article in articles_by_source[result.source.id].items()
+                               if key in fetched_keys[result.source.id]]
+            continue
         result.articles = retain_articles(
             articles_by_source[result.source.id].values(),
             today, retention_days, minimum_articles,

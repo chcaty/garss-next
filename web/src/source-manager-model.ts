@@ -39,7 +39,7 @@ export function archived(source: Source, state?: Health): boolean {
 export function exportOpml(sources: Source[]): string {
   const xml = document.implementation.createDocument('', 'opml', null); xml.documentElement.setAttribute('version','2.0');
   const body = xml.createElement('body'); xml.documentElement.append(body);
-  for (const source of sources) {const outline=xml.createElement('outline');
+  for (const source of sources.filter(item=>!item.adapter||item.adapter==='rss')) {const outline=xml.createElement('outline');
     for (const [key,value] of Object.entries({type:'rss',text:source.title,title:source.title,xmlUrl:source.feed_url,category:source.category,description:source.description})) outline.setAttribute(key,value);
     body.append(outline);
   }

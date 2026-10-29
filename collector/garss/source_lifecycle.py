@@ -17,6 +17,8 @@ def prepare(config, previous, now):
     for source in config['sources']:
         old = deepcopy(previous.get(source['id'], {}))
         signature = [source['feed_url'], source.get('recheck_requested_at', '')]
+        if source.get('adapter', 'rss') != 'rss':
+            signature.append(source['adapter'])
         if old.get('signature') != signature:
             old = {'signature': signature, 'failures': 0, 'status': 'pending'}
         states[source['id']] = old

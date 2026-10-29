@@ -1,7 +1,7 @@
 import {type Source,type SourceConfig,validateConfig} from './catalog.ts';
 import {duplicateUrls} from './source-management.ts';
 export const marker='<!-- shiyue-source-request:v1 -->';
-export const requestFields=['title','description','category','feed_url','enabled','allow_undated','recheck_requested_at','discovered_from','verified_at'] as const;
+export const requestFields=['title','description','category','feed_url','enabled','allow_undated','adapter','recheck_requested_at','discovered_from','verified_at'] as const;
 export type Operation={id:string;before:string|null;set?:Record<string,unknown>;remove?:true};
 export type RequestBatch={url:string;body:string;count:number};
 const canonical=(value:unknown)=>JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.keys(item).sort().map(key=>[key,item[key]])):item);

@@ -1,0 +1,156 @@
+{
+  "rss": {
+    "label": "RSS / Atom",
+    "format": "rss",
+    "url": ""
+  },
+  "v2ex": {
+    "label": "V2EX 热议",
+    "format": "json",
+    "url": "https://www.v2ex.com/api/topics/hot.json",
+    "content_type": "topic",
+    "parser": "collect_v2ex",
+    "family": "core"
+  },
+  "bilibili": {
+    "label": "B站热门",
+    "format": "json",
+    "url": "https://api.bilibili.com/x/web-interface/ranking/v2?rid=0&type=all",
+    "content_type": "video",
+    "parser": "collect_bilibili",
+    "family": "core"
+  },
+  "devto": {
+    "label": "DEV Community",
+    "format": "json",
+    "url": "https://dev.to/api/articles?top=1&per_page=20",
+    "content_type": "article",
+    "parser": "collect_devto",
+    "family": "extra"
+  },
+  "github-trending": {
+    "label": "GitHub 热榜（今日）",
+    "format": "html",
+    "url": "https://github.com/trending?since=daily",
+    "content_type": "repository",
+    "parser": "collect_github_trending",
+    "family": "core"
+  },
+  "javdb": {
+    "label": "JavDB 有碼日排行（Top 60）",
+    "format": "html",
+    "url": "https://javdb.com/rankings/movies?p=daily&t=censored",
+    "content_type": "item",
+    "parser": "collect_javdb",
+    "family": "core",
+    "sensitive": true
+  },
+  "gossip": {
+    "label": "黑料不打烊 最新",
+    "format": "html",
+    "url": "https://access.xgmxzbij.cc/",
+    "content_type": "article",
+    "parser": "collect_gossip",
+    "family": "core",
+    "sensitive": true
+  },
+  "weibo_hot": {
+    "label": "微博热搜",
+    "format": "json",
+    "url": "https://weibo.com/ajax/side/hotSearch",
+    "content_type": "topic",
+    "parser": "collect_weibo_hot",
+    "family": "core",
+    "headers": {
+      "Referer": "https://weibo.com/"
+    }
+  },
+  "toutiao": {
+    "label": "今日头条热榜",
+    "format": "json",
+    "url": "https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc",
+    "content_type": "topic",
+    "parser": "collect_toutiao",
+    "family": "core"
+  },
+  "sspai": {
+    "label": "少数派",
+    "format": "json",
+    "url": "https://sspai.com/api/v1/article/index/page/get?limit=20&offset=0",
+    "content_type": "article",
+    "parser": "collect_sspai",
+    "family": "core"
+  },
+  "bili_hotword": {
+    "label": "B站热搜",
+    "format": "json",
+    "url": "https://s.search.bilibili.com/main/hotword",
+    "content_type": "topic",
+    "parser": "collect_bili_hotword",
+    "family": "extra"
+  },
+  "zhihu_daily": {
+    "label": "知乎日报",
+    "format": "json",
+    "url": "https://news-at.zhihu.com/api/4/news/latest",
+    "content_type": "article",
+    "parser": "collect_zhihu_daily",
+    "family": "extra"
+  },
+  "douban_hot": {
+    "label": "豆瓣热门电影",
+    "format": "json",
+    "url": "https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0",
+    "content_type": "item",
+    "parser": "collect_douban_hot",
+    "family": "extra"
+  },
+  "douban_new": {
+    "label": "豆瓣新片",
+    "format": "json",
+    "url": "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start=0",
+    "content_type": "item",
+    "parser": "collect_douban_new",
+    "family": "extra"
+  },
+  "juejin": {
+    "label": "掘金",
+    "format": "json",
+    "url": "https://api.juejin.cn/content_api/v1/content/article_rank?category_id=1&type=hot",
+    "content_type": "article",
+    "parser": "collect_juejin",
+    "family": "extra"
+  },
+  "hn": {
+    "label": "Hacker News",
+    "format": "json",
+    "url": "https://hacker-news.firebaseio.com/v0/topstories.json",
+    "content_type": "article",
+    "parser": "collect_hn",
+    "family": "extra"
+  },
+  "lobsters": {
+    "label": "Lobsters",
+    "format": "json",
+    "url": "https://lobste.rs/hottest.json",
+    "content_type": "article",
+    "parser": "collect_lobsters",
+    "family": "extra"
+  },
+  "stackoverflow": {
+    "label": "Stack Overflow",
+    "format": "json",
+    "url": "https://api.stackexchange.com/2.3/questions?order=desc&sort=hot&site=stackoverflow&pagesize=20&filter=default",
+    "content_type": "topic",
+    "parser": "collect_stackoverflow",
+    "family": "extra"
+  },
+  "baidu_pc": {
+    "label": "百度热搜",
+    "format": "json",
+    "url": "https://top.baidu.com/api/board?platform=pc&tab=realtime",
+    "content_type": "topic",
+    "parser": "collect_baidu_pc",
+    "family": "extra"
+  }
+}

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../state/library.dart';
 import 'appearance.dart';
-import 'reading_page.dart';
+import 'results_page.dart';
 import 'sources_page.dart';
 import 'settings_page.dart';
 import 'sync.dart';
@@ -36,7 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
     final library = ref.watch(libraryProvider);
     final wide = MediaQuery.sizeOf(context).width >= 840;
-    const titles = ['信息流', '稍后读', '订阅源', '设置'];
+    const titles = ['拾阅', '我的收藏'];
     void select(int value) {
       FocusManager.instance.primaryFocus?.unfocus();
       setState(() => tab = value);
@@ -47,9 +47,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(semanticsLabel: '正在读取文章'),
+            CircularProgressIndicator(semanticsLabel: '正在读取内容'),
             SizedBox(height: 16),
-            Text('正在读取文章…'),
+            Text('正在读取内容…'),
           ],
         ),
       ),
@@ -61,7 +61,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             children: [
               const Icon(Icons.cloud_off_outlined, size: 48),
               const SizedBox(height: 16),
-              Text('暂时无法同步文章', style: Theme.of(context).textTheme.titleLarge),
+              Text('暂时无法同步内容', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 8),
               const Text('首次使用需要联网。请检查网络后重试。', textAlign: TextAlign.center),
               const SizedBox(height: 20),
@@ -76,34 +76,60 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       data: (data) => IndexedStack(
         index: tab,
         children: [
-          ReadingPage(library: data, onSources: () => select(2)),
-          ReadingPage(
-            library: data,
-            savedOnly: true,
-            onSources: () => select(0),
-          ),
-          SourcesPage(library: data),
-          SettingsPage(library: data),
+          ResultsPage(library: data),
+          ResultsPage(library: data, savedOnly: true),
         ],
       ),
     );
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Divider(
+            height: 1,
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
+        ),
         title: Text(
           titles[tab],
-          style: const TextStyle(fontWeight: FontWeight.w700),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
         ),
         actions: [
           const AppearanceButton(),
-          IconButton(
-            tooltip: '同步记录',
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (context) => const SyncScreen()),
-            ),
-            icon: const Icon(Icons.cloud_sync_outlined),
+          PopupMenuButton<String>(
+            tooltip: '更多',
+            onSelected: (value) {
+              final data = library.asData?.value;
+              if (data == null) return;
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => Consumer(
+                    builder: (context, ref, child) {
+                      final current =
+                          ref.watch(libraryProvider).asData?.value ?? data;
+                      if (value == '采集记录') return const SyncScreen();
+                      return Scaffold(
+                        appBar: AppBar(title: Text(value)),
+                        body: value == '来源管理'
+                            ? SourcesPage(library: current)
+                            : value == '阅读设置'
+                            ? SettingsPage(library: current)
+                            : const SyncScreen(),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+            itemBuilder: (_) => const [
+              PopupMenuItem(value: '来源管理', child: Text('来源管理')),
+              PopupMenuItem(value: '阅读设置', child: Text('阅读设置')),
+              PopupMenuItem(value: '采集记录', child: Text('采集记录')),
+            ],
           ),
           IconButton(
-            tooltip: '刷新文章',
+            tooltip: '刷新内容',
             onPressed: library.hasValue && !library.requireValue.syncing
                 ? () => ref.read(libraryProvider.notifier).refresh()
                 : null,
@@ -120,15 +146,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 NavigationDestination(
                   icon: Icon(Icons.view_agenda_outlined),
                   selectedIcon: Icon(Icons.view_agenda),
-                  label: '信息流',
+                  label: '全部更新',
                 ),
                 NavigationDestination(
                   icon: Icon(Icons.bookmark_border),
                   selectedIcon: Icon(Icons.bookmark),
-                  label: '稍后读',
+                  label: '我的收藏',
                 ),
-                NavigationDestination(icon: Icon(Icons.rss_feed), label: '订阅源'),
-                NavigationDestination(icon: Icon(Icons.tune), label: '设置'),
               ],
             ),
       body: SafeArea(
@@ -143,19 +167,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 destinations: const [
                   NavigationRailDestination(
                     icon: Icon(Icons.view_agenda_outlined),
-                    label: Text('信息流'),
+                    label: Text('全部更新'),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.bookmark_border),
-                    label: Text('稍后读'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.rss_feed),
-                    label: Text('订阅源'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.tune),
-                    label: Text('设置'),
+                    label: Text('我的收藏'),
                   ),
                 ],
               ),

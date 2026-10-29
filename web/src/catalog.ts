@@ -1,12 +1,20 @@
+import adapters from '../../collector/garss/source_adapters.json';
+export {adapters};
 export interface Source {
   id: string; title: string; description: string; category: string;
   feed_url: string; enabled: boolean; status?: string; article_count?: number;
   allow_undated?: boolean;
+  adapter?: keyof typeof adapters;
+  new_ids?: string[]; new_count?: number|null; baseline_known?: boolean; initialized?: boolean;
+  collected_at?: string|null; error?: string|null; collection_status?: string;
   recheck_requested_at?: string; discovered_from?: string; verified_at?: string;
 }
 export interface Article {
   id: string; source_id: string; source_ids?: string[]; title: string;
   url: string; published_at: string; date_inferred?: boolean; summary?: string; image_url?: string; legacy_ids?: string[];
+  content_type?: 'article'|'topic'|'video'|'repository'|'item';
+  metadata?: Record<string,string|number>;
+  observations?: Record<string,Record<string,string|number>>;
 }
 export interface SourceConfig {
   schema_version: '1.0'; sources: Source[];
@@ -31,6 +39,8 @@ export function validateConfig(value: unknown): asserts value is SourceConfig {
     if (!/^[A-Za-z0-9_-]+$/.test(source.id) || ids.has(source.id) || !source.title?.trim() || !source.category?.trim() ||
         typeof source.description !== 'string' || typeof source.enabled !== 'boolean' || !webUrl(source.feed_url)) throw Error('来源字段不完整、地址不合法或 ID 重复');
     ids.add(source.id);
+    const adapter=source.adapter??'rss';
+    if(!Object.hasOwn(adapters,adapter)||adapter!=='rss'&&source.feed_url!==adapters[adapter].url) throw Error('采集适配与地址不匹配');
   }
   for (const key of ['owner', 'name', 'branch', 'path'] as const) if (typeof config.repository[key] !== 'string' || !config.repository[key]) throw Error('仓库配置缺失');
 }
