@@ -1,0 +1,13 @@
+{
+  "api_version": "1.0",
+  "generated_at": "2026-10-31T14:03:23.965666Z",
+  "snapshot_id": "548e906e711c96423e52",
+  "snapshot_endpoint": "./snapshots/548e906e711c96423e52/manifest.json",
+  "feeds_endpoint": "./feeds.json",
+  "articles_endpoint": "./articles.json",
+  "retention_days": 30,
+  "minimum_articles_per_source": 5,
+  "sources_endpoint": "./sources.json",
+  "code_revision": "44e67ee2f3e38b619e7010d43eb1453d9feaffb0",
+  "source_revision": "44e67ee2f3e38b619e7010d43eb1453d9feaffb0"
+}
