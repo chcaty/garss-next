@@ -65,7 +65,7 @@ def collect(args):
     results = merge_recent_history(results, old, app_date(now), 30)
     create_snapshot(args.output, results, effective, now,
                     code_revision=args.code_revision, source_revision=args.source_revision,
-                    previous_articles=old,
+                    previous_articles=old, previous_root=args.previous,
                     previous_feeds=read_previous_document(args.previous, 'feeds.json', {}).get('feeds', []))
     write_json(args.output / 'api/v1/sources.json', config)
     write_json(args.output / 'api/v1/source-state.json', {'generated_at': stamp(now), 'sources': states,

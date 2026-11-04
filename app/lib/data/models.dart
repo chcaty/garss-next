@@ -167,6 +167,10 @@ bool isWebUrl(String value) {
 class Catalog {
   Catalog({
     required this.generatedAt,
+    this.snapshotId,
+    this.snapshotSource,
+    this.retentionDays,
+    this.timezone,
     required List<Feed> feeds,
     required List<Article> articles,
     Map<String, String> sourceAliases = const {},
@@ -174,6 +178,9 @@ class Catalog {
        articles = List.unmodifiable(articles),
        sourceAliases = Map.unmodifiable(sourceAliases);
   final DateTime generatedAt;
+  // Missing on legacy catalog-v1 caches; these must be downloaded once.
+  final String? snapshotId, snapshotSource, timezone;
+  final int? retentionDays;
   final List<Feed> feeds;
   final List<Article> articles;
   final Map<String, String> sourceAliases;
@@ -196,6 +203,10 @@ class Catalog {
           ..sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
     return Catalog(
       generatedAt: DateTime.parse(json['generated_at'] as String),
+      snapshotId: json['snapshot_id'] as String?,
+      snapshotSource: json['snapshot_source'] as String?,
+      retentionDays: json['retention_days'] as int?,
+      timezone: json['timezone'] as String?,
       feeds: feeds,
       articles: articles,
       sourceAliases: (json['source_aliases'] as Map<String, dynamic>? ?? {})
@@ -204,6 +215,10 @@ class Catalog {
   }
   Map<String, dynamic> toJson() => {
     'generated_at': generatedAt.toUtc().toIso8601String(),
+    'snapshot_id': snapshotId,
+    'snapshot_source': snapshotSource,
+    'retention_days': retentionDays,
+    'timezone': timezone,
     'source_aliases': sourceAliases,
     'feeds': feeds.map((feed) => feed.toJson()).toList(),
     'articles': articles.map((article) => article.toJson()).toList(),

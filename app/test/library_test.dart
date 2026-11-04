@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:garss_app/data/catalog_cache.dart';
 import 'package:garss_app/data/models.dart';
 import 'package:garss_app/data/repository.dart';
 import 'package:garss_app/state/library.dart';
 import 'package:garss_app/ui/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+
+import 'support/snapshot_fixture.dart';
 
 final article = Article(
   id: 'article',
@@ -232,6 +235,111 @@ void main() {
     expect(data.saved, contains(article.id));
     expect(data.message, contains('同步失败'));
   });
+  test(
+    'five-day refresh shrinks only catalog and keeps expired saved/read state',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        'catalog-v1': jsonEncode(catalog.toJson()),
+        'saved-v2': jsonEncode([article.toJson()]),
+        'read-v1': [article.id],
+        'hidden-v1': ['source'],
+        'font-scale': 1.2,
+        'show-images': false,
+      });
+      final requests = <String>[];
+      final repository = snapshotRepository(
+        snapshotDocuments(entries: []),
+        requests: requests,
+      );
+      final container = ProviderContainer(
+        overrides: [repositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(container.dispose);
+      final before = await container.read(libraryProvider.future);
+      expect(before.catalog.articles.single.id, article.id);
+      expect(before.catalog.snapshotId, isNull);
+      await container.read(libraryProvider.notifier).refresh();
+      final after = container.read(libraryProvider).requireValue;
+      expect(after.catalog.articles, isEmpty);
+      expect(after.catalog.snapshotId, 'one');
+      expect(after.saved[article.id]!.summary, article.summary);
+      expect(after.read, {article.id});
+      expect(after.hidden, {'source'});
+      expect(after.fontScale, 1.2);
+      expect(after.showImages, isFalse);
+      expect(requests, hasLength(4));
+      final preferences = await SharedPreferences.getInstance();
+      expect(preferences.containsKey('catalog-v1'), isFalse);
+      final restarted = ProviderContainer(
+        overrides: [repositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(restarted.dispose);
+      requests.clear();
+      final restored = await restarted.read(libraryProvider.future);
+      expect(restored.catalog.snapshotId, 'one');
+      expect(restored.saved, contains(article.id));
+      expect(restored.read, {article.id});
+      await restarted.read(libraryProvider.notifier).refresh();
+      expect(requests, [appMetaPath]);
+    },
+  );
+
+  test(
+    'failed verification leaves committed cache and user preferences untouched',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        'saved-v2': jsonEncode([article.toJson()]),
+        'read-v1': [article.id],
+      });
+      final preferences = await SharedPreferences.getInstance();
+      final first = await snapshotRepository(snapshotDocuments()).fetch();
+      await CatalogCache(preferences).save(first);
+      final pointer = preferences.getString(CatalogCache.activeKey);
+      final docs = snapshotDocuments();
+      (docs[appMetaPath] as Map<String, dynamic>)['snapshot_id'] = 'two';
+      (docs['$snapshotPath/manifest.json']
+              as Map<String, dynamic>)['snapshot_id'] =
+          'two';
+      docs['$snapshotPath/articles.json'] = '{}';
+      final container = ProviderContainer(
+        overrides: [
+          repositoryProvider.overrideWithValue(snapshotRepository(docs)),
+        ],
+      );
+      addTearDown(container.dispose);
+      await container.read(libraryProvider.future);
+      await container.read(libraryProvider.notifier).refresh();
+      final data = container.read(libraryProvider).requireValue;
+      expect(data.catalog.snapshotId, 'one');
+      expect(data.saved, contains(article.id));
+      expect(data.read, contains(article.id));
+      expect(data.message, contains('同步失败'));
+      expect(preferences.getString(CatalogCache.activeKey), pointer);
+      expect(CatalogCache(preferences).load()!.snapshotId, 'one');
+    },
+  );
+
+  test(
+    'offline first launch preserves saved articles even without a catalog',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        'saved-v2': jsonEncode([article.toJson()]),
+        'read-v1': [article.id],
+      });
+      final container = ProviderContainer(
+        overrides: [
+          repositoryProvider.overrideWithValue(snapshotRepository({})),
+        ],
+      );
+      addTearDown(container.dispose);
+      final data = await container.read(libraryProvider.future);
+      expect(data.catalog.articles, isEmpty);
+      expect(data.visible(savedOnly: true).single.id, article.id);
+      expect(data.read, contains(article.id));
+      expect(data.message, contains('收藏仍可阅读'));
+    },
+  );
+
   test('source rotation prevents one active source monopolizing the feed', () {
     final second = Article(
       id: 'second',

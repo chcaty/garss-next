@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/catalog_cache.dart';
 import '../data/models.dart';
 import '../data/repository.dart';
 import 'library_state.dart';
@@ -22,19 +23,13 @@ final libraryProvider = AsyncNotifierProvider<LibraryController, LibraryState>(
 
 class LibraryController extends AsyncNotifier<LibraryState> {
   late SharedPreferences _preferences;
+  late CatalogCache _cache;
   Future<void> _writes = Future.value();
   @override
   Future<LibraryState> build() async {
     _preferences = await SharedPreferences.getInstance();
-    Catalog? cached;
-    try {
-      final value = _preferences.getString('catalog-v1');
-      if (value != null) {
-        cached = Catalog.fromJson(jsonDecode(value) as Map<String, dynamic>);
-      }
-    } catch (_) {
-      /* Corrupt caches can be replaced by a fresh download. */
-    }
+    _cache = CatalogCache(_preferences);
+    final cached = _cache.load();
     final saved = <String, Article>{};
     try {
       for (final value in jsonDecode(
@@ -58,10 +53,7 @@ class LibraryController extends AsyncNotifier<LibraryState> {
     } else {
       try {
         catalog = await ref.read(repositoryProvider).fetch();
-        await _preferences.setString(
-          'catalog-v1',
-          jsonEncode(catalog.toJson()),
-        );
+        await _cache.save(catalog);
       } catch (_) {
         if (saved.isEmpty) rethrow;
         catalog = Catalog(
@@ -124,8 +116,10 @@ class LibraryController extends AsyncNotifier<LibraryState> {
     if (current == null || current.syncing) return;
     state = AsyncData(current.copyWith(syncing: true, message: '正在同步…'));
     try {
-      final catalog = await ref.read(repositoryProvider).fetch();
-      await _preferences.setString('catalog-v1', jsonEncode(catalog.toJson()));
+      final catalog = await ref
+          .read(repositoryProvider)
+          .fetch(cached: current.catalog);
+      if (!identical(catalog, current.catalog)) await _cache.save(catalog);
       if (ref.mounted) {
         state = AsyncData(
           state.requireValue.copyWith(

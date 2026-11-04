@@ -31,6 +31,14 @@ class DataBranchTests(unittest.TestCase):
             stored = subprocess.check_output(['git', 'show', f'rss-data:{path}'], cwd=remote)
             manifest = json.loads((first / 'api/v1/snapshots' / meta['snapshot_id'] / 'manifest.json').read_text(encoding='utf-8'))
             self.assertEqual(manifest['files']['articles.json'], {'bytes':len(stored), 'sha256':sha256(stored).hexdigest()})
+            app_meta = json.loads((first / 'api/v1/app/meta.json').read_text(encoding='utf-8'))
+            app_folder = first / 'api/v1/app/snapshots' / app_meta['snapshot_id']
+            app_manifest = json.loads((app_folder / 'manifest.json').read_text(encoding='utf-8'))
+            for name in ('feeds.json', 'articles.json'):
+                app_path = f"api/v1/app/snapshots/{app_meta['snapshot_id']}/{name}"
+                published = subprocess.check_output(['git', 'show', f'rss-data:{app_path}'], cwd=remote)
+                self.assertEqual(app_manifest['files'][name],
+                                 {'bytes': len(published), 'sha256': sha256(published).hexdigest()})
             publish(second, str(remote), old)
             self.assertEqual(git('rev-list', '--count', 'rss-data', cwd=remote), '1')
             with self.assertRaises(subprocess.CalledProcessError):
