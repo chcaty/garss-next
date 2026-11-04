@@ -100,12 +100,12 @@ class SettingsPage extends ConsumerWidget {
         ),
         const Divider(height: 32),
         const Text(
-          '拾阅 · Android 预览版 0.2.1',
+          '拾阅 · Android 预览版 0.2.2',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
         Text(
-          '数据由 GitHub 定时采集并发布。手机同步同一份多源内容快照，内容离开目录后，本机收藏仍然保留。',
+          '数据由 GitHub 定时采集并发布。手机仅同步最近 5 个自然日（含今天，北京时间）的多源内容快照。内容离开目录后，本机收藏仍然保留。',
           style: TextStyle(color: colors.onSurfaceVariant, height: 1.8),
         ),
       ],

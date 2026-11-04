@@ -1,9 +1,10 @@
 """Exercise the collection entry point without network or a public repository."""
 import importlib.util
 import json
+import shutil
 import tempfile
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -40,12 +41,16 @@ class CollectionTests(unittest.TestCase):
             article = Article('old', 'Saved content', 'https://example.com/post', self.now, 'Summary')
             identity = create_snapshot(previous, [FeedResult(old_source, [article])],
                                        {'sources': [{'id': 'old', 'title': 'Old', 'feed_url': old_source.feed_url}]}, self.now)
+            # Simulate the currently deployed pre-mobile data branch.
+            shutil.rmtree(previous / 'api/v1/app')
             (previous / 'api/v1/snapshots/unrelated').mkdir()
             output = root / 'output'
             self.invoke(root, '--offline', '--previous', previous, '--output', output,
                         '--code-revision', 'code', '--source-revision', 'source')
             meta = validate_snapshot(output)
             self.assertEqual({p.name for p in (output / 'api/v1/snapshots').iterdir()}, {identity, meta['snapshot_id']})
+            self.assertTrue((output / 'api/v1/app/meta.json').exists())
+            self.assertFalse((previous / 'api/v1/app').exists())
             self.assertEqual(meta['code_revision'], 'code')
             self.assertEqual(meta['source_revision'], 'source')
             documents = {p.name: json.loads(p.read_text(encoding='utf-8'))
@@ -97,3 +102,27 @@ class CollectionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'new directory'):
                 self.invoke(root, '--offline', '--output', output)
             self.assertEqual(marker.read_text(encoding='utf-8'), 'keep')
+
+
+    def test_mobile_projection_after_real_history_merge_preserves_full_archive(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            previous, output = root / 'previous', root / 'output'
+            historic = [Article('current', f'Age {age}', f'https://example.com/{age}',
+                                self.now - timedelta(days=age)) for age in (0, 4, 5, 20, 29, 40)]
+            create_snapshot(previous, [FeedResult(self.source, historic)], self.config, self.now)
+            before = (previous / 'api/v1/articles.json').read_bytes()
+            with patch.object(collect, 'FeedCache'), \
+                    patch.object(collect, 'fetch_all', return_value=[FeedResult(self.source, historic[:1])]), \
+                    patch.object(collect, 'discover', return_value={'candidates': []}):
+                self.invoke(root, '--previous', previous, '--output', output)
+            validate_snapshot(output)
+            full = json.loads((output / 'api/v1/articles.json').read_text())['articles']
+            meta = json.loads((output / 'api/v1/app/meta.json').read_text())
+            folder = output / 'api/v1/app/snapshots' / meta['snapshot_id']
+            mobile = json.loads((folder / 'articles.json').read_text())['articles']
+            feeds = json.loads((folder / 'feeds.json').read_text())['feeds']
+            self.assertEqual({item['title'] for item in full}, {'Age 0', 'Age 4', 'Age 5', 'Age 20', 'Age 29'})
+            self.assertEqual({item['title'] for item in mobile}, {'Age 0', 'Age 4'})
+            self.assertEqual(feeds[0]['article_count'], 2)
+            self.assertEqual((previous / 'api/v1/articles.json').read_bytes(), before)

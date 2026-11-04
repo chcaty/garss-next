@@ -71,7 +71,7 @@ def expand_history(articles):
 
 
 def create_snapshot(root: Path, results, config, generated_at, *, code_revision='local', source_revision='local',
-                    previous_articles=None, previous_feeds=None):
+                    previous_articles=None, previous_feeds=None, previous_root=None):
     generated = generated_at.isoformat().replace('+00:00', 'Z')
     articles = consolidate(results)
     aliases = config.get('source_aliases', {})
@@ -125,6 +125,8 @@ def create_snapshot(root: Path, results, config, generated_at, *, code_revision=
     write_json(root / 'api/v1/feeds.json', feed_doc)
     write_json(root / 'api/v1/articles.json', article_doc)
     write_json(root / 'api/v1/sources.json', config)
+    from .app_snapshot import create_app_snapshot
+    create_app_snapshot(root, feed_doc, article_doc, generated_at, previous_root)
     return identity
 
 
@@ -145,4 +147,7 @@ def validate_snapshot(root: Path):
     keys = [article_key(item['url']) for item in articles]
     if len(keys) != len(set(keys)):
         raise ValueError('Duplicate article identity')
+    if (root / 'api/v1/app/meta.json').exists():
+        from .app_snapshot import validate_app_snapshot
+        validate_app_snapshot(root)
     return meta
