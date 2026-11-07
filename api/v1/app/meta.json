@@ -1,0 +1,11 @@
+{
+  "api_version": "1.0",
+  "snapshot_id": "95b2db996a35c8ad869c",
+  "generated_at": "2026-11-07T14:03:30.889652Z",
+  "snapshot_endpoint": "./snapshots/95b2db996a35c8ad869c/manifest.json",
+  "retention_days": 5,
+  "minimum_articles_per_source": 0,
+  "timezone": "Asia/Shanghai",
+  "window_start": "2026-11-03",
+  "window_end": "2026-11-07"
+}
