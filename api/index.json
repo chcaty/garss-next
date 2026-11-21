@@ -1,0 +1,6 @@
+{
+  "current_version": "v1",
+  "versions": {
+    "v1": "./v1/meta.json"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "api_version": "1.0",
+  "snapshot_id": "e6bcf96f5e8084497459",
+  "generated_at": "2026-11-21T09:03:55.428288Z",
+  "retention_days": 5,
+  "timezone": "Asia/Shanghai",
+  "window_start": "2026-11-17",
+  "window_end": "2026-11-21",
+  "feeds_endpoint": "./feeds.json",
+  "articles_endpoint": "./articles.json",
+  "files": {
+    "feeds.json": {
+      "bytes": 145222,
+      "sha256": "006da291f546da2d0b5e9148eb6d04c3ab292c64056dc4f2dce543470bf8944b"
+    },
+    "articles.json": {
+      "bytes": 5538591,
+      "sha256": "20dee3ae6347848cf25d570a6ef2de9b1af9d58e3c397b4f91ed5cb6fea257f3"
+    }
+  }
+}
